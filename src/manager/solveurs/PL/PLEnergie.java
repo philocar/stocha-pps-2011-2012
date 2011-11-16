@@ -3,6 +3,7 @@ package manager.solveurs.PL;
 import manager.solveurs.Solveur;
 
 import data.Data;
+import data.solution.SolutionEnergie;
 import data.solution.SolutionEnergieBinaire;
 
 /**
@@ -15,12 +16,26 @@ public abstract class PLEnergie implements Solveur {
 
 	/** Variable contenant les données du problème */
 	protected Data donnees;
-
-	/** La solution du problème. */
-	protected SolutionEnergieBinaire solution;
-	
-	/** Le tableau contenant les coefficients de la fonction objectif. */
-	protected double[] coefFonctionObjectif;
+	/** Le vecteur de solution du problème. La production de chaque centrale par période en MW */
+	protected double[] solution;
+	/** Le vecteur des couts de production de l'énergie en €/MW. */
+	protected double[] couts;
+	/** Pour chaque scénario il y a un vecteur d'énergie achetée par période en MW */
+	protected double[][] energieAchetee;
+	/** Pour chaque scénario il y a un vecteur d'énergie vendue par période en MW */
+	protected double[][] energieVendue;
+	/** Le prix du MW acheté */
+	protected double prixAchete;
+	/** Le prix du MW vendu */
+	protected double prixVente;
+	/** Pour chaque scénario il y a un vecteur des demandes par période */
+	protected double[][] demandes;
+	/** Pour chaque scénario il y a un vecteur, toujours le même, pour la partie droite des contraintes sur les productions */
+	protected double[] vecteurContraintesMembreDroit;
+	/** Pour chaque scénario il y a une matrice, toujours la même, pour la partie gauche des contraintes sur les productions */
+	protected int[][] matriceContraintesMembreGauche;
+	/** Pour chaque scénario il y a un vecteur de disponibilité par période (entre 0 et 1) */
+	protected double[][] matriceDisponibilite;
 	
 	/**
 	 * Crée un nouveau PLEnergie.
@@ -28,9 +43,7 @@ public abstract class PLEnergie implements Solveur {
 	 */
 	public PLEnergie(Data donnees)
 	{
-		this.donnees = donnees;
-		solution = new SolutionEnergieBinaire(donnees);
-		genererPL();
+		
 	}
 
 	/**
@@ -39,62 +52,15 @@ public abstract class PLEnergie implements Solveur {
 	 */
 	private void genererPL()
 	{
-		// Remplit le tableau coefFonctionObjectif
-		// A chaque paire i j on associe la distance les séparant
-		coefFonctionObjectif = new double[donnees.getNbEntites()*donnees.getNbEntites()];
-		for(int i=0; i<donnees.getNbEntites(); i++)
-		{
-			for(int j=0; j<donnees.getNbEntites(); j++)
-			{
-				coefFonctionObjectif[i*donnees.getNbEntites()+j] = donnees.getDistance(i, j);
-			}
-		}
 		
-		// Remplit le tableau coefNbCentres
-		// A chaque paire j j on met un poid de 1 pour les activer dans la contrainte
-		coefNbCentres = new int[donnees.getNbEntites()*donnees.getNbEntites()];
-		for(int i=0; i<donnees.getNbEntites(); i++)
-		{
-			for(int j=0; j<donnees.getNbEntites(); j++)
-			{
-				if(i == j)
-				{
-					coefNbCentres[i*donnees.getNbEntites()+j] = 1;
-				}
-				else
-				{
-					coefNbCentres[i*donnees.getNbEntites()+j] = 0;
-				}
-			}
-		}
-		
-		// Remplit le tableau coefEntiteRelieeUneEntite
-		// Pour chaque contrainte on a la plage de variables à prendre en compte (pour éviter le débordement de mémoire)
-		coefEntiteRelieeUneEntite = new int[donnees.getNbEntites()];
-		for(int l=0; l<donnees.getNbEntites(); l++)
-		{
-			coefEntiteRelieeUneEntite[l] = (l + 1) * donnees.getNbEntites() - 1;
-		}
-		
-		// Remplit le tableau coefGaucheEntiteRelieeUnCentre et coefDroiteEntiteRelieeUnCentre
-		coefDroiteEntiteRelieeUnCentre = new int[donnees.getNbEntites()*donnees.getNbEntites()];
-		coefGaucheEntiteRelieeUnCentre = new int[donnees.getNbEntites()*donnees.getNbEntites()];
-		for(int i=0; i<donnees.getNbEntites(); i++)
-		{
-			for(int j=0; j<donnees.getNbEntites(); j++)
-			{
-				coefDroiteEntiteRelieeUnCentre[i*donnees.getNbEntites()+j] = j*donnees.getNbEntites()+j;
-				coefGaucheEntiteRelieeUnCentre[i*donnees.getNbEntites()+j] = i*donnees.getNbEntites()+j;
-			}
-		}
 	}
 	
 	/**
 	 * Renvoie la solution calculée.
 	 * @return la solution calculée
 	 */
-	public SolutionEnergieBinaire getSolution() {
-		return solution;
+	public SolutionEnergie getSolution() {
+		return null;
 	}
 	
 	public abstract void lancer();

@@ -74,7 +74,9 @@ public class RSEnergie extends RecuitSimule
 	}
 
 	/**
-	 * Sélectionne une solution dans le voisinage de la solution courante en modifiant un centre.
+	 * Sélectionne une solution dans le voisinage de la solution courante en modifiant l'activation d'un scénario et une décision.
+	 * Un scénario actif devient inactif et inversement. Il faut que la nouvelle configuration ait une probabilité supérieure à celle demandée.
+	 * Une décision passe de 0 à 1 ou de 1 à 0. Il faut que la nouvelle configuration respecte l'offre et la demande et les contraintes d'unicitées.
 	 * @return une solution voisine de la solution courante.
 	 */
 	protected Solution voisin()
