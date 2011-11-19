@@ -15,26 +15,18 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 
 	/** Variable contenant les données du problème */
 	protected DataBinaire donnees;
-	/** Le vecteur de solution du problème. La production de chaque centrale par période en MW */
-	protected double[] solution;
-	/** Le vecteur des couts de production de l'énergie en €/MW. */
+	/** Le vecteur de solution du problème */
+	protected SolutionEnergieBinaire solution;
+	/** Le vecteur de coûts */
 	protected double[] couts;
-	/** Pour chaque scénario il y a un vecteur d'énergie achetée par période en MW */
-	protected double[][] energieAchetee;
-	/** Pour chaque scénario il y a un vecteur d'énergie vendue par période en MW */
-	protected double[][] energieVendue;
-	/** Le prix du MW acheté */
-	protected double prixAchete;
-	/** Le prix du MW vendu */
-	protected double prixVente;
-	/** Pour chaque scénario il y a un vecteur des demandes par période */
-	protected double[][] demandes;
-	/** Pour chaque scénario il y a un vecteur, toujours le même, pour la partie droite des contraintes sur les productions */
-	protected double[] vecteurContraintesMembreDroit;
-	/** Pour chaque scénario il y a une matrice, toujours la même, pour la partie gauche des contraintes sur les productions */
-	protected int[][] matriceContraintesMembreGauche;
-	/** Pour chaque scénario il y a un vecteur de disponibilité par période (entre 0 et 1) */
-	protected double[][] matriceDisponibilite;
+	/** La matrice pour l'unicité du palier de production thermique par centrale */
+	protected int[][] h;
+	/** Le vecteur pour l'unicité de la trajectoire d'utilisation de l'eau */
+	protected int[] u;
+	/** Les probabilités des scénarios */
+	protected double[] probabilites;
+	/** La matrice qui pour chaque scénario et chaque période associe la liste des paliers de production et les trajectoires */
+	protected double[][][] productions;
 	
 	/**
 	 * Crée un nouveau PLEnergie.

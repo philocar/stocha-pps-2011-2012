@@ -12,6 +12,8 @@ public class DataBinaire {
 	private double[][] couts;
 	/** Tableau contenant les différents scénarios */
 	private ScenarioBinaire[] scenarios;
+	/** La probabilité voulue que les scénarios se déroulent */
+	double probabilite;
 	
 	/**
 	 * Construit une donnée en fonction d'un fichier
