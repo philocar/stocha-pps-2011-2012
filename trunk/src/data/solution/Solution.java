@@ -1,7 +1,7 @@
 package data.solution;
 
 /**
- * Classe contenant la solution d'un problème de programmation en nombre entier
+ * Classe contenant la solution d'un problème
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  * 

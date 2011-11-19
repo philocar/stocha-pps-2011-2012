@@ -1,9 +1,6 @@
 package manager.solveurs.RS;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import data.Data;
+import data.DataBinaire;
 import data.solution.Solution;
 import data.solution.SolutionEnergieBinaire;
 
@@ -14,7 +11,7 @@ import data.solution.SolutionEnergieBinaire;
 public class RSEnergie extends RecuitSimule
 {
 	/** Les données du problème */
-	private Data donnees;
+	private DataBinaire donnees;
 	/** Le nombre d'itérations par palier de température */
 	private int nbIterationsParPalier;
 	/** Le nombre d'itérations courant pour le palier de température courant.*/
@@ -27,7 +24,7 @@ public class RSEnergie extends RecuitSimule
 	 * @param facteurDecroissance le facteur de décroissance de la température du recuit.
 	 * @param temperatureFinale la température à atteindre pour arrêter le recuit.
 	 */
-	public RSEnergie(double facteurDecroissance, Data donnees, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation)
+	public RSEnergie(double facteurDecroissance, DataBinaire donnees, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation)
 	{
 		super(facteurDecroissance, tauxAcceptation);
 		solutionCourante = new SolutionEnergieBinaire(donnees);

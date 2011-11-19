@@ -1,24 +1,21 @@
 package data.solution;
 
-import data.Data;
-
 /**
- * Une solution du problème de management de la production d'énergie en binaire.
+ * Une solution du problème de management de la production d'énergie en binaire mais aussi pour sa relaxation.
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
 public class SolutionEnergieBinaire extends Solution {
 
 	/** Le vecteur de décision */
-	boolean[] y;
+	double[] y;
 	/** Le vecteur d'activation des scénarios */
-	boolean[] z;
+	double[] z;
 	
 	/**
-	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie en fonction des données
-	 * @param data
+	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie sous sa forme binaire et sa relaxation
 	 */
-	public SolutionEnergieBinaire(Data data)
+	public SolutionEnergieBinaire()
 	{
 		
 	}
