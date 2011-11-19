@@ -10,14 +10,14 @@ import data.DataBinaire;
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
-public class CplexEnergie extends PLEnergie 
+public class CplexEnergieRecours extends PLEnergieRecours 
 {
 	/**
 	 * Crée un nouveau CPlexEnergie
 	 * 
 	 * @param donnees les données du problème
 	 */
-	public CplexEnergie(DataBinaire donnees)
+	public CplexEnergieRecours(DataBinaire donnees)
 	{
 		super(donnees);
 	}

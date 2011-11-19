@@ -19,6 +19,8 @@ public abstract class DataBase {
 	protected double volumeMax;
 	/** Le turbinage */
 	protected double turbinage;
+	/** Les apports en eau pour chaque période */
+	private double[] apports;
 	
 	/**
 	 * Retourne les coûts
@@ -87,5 +89,21 @@ public abstract class DataBase {
 	public double getProductionMaxCentrale(int centrale) 
 	{
 		return productionsMax[centrale];
+	}
+
+	/**
+	 * Retourne les apports
+	 * @return les apports
+	 */
+	public double[] getApports() {
+		return apports;
+	}
+	
+	/**
+	 * Retourne les apports d'une période
+	 * @return les apports d'une période
+	 */
+	public double getApportsPeriode(int periode) {
+		return apports[periode];
 	}
 }

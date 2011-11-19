@@ -8,9 +8,7 @@ import data.DataBinaire;
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
 public class Manager 
-{	
-	/** Les données du problème */
-	private static DataBinaire donnees;
+{
 	/** Le solveur utilisé pour résourdre le problème */
 	private static Solveur solveur;
 	

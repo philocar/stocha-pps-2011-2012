@@ -10,8 +10,6 @@ public class ScenarioRecours {
 	private double[][] facteursDisponibilite;
 	/** Le vecteur de demandes. Pour chaque période il y a une demande  */
 	private double[] demandes;
-	/** Les apports en eau pour chaque période */
-	private double[] apports;
 	/** La probabilité que le scénario se déroule */
 	private double probabilite;
 	
@@ -65,21 +63,5 @@ public class ScenarioRecours {
 	public double getDemandePeriode(int periode)
 	{
 		return demandes[periode];
-	}
-
-	/**
-	 * Retourne les apports
-	 * @return les apports
-	 */
-	public double[] getApports() {
-		return apports;
-	}
-	
-	/**
-	 * Retourne les apports d'une période
-	 * @return les apports d'une période
-	 */
-	public double getApportsPeriode(int periode) {
-		return apports[periode];
 	}
 }

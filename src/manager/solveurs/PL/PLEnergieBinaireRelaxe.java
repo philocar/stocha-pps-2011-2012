@@ -3,7 +3,6 @@ package manager.solveurs.PL;
 import manager.solveurs.Solveur;
 
 import data.DataBinaire;
-import data.solution.SolutionEnergieRecours;
 import data.solution.SolutionEnergieBinaire;
 
 /**
@@ -12,7 +11,7 @@ import data.solution.SolutionEnergieBinaire;
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  * 
  */
-public abstract class PLEnergie implements Solveur {
+public abstract class PLEnergieBinaireRelaxe implements Solveur {
 
 	/** Variable contenant les données du problème */
 	protected DataBinaire donnees;
@@ -41,9 +40,9 @@ public abstract class PLEnergie implements Solveur {
 	 * Crée un nouveau PLEnergie.
 	 * @param donnees les données du problème
 	 */
-	public PLEnergie(DataBinaire donnees)
+	public PLEnergieBinaireRelaxe(DataBinaire donnees)
 	{
-		
+		genererPL();
 	}
 
 	/**
@@ -59,7 +58,7 @@ public abstract class PLEnergie implements Solveur {
 	 * Renvoie la solution calculée.
 	 * @return la solution calculée
 	 */
-	public SolutionEnergieRecours getSolution() {
+	public SolutionEnergieBinaire getSolution() {
 		return null;
 	}
 	
