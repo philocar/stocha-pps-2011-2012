@@ -1,9 +1,9 @@
 package manager;
 
-import data.Data;
+import data.DataBinaire;
 
 /**
- * Classe permettant la création d'un fichier exécutable par Matlab pour la résolution probabiliste du problème.
+ * Classe permettant la création d'un fichier exécutable par Matlab pour la résolution du problème déterministe dérivé du problème probabiliste.
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  *
@@ -15,7 +15,7 @@ public class PreparationMatlab {
 	 * @param donnees Les données du problème
 	 * @param fichier Le fichier d'écriture
 	 */
-	public static void generer(Data donnees, String fichier){
+	public static void generer(DataBinaire donnees, String fichier){
 		
 	}
 }

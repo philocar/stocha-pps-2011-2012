@@ -1,7 +1,7 @@
 package manager;
 
 import manager.solveurs.Solveur;
-import data.Data;
+import data.DataBinaire;
 
 /**
  * Classe principale gérant la configuration des solveurs et le lien avec l'interface.
@@ -10,7 +10,7 @@ import data.Data;
 public class Manager 
 {	
 	/** Les données du problème */
-	static Data donnees;
+	static DataBinaire donnees;
 	/** Le solveur utilisé pour résourdre le problème */
 	static Solveur solveur;
 	

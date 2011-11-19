@@ -1,19 +1,19 @@
 package data.solution;
 
 /**
- * Une solution du problème de management de la production d'énergie.
+ * Une solution du problème de management de la production d'énergie sous forme de recours avec scénarios.
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
-public class SolutionEnergie extends Solution {
+public class SolutionEnergieRecours extends Solution {
 
 	/** Le vecteur de production */
-	boolean[] x;
+	double[] y;
 	
 	/**
 	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie
 	 */
-	public SolutionEnergie()
+	public SolutionEnergieRecours()
 	{
 		
 	}

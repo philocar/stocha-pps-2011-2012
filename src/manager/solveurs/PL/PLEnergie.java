@@ -2,8 +2,8 @@ package manager.solveurs.PL;
 
 import manager.solveurs.Solveur;
 
-import data.Data;
-import data.solution.SolutionEnergie;
+import data.DataBinaire;
+import data.solution.SolutionEnergieRecours;
 import data.solution.SolutionEnergieBinaire;
 
 /**
@@ -15,7 +15,7 @@ import data.solution.SolutionEnergieBinaire;
 public abstract class PLEnergie implements Solveur {
 
 	/** Variable contenant les données du problème */
-	protected Data donnees;
+	protected DataBinaire donnees;
 	/** Le vecteur de solution du problème. La production de chaque centrale par période en MW */
 	protected double[] solution;
 	/** Le vecteur des couts de production de l'énergie en €/MW. */
@@ -41,7 +41,7 @@ public abstract class PLEnergie implements Solveur {
 	 * Crée un nouveau PLEnergie.
 	 * @param donnees les données du problème
 	 */
-	public PLEnergie(Data donnees)
+	public PLEnergie(DataBinaire donnees)
 	{
 		
 	}
@@ -59,7 +59,7 @@ public abstract class PLEnergie implements Solveur {
 	 * Renvoie la solution calculée.
 	 * @return la solution calculée
 	 */
-	public SolutionEnergie getSolution() {
+	public SolutionEnergieRecours getSolution() {
 		return null;
 	}
 	
