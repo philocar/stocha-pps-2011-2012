@@ -10,9 +10,9 @@ import data.DataBinaire;
 public class Manager 
 {	
 	/** Les données du problème */
-	static DataBinaire donnees;
+	private static DataBinaire donnees;
 	/** Le solveur utilisé pour résourdre le problème */
-	static Solveur solveur;
+	private static Solveur solveur;
 	
 	/**
 	 * Fonction principale gérant le fonctionnement du programme.

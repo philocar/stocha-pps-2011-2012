@@ -7,11 +7,15 @@ package data.solution;
  */
 public class SolutionEnergieRecours extends Solution {
 
-	/** Le vecteur de production */
-	double[] y;
+	/** Le vecteur de productions */
+	private double[] x;
+	/** La matrice contenant l'énergie achetée. Pour chaque période et chaque scénario il y a de l'énergie achetée */
+	private double[][] yAchat;
+	/** La matrice contenant l'énergie vendue. Pour chaque période et chaque scénario il y a de l'énergie vendue */
+	private double[][] yVente;
 	
 	/**
-	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie
+	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie avec recours
 	 */
 	public SolutionEnergieRecours()
 	{

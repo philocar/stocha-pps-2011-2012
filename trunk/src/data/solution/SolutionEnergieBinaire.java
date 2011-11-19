@@ -1,5 +1,7 @@
 package data.solution;
 
+import data.DataBinaire;
+
 /**
  * Une solution du problème de management de la production d'énergie en binaire mais aussi pour sa relaxation.
  * 
@@ -8,14 +10,17 @@ package data.solution;
 public class SolutionEnergieBinaire extends Solution {
 
 	/** Le vecteur de décision */
-	double[] y;
+	private double[] y;
 	/** Le vecteur d'activation des scénarios */
-	double[] z;
+	private double[] z;
+	/** Les données du problème */
+	private DataBinaire données;
 	
 	/**
 	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie sous sa forme binaire et sa relaxation
+	 * @param donnees les donnees du problème
 	 */
-	public SolutionEnergieBinaire()
+	public SolutionEnergieBinaire(DataBinaire donnees)
 	{
 		
 	}

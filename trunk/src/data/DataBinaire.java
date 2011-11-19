@@ -2,16 +2,16 @@ package data;
 
 
 /**
- * Cette classe contient les informations concernant une instance du problèmesous la forme binaire.
+ * Cette classe contient les informations concernant une instance du problème sous la forme binaire et sa relaxation.
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  *
  */
 public class DataBinaire {
 	
 	/** Le vecteur de coûts. Pour chaque période et chaque centrale thermique il y a un cout de production en €/MW associé et pour la centrale hydrolique un cout d'utilisation de l'eau */
-	double[][] couts;
+	private double[][] couts;
 	/** Tableau contenant les différents scénarios */
-	ScenarioBinaire[] scenarios;
+	private ScenarioBinaire[] scenarios;
 	
 	/**
 	 * Construit une donnée en fonction d'un fichier
