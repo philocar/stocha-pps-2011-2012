@@ -1,7 +1,6 @@
 package manager;
 
 import manager.solveurs.Solveur;
-import data.DataBinaire;
 
 /**
  * Classe principale gérant la configuration des solveurs et le lien avec l'interface.

@@ -1,9 +1,6 @@
 package manager.solveurs.PL;
 
-import ilog.concert.IloException;
-import ilog.concert.IloIntVar;
-import ilog.cplex.IloCplex;
-import data.DataBinaire;
+import data.DataRecours;
 
 /**
  * Cette classe permet de résoudre une instance du problème de management de la production d'énergie à l'aide de CPLEX
@@ -17,7 +14,7 @@ public class CplexEnergieRecours extends PLEnergieRecours
 	 * 
 	 * @param donnees les données du problème
 	 */
-	public CplexEnergieRecours(DataBinaire donnees)
+	public CplexEnergieRecours(DataRecours donnees)
 	{
 		super(donnees);
 	}
@@ -28,6 +25,7 @@ public class CplexEnergieRecours extends PLEnergieRecours
 	 */
 	public void lancer()
 	{
-		
+		// min couts * x + probabilitesPrix * y
+		// une contrainte par scénario et par période pour l'offre et la demande
 	}
 }

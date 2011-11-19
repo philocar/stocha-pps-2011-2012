@@ -2,7 +2,6 @@ package manager.solveurs.PL;
 
 import manager.solveurs.Solveur;
 
-import data.DataBinaire;
 import data.DataRecours;
 import data.solution.SolutionEnergieRecours;
 
@@ -18,16 +17,18 @@ public abstract class PLEnergieRecours implements Solveur {
 	protected DataRecours donnees;
 	/** La solution */
 	protected SolutionEnergieRecours solution;
-	/** Pour chaque scénario il y a un vecteur, toujours le même, pour la partie droite des contraintes sur les productions */
-	protected double[] vecteurContraintesMembreDroit;
-	/** Pour chaque scénario il y a une matrice, toujours la même, pour la partie gauche des contraintes sur les productions */
-	protected int[][] matriceContraintesMembreGauche;
+	/** Le vecteur contenant les prix par période multiplié par la probabilité de chaque scénarios */
+	protected double[] probabilitesPrix;
+	/** Le vecteur de coûts par période et par centrale */
+	protected double[] couts;
+	/** La matrice qui pour chaque scénario et chaque période associe la liste des facteurs de disponibilité */
+	protected double[][][] facteursDisponibilite;
 	
 	/**
 	 * Crée un nouveau PLEnergie.
 	 * @param donnees les données du problème
 	 */
-	public PLEnergieRecours(DataBinaire donnees)
+	public PLEnergieRecours(DataRecours donnees)
 	{
 		genererPL();
 	}

@@ -1,8 +1,5 @@
 package manager.solveurs.PL;
 
-import ilog.concert.IloException;
-import ilog.concert.IloIntVar;
-import ilog.cplex.IloCplex;
 import data.DataBinaire;
 
 /**
@@ -10,7 +7,7 @@ import data.DataBinaire;
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
-public class CplexEnergieBinaireRelaxe extends PLEnergieRecours 
+public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe
 {
 	/**
 	 * Crée un nouveau CPlexEnergie
