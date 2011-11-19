@@ -1,16 +1,19 @@
 package userInterface;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -18,36 +21,31 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+
 
 public class MainFenetre extends JFrame {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel labelCharbon;
-	private JLabel labelJour;
-	private JTextField fpChar;
-	private JLabel labelNucleaire;
-	private JTextField fpNucleaire;
-	private JLabel labelFioul;
-	private JTextField fpFioul;
-	private JLabel labelGaz;
-	private JTextField fpGaz;
-	private JLabel labelMinReservoir;
-	private JTextField maxRes;
-	private JTextField initRes;
+	
+	private JLabel methodeText;
+	private JComboBox choixMethode;
+	private JMenuItem ouvrir;
 	private JPanel panel;
-	private JTextField minRes;
-	private JLabel labelMaxReservoir;
-	private JLabel labelInitReservoir;
-	private JTextField nbJours;
-	private JButton scenariiReservoir;
-	private JButton scenariiCentrales;
+	private MainFenetre me;
+	private JLabel fileName;
 
+	private ActionListener charger;
+
+	private Parametres params;
+
+	private JButton enregistrer;
+	
 	public MainFenetre() {
 		super();
-
+		params = new Parametres();
+		me = this;
 		build();// On initialise notre fenêtre
 	}
 
@@ -56,8 +54,26 @@ public class MainFenetre extends JFrame {
 
 		JMenu menu1 = new JMenu("Menu");
 
-		JMenuItem suivant = new JMenuItem(new AjoutScenarii(this, "Suivant"));
+		JMenuItem suivant = new JMenuItem(new Optimise(this, "Suivant", params));
 		menu1.add(suivant);
+
+		//Création du bouton de chargement de fichier
+		ouvrir = new JMenuItem("Charger fichier");
+		charger = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//L'affichage présent sur la fenêtre du programme est supprimé
+		//		me.getContentPane().removeAll();
+			//	me.repaint();
+				me.validate();
+				
+				ZDialogCharger zd = new ZDialogCharger(me, "Fichier de données", true);
+				zd.setVisible(true);
+			}
+		};
+		ouvrir.addActionListener(charger);
+		//Le bouton de chargement de fichier est placé dans la barre de menu dans l'onglet "fichier"
+		menu1.add(ouvrir);
+		menu1.addSeparator();
 
 		JMenuItem quitter = new JMenuItem(new QuitterAction("Quitter"));
 		menu1.add(quitter);
@@ -95,7 +111,7 @@ public class MainFenetre extends JFrame {
 		setJMenuBar(menuBar);
 
 		setTitle("Calculatrice"); // On donne un titre à l'application
-		setSize(800, 600); // On donne une taille à notre fenêtre
+		setSize(600, 300); // On donne une taille à notre fenêtre
 		setLocationRelativeTo(null); // On centre la fenêtre sur l'écran
 		setResizable(false); // On interdit la redimensionnement de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // On dit à
@@ -107,150 +123,75 @@ public class MainFenetre extends JFrame {
 
 	private JPanel buildContentPane() {
 		panel = new JPanel();
-		panel.setLayout(new FlowLayout());
 		panel.setBackground(Color.white);
 
-		GridLayout layout = new GridLayout(14, 2);
+		
+		GridLayout layout = new GridLayout(3, 1);
+		layout.setColumns(2);
+		layout.setVgap(8);
 		panel.setLayout(layout);
-		labelJour = new JLabel("nombre de jours :");
-		panel.add(labelJour);
-		nbJours = new JTextField();
-		nbJours.setColumns(4);
-		panel.add(nbJours);
-		panel.add(new JLabel());
-		panel.add(new JLabel());
-
-		labelCharbon = new JLabel("centrale à charbon puissance (MW) :");
-		panel.add(labelCharbon);
-		fpChar = new JTextField();
-		fpChar.setColumns(4);
-		panel.add(fpChar);
 		
-		labelNucleaire = new JLabel(
-				"centrale nucléaire puissance (MW) :");
-		panel.add(labelNucleaire);
-		fpNucleaire = new JTextField();
-		fpNucleaire.setColumns(4);
-		panel.add(fpNucleaire);
+		methodeText = new JLabel("methode de résolution : ");
+		Object[] listeMethode = new Object[]{"modèle probabiliste", "modèle avec recours", "recuit simulé"};
+		choixMethode = new JComboBox(listeMethode);
+		JPanel configurePanel = new JPanel();
+		GridLayout configureLayout = new GridLayout(2,1);
+		configurePanel.setLayout(configureLayout);
+		configurePanel.setBackground(Color.white);
+		panel.add(configurePanel);
+		JPanel methodePanel = new JPanel();
+		methodePanel.setBackground(Color.white);
+		methodePanel.add(methodeText);
+		methodePanel.add(choixMethode);
+		configurePanel.add(methodePanel);
+		JPanel fichierPanel = new JPanel();
+		fichierPanel.setBackground(Color.white);
+		panel.add(fichierPanel);
+		JButton fileButton = new JButton("charger fichier");
+		fileButton.addActionListener(charger);
+		fichierPanel.add(fileButton);
+		fileName = new JLabel();
+		fichierPanel.add(fileName);
+		
+		JButton suivant = new JButton(new Optimise(this,
+				"suivant", params));
+		JPanel suite = new JPanel();
+		suite.setBackground(Color.white);
+		suite.add(suivant);
+		panel.add(suite, BorderLayout.SOUTH);
+		
+		enregistrer = new JButton("enregister le résultat");
+		enregistrer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ZDialogSave(me,"enregistrer le résultat", params).setVisible(true);
+			}
+		});
+	//	enregistrer.setVisible(false);
+		
+		suite = new JPanel();
+		suite.setBackground(Color.white);
+		suite.add(enregistrer);
+		panel.add(suite);
 
-		labelFioul = new JLabel("centrale au fioul puissance (MW) :");
-		panel.add(labelFioul);
-		fpFioul = new JTextField();
-		fpFioul.setColumns(4);
-		panel.add(fpFioul);
-
-		labelGaz = new JLabel("centrale au gaz puissance (MW) :");
-		panel.add(labelGaz);
-		fpGaz = new JTextField();
-		fpGaz.setColumns(4);
-		panel.add(fpGaz);
-
-		panel.add(new JLabel());
-		panel.add(new JLabel());
-		labelMinReservoir = new JLabel(
-				"reservoir hydraulique volume minimal :");
-		panel.add(labelMinReservoir);
-		minRes = new JTextField();
-		minRes.setColumns(4);
-		panel.add(minRes);
-		labelMaxReservoir = new JLabel("volume maximal :");
-		panel.add(labelMaxReservoir);
-		maxRes = new JTextField();
-		maxRes.setColumns(4);
-		panel.add(maxRes);
-		labelInitReservoir = new JLabel("volume initial :");
-		panel.add(labelInitReservoir);
-		initRes = new JTextField();
-		initRes.setColumns(4);
-		panel.add(initRes);
-
-
-		panel.add(new JLabel());
-		panel.add(new JLabel());
-		scenariiCentrales = new JButton("scenarii des centrales");
-		scenariiReservoir = new JButton("scenarii du réservoir");
-		panel.add(scenariiReservoir);
-		panel.add(scenariiCentrales);
-		scenariiCentrales.setVisible(false);
-		scenariiReservoir.setVisible(false);
-		JButton suivant = new JButton(new AjoutScenarii(this,
-				"suivant"));
-		panel.add(suivant);
+		JLabel result = new JLabel("cout optimal : 98797");
+	//	result.setVisible(false);
+		suite = new JPanel();
+		suite.setBackground(Color.white);
+		suite.add(result);
+		panel.add(suite);
 
 		return panel;
 	}
 
-
-	public JButton getScenariiReservoir() {
-		return scenariiReservoir;
+	public JComboBox getChoixMethode() {
+		return choixMethode;
 	}
 
-	public JButton getScenariiCentrales() {
-		return scenariiCentrales;
-	}
-
-	public void effaceOption1(){
-		remove(labelCharbon);
-		remove(labelJour);
-		remove(fpChar);
-		remove(labelNucleaire);
-		remove(fpNucleaire);
-		remove(labelFioul);
-		remove(fpFioul);
-		remove(labelGaz);
-		remove(fpGaz);
-		remove(labelMinReservoir);
-		remove(maxRes);
-		remove(minRes);
-		remove(initRes);
-		remove(labelMaxReservoir);
-		remove(labelInitReservoir);
-		remove(nbJours);
-		
-		repaint();
-	}
-
-	public JTextField getNbJours() {
-		return nbJours;
-	}
-
-	public JTextField getMinRes() {
-		return minRes;
+	// lire les données depuis un fichier
+	public void chargerDonnees(String file) throws FileNotFoundException{
+		fileName.setText(file);
 	}
 
 
-	public JPanel getPanel() {
-		return panel;
-	}
-
-	public JTextField getMaxRes() {
-		return maxRes;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	public JTextField getFpChar() {
-		return fpChar;
-	}
-
-	public JTextField getFpNucleaire() {
-		return fpNucleaire;
-	}
-
-	public JTextField getFpFioul() {
-		return fpFioul;
-	}
-
-	public JTextField getFpGaz() {
-		return fpGaz;
-	}
-
-	public JTextField getInitRes() {
-		return initRes;
-	}
-
-	public JLabel getLabel() {
-		return labelCharbon;
-	}
+	
 }
