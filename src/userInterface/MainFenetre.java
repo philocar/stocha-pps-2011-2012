@@ -1,6 +1,5 @@
 package userInterface;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
@@ -22,6 +21,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import data.solution.Solution;
+
 
 public class MainFenetre extends JFrame {
 	/**
@@ -41,6 +42,8 @@ public class MainFenetre extends JFrame {
 	private Parametres params;
 
 	private JButton enregistrer;
+
+	private JButton resultat;
 	
 	public MainFenetre() {
 		super();
@@ -126,13 +129,13 @@ public class MainFenetre extends JFrame {
 		panel.setBackground(Color.white);
 
 		
-		GridLayout layout = new GridLayout(3, 1);
-		layout.setColumns(2);
+		GridLayout layout = new GridLayout(2, 3);
 		layout.setVgap(8);
 		panel.setLayout(layout);
 		
 		methodeText = new JLabel("methode de résolution : ");
-		Object[] listeMethode = new Object[]{"modèle probabiliste", "modèle avec recours", "recuit simulé"};
+		Object[] listeMethode = new Object[]{"modèle probabiliste", "modèle avec recours", 
+				"recuit simulé", "relaxation du binaire"};
 		choixMethode = new JComboBox(listeMethode);
 		JPanel configurePanel = new JPanel();
 		GridLayout configureLayout = new GridLayout(2,1);
@@ -153,12 +156,7 @@ public class MainFenetre extends JFrame {
 		fileName = new JLabel();
 		fichierPanel.add(fileName);
 		
-		JButton suivant = new JButton(new Optimise(this,
-				"suivant", params));
 		JPanel suite = new JPanel();
-		suite.setBackground(Color.white);
-		suite.add(suivant);
-		panel.add(suite, BorderLayout.SOUTH);
 		
 		enregistrer = new JButton("enregister le résultat");
 		enregistrer.addActionListener(new ActionListener() {
@@ -173,13 +171,33 @@ public class MainFenetre extends JFrame {
 		suite.add(enregistrer);
 		panel.add(suite);
 
-		JLabel result = new JLabel("cout optimal : 98797");
 	//	result.setVisible(false);
 		suite = new JPanel();
 		suite.setBackground(Color.white);
-		suite.add(result);
+		FlowLayout l = new FlowLayout();
+		l.setHgap(30);
+		suite.setLayout(l);
 		panel.add(suite);
+		Solution s = null;
+		resultat = new JButton(new AfficheResultat(this,
+				"voir le résultat", s));
+		suite.add(resultat);
 
+		suite = new JPanel();
+		suite.setBackground(Color.white);
+		JButton suivant = new JButton(new Optimise(this,
+				"suivant", params));
+		suite.setBackground(Color.white);
+		suite.add(suivant);
+		panel.add(suite);
+		
+
+		suite = new JPanel();
+		suite.setBackground(Color.white);
+		JLabel cout = new JLabel("cout optimal : 98797");
+		suite.add(cout);
+		panel.add(suite);
+		
 		return panel;
 	}
 

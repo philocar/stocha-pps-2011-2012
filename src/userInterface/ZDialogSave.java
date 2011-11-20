@@ -100,11 +100,9 @@ public class ZDialogSave extends JDialog {
 					f = new File(new String("Data/")+fichier);
 					fw = new FileWriter(f);
 					fw.write("valeur de la fonction objectif : "+valFonctionObjectif+"\n");
-					
-					
 					fw.close();
-					JOptionPane.showMessageDialog(null, "La sauvegarde des résultats a bien été faite dans "+fichier, "Infos", JOptionPane.INFORMATION_MESSAGE);
 					setVisible(false);
+					JOptionPane.showMessageDialog(null, "La sauvegarde des résultats a bien été faite dans "+fichier, "Infos", JOptionPane.INFORMATION_MESSAGE);
 				} catch (IOException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);

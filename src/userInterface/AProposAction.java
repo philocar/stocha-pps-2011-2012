@@ -19,9 +19,9 @@ public class AProposAction extends AbstractAction {
 	}
 	
 	public void actionPerformed(ActionEvent e) { 
-		JOptionPane.showMessageDialog(fenetre, "Ce logiciel a été conçu dans le cadre d'un projet\n" +
+		JOptionPane.showMessageDialog(fenetre, "Ce logiciel a été conçu dans le cadre d'un projet" +
 				" de programmation stochastique \n en 5e année de Polytech'Paris-Sud." +
-				"\n Concepteurs du logiciel : \nFabien BINI, Nathanaël MASRI et Nicolas Poirier" +
-				"\n Responsable du projet : Abdel LISSER");
+				"\n\n Concepteurs du logiciel : Fabien BINI, Nathanaël MASRI et Nicolas Poirier" +
+				"\n Responsables du projet : Abdel LISSER et Riadh ZORGATI");
 	} 
 }
