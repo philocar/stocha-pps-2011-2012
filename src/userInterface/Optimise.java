@@ -28,6 +28,7 @@ public class Optimise extends AbstractAction {
 				zd.setVisible(true);
         		
         	}
+        	else if(methodeName.equals("modèle probabiliste"));
         	
         	
         	
