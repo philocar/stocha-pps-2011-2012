@@ -28,7 +28,10 @@ public class Optimise extends AbstractAction {
 				zd.setVisible(true);
         		
         	}
-        	else if(methodeName.equals("modèle probabiliste"));
+        	else if(methodeName.equals("modèle probabiliste")){
+        		ZDialogParamDeter zd = new ZDialogParamDeter(fenetre, "Choix des paramètres", true, params);
+				zd.setVisible(true);
+        	}
         	
         	
         	

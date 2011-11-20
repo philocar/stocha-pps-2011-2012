@@ -43,7 +43,6 @@ public class ZDialogParamRS extends JDialog {
 		this.setSize(350, 260);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
-		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		this.initComponent();
 		this.params = p;
 	}
