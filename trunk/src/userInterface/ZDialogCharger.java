@@ -11,6 +11,7 @@ import java.util.IllegalFormatException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,10 +41,9 @@ public class ZDialogCharger extends JDialog {
 	 */
 	public ZDialogCharger(MainFenetre parent, String title, boolean modal){
 		super(parent, title, modal);
-		this.setSize(300, 100);
+		this.setSize(400, 180);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
-		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		this.initComponent();
 		this.parent = parent;
 		
@@ -56,10 +56,8 @@ public class ZDialogCharger extends JDialog {
 
 		JPanel panCharger = new JPanel();
 		panCharger.setBackground(Color.white);
-		panCharger.setPreferredSize(new Dimension(300, 40));
-		charger = new JTextField();
-		charger.setPreferredSize(new Dimension(150, 25));
-		labCharger = new JLabel("Chemin d'accès :");
+		charger = new JTextField(25);
+		labCharger = new JLabel("fichier :");
 		panCharger.add(labCharger);
 		panCharger.add(charger);
 		
@@ -67,19 +65,38 @@ public class ZDialogCharger extends JDialog {
 		JPanel content = new JPanel();
 		content.setBackground(Color.white);
 		content.add(panCharger);
+		JButton explorer = new JButton("explorer");
+		content.add(explorer);
 		
 		JPanel control = new JPanel();
 		control.setBackground(Color.white);
 		JButton chargerBouton = new JButton("Charger");
 		JButton cancelBouton = new JButton("Annuler");
 		
+		explorer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser chooser = new JFileChooser();
+
+				int returnVal = chooser.showOpenDialog(parent);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					charger.setText(chooser.getSelectedFile().getAbsolutePath());
+				}
+
+			}
+		});
+		
 		chargerBouton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					fileName = "Data/"+charger.getText(); 
+					fileName = charger.getText(); 
 					File file = new File(fileName);
-			       
-					parent.chargerDonnees(fileName);
+					if ( !file.exists() ) {
+						JOptionPane.showMessageDialog(null, "Le fichier est introuvable", "Erreur", JOptionPane.ERROR_MESSAGE);
+					}
+					else
+						parent.chargerDonnees(fileName);
 					setVisible(false);
 					
 				} catch (IllegalFormatException e) {
