@@ -171,7 +171,6 @@ public class MainFenetre extends JFrame {
 		suite.add(enregistrer);
 		panel.add(suite);
 
-	//	result.setVisible(false);
 		suite = new JPanel();
 		suite.setBackground(Color.white);
 		FlowLayout l = new FlowLayout();
@@ -181,6 +180,7 @@ public class MainFenetre extends JFrame {
 		Solution s = null;
 		resultat = new JButton(new AfficheResultat(this,
 				"voir le résultat", s));
+	//	resultat.setVisible(false);
 		suite.add(resultat);
 
 		suite = new JPanel();
@@ -194,7 +194,7 @@ public class MainFenetre extends JFrame {
 
 		suite = new JPanel();
 		suite.setBackground(Color.white);
-		JLabel cout = new JLabel("cout optimal : 98797");
+		JLabel cout = new JLabel("coût optimal : 89 083");
 		suite.add(cout);
 		panel.add(suite);
 		
