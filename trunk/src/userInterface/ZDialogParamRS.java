@@ -37,7 +37,7 @@ public class ZDialogParamRS extends JDialog {
 	 * @param title
 	 * @param modal
 	 */
-	public ZDialogParamRS(JFrame parent, String title, boolean modal,
+	public ZDialogParamRS(MainFenetre parent, String title, boolean modal,
 			Parametres p) {
 		super(parent, title, modal);
 		this.setSize(350, 260);
@@ -45,6 +45,8 @@ public class ZDialogParamRS extends JDialog {
 		this.setResizable(false);
 		this.initComponent();
 		this.params = p;
+		parent.setEtat(MainFenetre.State.FICHIER_CHOISI);
+		parent.updateVisibility();
 	}
 
 	/**
