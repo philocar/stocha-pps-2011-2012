@@ -28,6 +28,14 @@ public class MainFenetre extends JFrame {
 	/**
 	 * 
 	 */
+	
+	public enum State{
+		INITIAL, FICHIER_CHOISI, RESULTAT_CALCULE
+	}
+	
+	
+	
+	
 	private static final long serialVersionUID = 1L;
 	
 	private JLabel methodeText;
@@ -36,6 +44,7 @@ public class MainFenetre extends JFrame {
 	private JPanel panel;
 	private MainFenetre me;
 	private JLabel fileName;
+	private State etat = State.INITIAL;
 
 	private ActionListener charger;
 
@@ -44,9 +53,14 @@ public class MainFenetre extends JFrame {
 	private JButton enregistrer;
 
 	private JButton resultat;
+
+	private JLabel cout;
+
+	private JButton suivant;
 	
 	public MainFenetre() {
 		super();
+		etat = State.INITIAL;
 		params = new Parametres();
 		me = this;
 		build();// On initialise notre fenêtre
@@ -64,10 +78,6 @@ public class MainFenetre extends JFrame {
 		ouvrir = new JMenuItem("Charger fichier");
 		charger = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//L'affichage présent sur la fenêtre du programme est supprimé
-		//		me.getContentPane().removeAll();
-			//	me.repaint();
-				me.validate();
 				
 				ZDialogCharger zd = new ZDialogCharger(me, "Fichier de données", true);
 				zd.setVisible(true);
@@ -185,7 +195,7 @@ public class MainFenetre extends JFrame {
 
 		suite = new JPanel();
 		suite.setBackground(Color.white);
-		JButton suivant = new JButton(new Optimise(this,
+		suivant = new JButton(new Optimise(this,
 				"suivant", params));
 		suite.setBackground(Color.white);
 		suite.add(suivant);
@@ -194,11 +204,43 @@ public class MainFenetre extends JFrame {
 
 		suite = new JPanel();
 		suite.setBackground(Color.white);
-		JLabel cout = new JLabel("coût optimal : 89 083");
+		cout = new JLabel("coût optimal : 89 083");
 		suite.add(cout);
 		panel.add(suite);
 		
+		updateVisibility();
+		
 		return panel;
+	}
+
+	public void updateVisibility() {
+		
+		switch(etat){
+		
+
+		case FICHIER_CHOISI : 
+				suivant.setVisible(true);
+				resultat.setVisible(false);
+				enregistrer.setVisible(false);
+				cout.setVisible(false);
+				break;
+				
+		case RESULTAT_CALCULE :
+			resultat.setVisible(true);
+			enregistrer.setVisible(true);
+			cout.setVisible(true);
+			break;
+		
+				
+		case INITIAL : 
+			suivant.setVisible(false);
+			resultat.setVisible(false);
+			enregistrer.setVisible(false);
+			cout.setVisible(false);
+			break;
+		
+		}
+		
 	}
 
 	public JComboBox getChoixMethode() {
@@ -208,6 +250,16 @@ public class MainFenetre extends JFrame {
 	// lire les données depuis un fichier
 	public void chargerDonnees(String file) throws FileNotFoundException{
 		fileName.setText(file);
+		etat = State.FICHIER_CHOISI;
+		suivant.setVisible(true);
+	}
+
+	public State getEtat() {
+		return etat;
+	}
+
+	public void setEtat(State etat) {
+		this.etat = etat;
 	}
 
 

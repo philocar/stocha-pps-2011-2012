@@ -32,7 +32,7 @@ public class ZDialogParamDeter extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JTextField tempF, taux, dec, fichier;
 	private Parametres params = new Parametres();
-	private JFrame parent;
+	private MainFenetre parent;
 
 	/**
 	 * Constructeur
@@ -41,7 +41,7 @@ public class ZDialogParamDeter extends JDialog {
 	 * @param title
 	 * @param modal
 	 */
-	public ZDialogParamDeter(JFrame parent, String title, boolean modal,
+	public ZDialogParamDeter(MainFenetre parent, String title, boolean modal,
 			Parametres p) {
 		super(parent, title, modal);
 		this.parent = parent;
@@ -50,6 +50,8 @@ public class ZDialogParamDeter extends JDialog {
 		this.setResizable(false);
 		this.initComponent();
 		this.params = p;
+		parent.setEtat(MainFenetre.State.FICHIER_CHOISI);
+		parent.updateVisibility();
 	}
 
 	/**
@@ -99,12 +101,23 @@ public class ZDialogParamDeter extends JDialog {
 		// l'utilisateur
 		okBouton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(
-		                parent,
-		                "Le fichier a bien été sauvegardé");
 
-				setVisible(false);
+				try {
+					String fileName = fichier.getText();
+					File file = new File(fileName);
+					if (!file.exists()) {
+						JOptionPane.showMessageDialog(null,
+								"Le fichier est introuvable", "Erreur",
+								JOptionPane.ERROR_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(parent,
+								"Le fichier a bien été sauvegardé");
+						setVisible(false);
+					}
 
+				} catch (IllegalFormatException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 

@@ -22,6 +22,9 @@ public class Optimise extends AbstractAction {
         }
         
         public void actionPerformed(ActionEvent e) { 
+        	
+
+            fenetre.setEtat(MainFenetre.State.FICHIER_CHOISI);
         	String methodeName = (String) fenetre.getChoixMethode().getSelectedItem();
         	if(methodeName.equals("recuit simulé")){
         		ZDialogParamRS zd = new ZDialogParamRS(fenetre, "Choix des paramètres", true, params);
@@ -32,8 +35,11 @@ public class Optimise extends AbstractAction {
         		ZDialogParamDeter zd = new ZDialogParamDeter(fenetre, "Choix des paramètres", true, params);
 				zd.setVisible(true);
         	}
-        	
-        	
+        	else{
+        		fenetre.setEtat(MainFenetre.State.RESULTAT_CALCULE);
+        	}
+
+            fenetre.updateVisibility();
         	
         } 
 }
