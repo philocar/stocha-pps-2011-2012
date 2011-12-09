@@ -204,7 +204,39 @@ public class FenetreSolution extends JFrame {
 			}
 		});
 		
-		panel.add(new JLabel("coût optimal : 89 083"));
+		
+		
+		
+		DessinHistogramme histogramme = new DessinHistogramme();
+		final double[][] liste_points = { { 2, 1, 3, 0, 2, 3, 1, 1 },
+				{ 2, 1, 1, 0, 2, 3, 0, 1 }, { 2, 1, 0, 2, 2, 3, 1, 1 },
+				{ 2, 1, 1, 0, 2, 3, 1, 1 }, { 2, 1, 4, 0, 2, 3, 1, 1 } };
+		histogramme.setNuage(liste_points);
+		centralePanel = new JPanel();
+		configureLayout = new BorderLayout();
+		centralePanel.setLayout(configureLayout);
+		panel.add(centralePanel);
+		centralePanel.add(histogramme, BorderLayout.CENTER);
+		centralePanel.add(new JLabel("histogramme"), BorderLayout.NORTH);centralePanel.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent arg0) {
+			}
+			
+			public void mousePressed(MouseEvent arg0) {
+			}
+			
+			public void mouseExited(MouseEvent arg0) {
+			}
+			
+			public void mouseEntered(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				DessinHistogramme histogramme = new DessinHistogramme(true);
+				histogramme.setNuage(liste_points);
+			}
+		});
+		
 		
 		return panel;
 	}
