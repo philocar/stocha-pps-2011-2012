@@ -23,21 +23,17 @@ import javax.swing.JPanel;
 
 import data.solution.Solution;
 
-
 public class MainFenetre extends JFrame {
 	/**
 	 * 
 	 */
-	
-	public enum State{
+
+	public enum State {
 		INITIAL, FICHIER_CHOISI, RESULTAT_CALCULE
 	}
-	
-	
-	
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private JLabel methodeText;
 	private JComboBox choixMethode;
 	private JMenuItem ouvrir;
@@ -45,19 +41,16 @@ public class MainFenetre extends JFrame {
 	private MainFenetre me;
 	private JLabel fileName;
 	private State etat = State.INITIAL;
+	private Solution solution;
+	private Optimise optimiser;
 
 	private ActionListener charger;
-
 	private Parametres params;
-
 	private JButton enregistrer;
-
 	private JButton resultat;
-
 	private JLabel cout;
-
 	private JButton suivant;
-	
+
 	public MainFenetre() {
 		super();
 		etat = State.INITIAL;
@@ -71,20 +64,23 @@ public class MainFenetre extends JFrame {
 
 		JMenu menu1 = new JMenu("Menu");
 
-		JMenuItem suivant = new JMenuItem(new Optimise(this, "Suivant", params));
+		optimiser = new Optimise(this, "Suivant", params);
+		JMenuItem suivant = new JMenuItem(optimiser);
 		menu1.add(suivant);
 
-		//Création du bouton de chargement de fichier
+		// Création du bouton de chargement de fichier
 		ouvrir = new JMenuItem("Charger fichier");
 		charger = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				ZDialogCharger zd = new ZDialogCharger(me, "Fichier de données", true);
+
+				ZDialogCharger zd = new ZDialogCharger(me,
+						"Fichier de données", true);
 				zd.setVisible(true);
 			}
 		};
 		ouvrir.addActionListener(charger);
-		//Le bouton de chargement de fichier est placé dans la barre de menu dans l'onglet "fichier"
+		// Le bouton de chargement de fichier est placé dans la barre de menu
+		// dans l'onglet "fichier"
 		menu1.add(ouvrir);
 		menu1.addSeparator();
 
@@ -123,7 +119,8 @@ public class MainFenetre extends JFrame {
 
 		setJMenuBar(menuBar);
 
-		setTitle("Programmation stochastique"); // On donne un titre à l'application
+		setTitle("Programmation stochastique"); // On donne un titre à
+												// l'application
 		setSize(600, 300); // On donne une taille à notre fenêtre
 		setLocationRelativeTo(null); // On centre la fenêtre sur l'écran
 		setResizable(false); // On interdit la redimensionnement de la fenêtre
@@ -138,17 +135,16 @@ public class MainFenetre extends JFrame {
 		panel = new JPanel();
 		panel.setBackground(Color.white);
 
-		
 		GridLayout layout = new GridLayout(2, 3);
 		layout.setVgap(8);
 		panel.setLayout(layout);
-		
+
 		methodeText = new JLabel("methode de résolution : ");
-		Object[] listeMethode = new Object[]{"modèle probabiliste", "modèle avec recours", 
-				"recuit simulé", "relaxation du binaire"};
+		Object[] listeMethode = new Object[] { "modèle probabiliste",
+				"modèle avec recours", "recuit simulé", "relaxation du binaire" };
 		choixMethode = new JComboBox(listeMethode);
 		JPanel configurePanel = new JPanel();
-		GridLayout configureLayout = new GridLayout(2,1);
+		GridLayout configureLayout = new GridLayout(2, 1);
 		configurePanel.setLayout(configureLayout);
 		configurePanel.setBackground(Color.white);
 		panel.add(configurePanel);
@@ -165,17 +161,18 @@ public class MainFenetre extends JFrame {
 		fichierPanel.add(fileButton);
 		fileName = new JLabel();
 		fichierPanel.add(fileName);
-		
+
 		JPanel suite = new JPanel();
-		
+
 		enregistrer = new JButton("enregister le résultat");
 		enregistrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ZDialogSave(me,"enregistrer le résultat", params).setVisible(true);
+				new ZDialogSave(me, "enregistrer le résultat", params)
+						.setVisible(true);
 			}
 		});
-	//	enregistrer.setVisible(false);
-		
+		// enregistrer.setVisible(false);
+
 		suite = new JPanel();
 		suite.setBackground(Color.white);
 		suite.add(enregistrer);
@@ -188,59 +185,54 @@ public class MainFenetre extends JFrame {
 		suite.setLayout(l);
 		panel.add(suite);
 		Solution s = null;
-		resultat = new JButton(new AfficheResultat(this,
-				"voir le résultat", s));
-	//	resultat.setVisible(false);
+		resultat = new JButton(new AfficheResultat(this, "voir le résultat", s));
+		// resultat.setVisible(false);
 		suite.add(resultat);
 
 		suite = new JPanel();
 		suite.setBackground(Color.white);
-		suivant = new JButton(new Optimise(this,
-				"suivant", params));
+		suivant = new JButton(optimiser);
 		suite.setBackground(Color.white);
 		suite.add(suivant);
 		panel.add(suite);
-		
 
 		suite = new JPanel();
 		suite.setBackground(Color.white);
 		cout = new JLabel("coût optimal : 89 083");
 		suite.add(cout);
 		panel.add(suite);
-		
+
 		updateVisibility();
-		
+
 		return panel;
 	}
 
 	public void updateVisibility() {
-		
-		switch(etat){
-		
 
-		case FICHIER_CHOISI : 
-				suivant.setVisible(true);
-				resultat.setVisible(false);
-				enregistrer.setVisible(false);
-				cout.setVisible(false);
-				break;
-				
-		case RESULTAT_CALCULE :
+		switch (etat) {
+
+		case FICHIER_CHOISI:
+			suivant.setVisible(true);
+			resultat.setVisible(false);
+			enregistrer.setVisible(false);
+			cout.setVisible(false);
+			break;
+
+		case RESULTAT_CALCULE:
 			resultat.setVisible(true);
 			enregistrer.setVisible(true);
 			cout.setVisible(true);
 			break;
-		
-				
-		case INITIAL : 
+
+		case INITIAL:
 			suivant.setVisible(false);
 			resultat.setVisible(false);
 			enregistrer.setVisible(false);
 			cout.setVisible(false);
 			break;
-		
+
 		}
-		
+
 	}
 
 	public JComboBox getChoixMethode() {
@@ -248,8 +240,9 @@ public class MainFenetre extends JFrame {
 	}
 
 	// lire les données depuis un fichier
-	public void chargerDonnees(String file) throws FileNotFoundException{
+	public void chargerDonnees(String file) throws FileNotFoundException {
 		fileName.setText(file);
+		optimiser.setFileName(file);
 		etat = State.FICHIER_CHOISI;
 		suivant.setVisible(true);
 	}
@@ -262,6 +255,13 @@ public class MainFenetre extends JFrame {
 		this.etat = etat;
 	}
 
+	public Solution getSolution() {
+		return solution;
+	}
+
+	public void setSolution(Solution solution) {
+		this.solution = solution;
+	}
 
 	
 }

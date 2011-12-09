@@ -8,11 +8,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import manager.solveurs.RS.RSEnergie;
+import data.DataBinaire;
 
 /**
  * 
@@ -29,6 +31,8 @@ public class ZDialogParamRS extends JDialog {
 	private JLabel labIter, labTempF, labTaux, labDec;
 	private JTextField iter, tempF, taux, dec;
 	private Parametres params = new Parametres();
+	private RSEnergie solveur;
+	private DataBinaire data;
 
 	/**
 	 * Constructeur
@@ -38,7 +42,7 @@ public class ZDialogParamRS extends JDialog {
 	 * @param modal
 	 */
 	public ZDialogParamRS(MainFenetre parent, String title, boolean modal,
-			Parametres p) {
+			Parametres p, DataBinaire data) {
 		super(parent, title, modal);
 		this.setSize(350, 260);
 		this.setLocationRelativeTo(null);
@@ -47,6 +51,8 @@ public class ZDialogParamRS extends JDialog {
 		this.params = p;
 		parent.setEtat(MainFenetre.State.FICHIER_CHOISI);
 		parent.updateVisibility();
+		solveur = null;
+		this.data = data;
 	}
 
 	/**
@@ -144,12 +150,15 @@ public class ZDialogParamRS extends JDialog {
 				
 				if(valide){
 					setVisible(false);
-					params.setRsIter(Integer.decode(iter.getText()));
+				/*	params.setRsIter(Integer.decode(iter.getText()));
 					params.setRsTempF(Double.parseDouble(tempF.getText()));
 					params.setRsTaux(Double.parseDouble(taux.getText()));
 					params.setRsDec(Double.parseDouble(dec.getText()));
 					params.setChoixMethode(2);
-					params.activer();
+					params.activer(); */
+					solveur = new RSEnergie(Double.parseDouble(dec.getText()),
+							data, Double.parseDouble(tempF.getText()),
+							Integer.decode(iter.getText()), Double.parseDouble(taux.getText()));
 				}else{
 					JOptionPane.showMessageDialog(null, rep, "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
@@ -169,5 +178,13 @@ public class ZDialogParamRS extends JDialog {
 
 		this.getContentPane().add(content, BorderLayout.CENTER);
 		this.getContentPane().add(control, BorderLayout.SOUTH);
+	}
+
+	public RSEnergie getSolveur() {
+		return solveur;
+	}
+
+	public void setSolveur(RSEnergie solveur) {
+		this.solveur = solveur;
 	}
 }
