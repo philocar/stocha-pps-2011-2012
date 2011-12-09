@@ -78,6 +78,7 @@ public class ZDialogSave extends JDialog {
 		control.setBackground(Color.white);
 		JButton saveBouton = new JButton("Sauvegarder");
 		JButton cancelBouton = new JButton("Annuler");
+		JButton explorerBouton = new JButton("Explorer");
 
 		saveBouton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -118,6 +119,7 @@ public class ZDialogSave extends JDialog {
 
 		control.add(saveBouton);
 		control.add(cancelBouton);
+		control.add(explorerBouton);
 
 		this.getContentPane().add(content, BorderLayout.CENTER);
 		this.getContentPane().add(control, BorderLayout.SOUTH);

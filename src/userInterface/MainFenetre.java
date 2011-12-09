@@ -113,7 +113,7 @@ public class MainFenetre extends JFrame {
 
 		setJMenuBar(menuBar);
 
-		setTitle("Calculatrice"); // On donne un titre à l'application
+		setTitle("Programmation stochastique"); // On donne un titre à l'application
 		setSize(600, 300); // On donne une taille à notre fenêtre
 		setLocationRelativeTo(null); // On centre la fenêtre sur l'écran
 		setResizable(false); // On interdit la redimensionnement de la fenêtre
