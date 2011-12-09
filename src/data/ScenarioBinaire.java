@@ -6,7 +6,7 @@ package data;
  */
 public class ScenarioBinaire {
 
-	/** La matrice de productions. Pour chaque période, pour chaque centrale, il y a un vecteur de paliers de production réels affectés par l'aléa */
+	/** La matrice de productions. Pour chaque centrale, pour chaque période, il y a un vecteur de paliers de production réels affectés par l'aléa */
 	private double[][][] productions;
 	/** Le vecteur de demandes. Pour chaque période il y a une demande  */
 	private double[] demandes;

@@ -6,12 +6,11 @@ package data;
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  *
  */
-public class DataBinaire {
-	
-	/** Le vecteur de coûts. Pour chaque période et chaque centrale thermique il y a un cout de production en €/MW associé et pour la centrale hydrolique un cout d'utilisation de l'eau */
-	private double[][] couts;
+public class DataBinaire extends DataBase {
 	/** Tableau contenant les différents scénarios */
 	private ScenarioBinaire[] scenarios;
+	/** Les trajectoires hydrauliques */
+	private double[] trajectoires;
 	/** La probabilité voulue que les scénarios se déroulent */
 	double probabilite;
 	
@@ -27,7 +26,7 @@ public class DataBinaire {
 	 * Retourne les coûts
 	 * @return les couts
 	 */
-	public double[][] getCouts() {
+	public double[] getCouts() {
 		return couts;
 	}
 
@@ -50,13 +49,21 @@ public class DataBinaire {
 	}
 	
 	/**
-	 * Retourne le cout de production d'une centrale pour une période
-	 * @param periode la période
-	 * @param centrale la centrale
-	 * @return le cout de production d'une centrale pour une période
+	 * Retourne les trajectoires hydrauliques
+	 * @return les trajectoires hydrauliques
 	 */
-	public double getCoutPeriodeCentrale(int periode, int centrale)
+	public double[] getTrajectoires()
 	{
-		return couts[periode][centrale];
+		return trajectoires;
+	}
+	
+	/**
+	 * Retourne la trajectoire hydraulique voulue
+	 * @param trajectoire la trajectoire voulue
+	 * @return la trajectoire hydraulique voulue
+	 */
+	public double getTrajectoire(int trajectoire)
+	{
+		return trajectoires[trajectoire];
 	}
 }

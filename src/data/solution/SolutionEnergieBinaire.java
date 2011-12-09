@@ -48,4 +48,14 @@ public class SolutionEnergieBinaire extends Solution {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public double[] getZ()
+	{
+		return z;
+	}
+	
+	public double[] getY()
+	{
+		return y;
+	}
 }
