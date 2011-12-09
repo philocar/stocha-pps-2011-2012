@@ -95,7 +95,6 @@ public class DessinCentrale extends JComponent {
 				ydr = (int) ((y - ymin) * getHeight() / (ymax - ymin));
 				//jours sur l'axe
 				g.setColor(new Color(0, 129, 21));
-				System.out.println(" x : "+idr+"\n y : "+hauteurAxe);
 				g.drawLine(idr, hauteurAxe-delta , idr, hauteurAxe + delta );
 				text = (""+i).toCharArray();
 				g.drawChars(text, 0, text.length, idr, hauteurAxe+delta+10);
