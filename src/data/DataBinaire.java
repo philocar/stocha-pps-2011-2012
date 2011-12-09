@@ -15,10 +15,19 @@ public class DataBinaire extends DataBase {
 	double probabilite;
 	
 	/**
-	 * Construit une donnée en fonction d'un fichier
-	 * @param fileName le chemin vers le fichier de données
+	 * Construit une donnée binaire en fonction des fichiers. Les scénarios sont équiprobables
+	 * @param demandesFile
+	 * @param coeffCentrale1File
+	 * @param coeffCentrale2File
+	 * @param coeffCentrale3File
+	 * @param coeffCentrale4File
+	 * @param trajectoiresFile
+	 * @param parametresHydrauliquesFile le fichier csv contenant les paramètres hydrauliques
+	 * @param capaciteMaxFile le fichier csv contenant la capacité max
 	 */
-	public DataBinaire(String fileName) {
+	public DataBinaire(double probabilite, String demandesFile, String coeffCentrale1File, String coeffCentrale2File, String coeffCentrale3File, String coeffCentrale4File, String trajectoiresFile, String parametresHydrauliquesFile, String capaciteMaxFile) {
+		super(parametresHydrauliquesFile, capaciteMaxFile);
+		
 		
 	}
 

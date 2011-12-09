@@ -23,6 +23,16 @@ public abstract class DataBase {
 	private double[] apports;
 	
 	/**
+	 * Crée les données à partir des fichiers
+	 * @param parametresHydrauliquesFile le fichier csv contenant les paramètres hydrauliques
+	 * @param capaciteMaxFile le fichier csv contenant la capacité max
+	 */
+	public DataBase(String parametresHydrauliquesFile, String capaciteMaxFile)
+	{
+		
+	}
+	
+	/**
 	 * Retourne les coûts
 	 * @return les couts
 	 */
