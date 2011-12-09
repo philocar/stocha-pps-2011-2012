@@ -7,16 +7,16 @@ package data;
  */
 public abstract class DataBase {
 	
-	/** Le vecteur de coûts. Pour chaque période et chaque centrale thermique il y a un cout de production en €/MW associé et pour la centrale hydrolique un cout d'utilisation de l'eau */
-	protected double[][] couts;
-	/** La production maximale de chaque centrale */
-	protected double[] productionsMax;
+	/** Le vecteur de coûts. Pour chaque centrale thermique il y a un cout de production en €/MW associé et pour la centrale hydrolique un cout d'utilisation de l'eau en €/m^3 */
+	protected double[] couts;
+	/** La production maximale de chaque centrale pour chaque période */
+	protected double[][] productionsMax;
 	/** Le volume initial d'eau dans le réservoir */
 	protected double volumeInitial;
-	/** Le volume minimum d'eau dans le réservoir */
-	protected double volumeMin;
-	/** Le volume maximum d'eau dans le réservoir */
-	protected double volumeMax;
+	/** Les volumes minimum d'eau dans le réservoir par périodes */
+	protected double[] volumeMin;
+	/** Les volumes maximum d'eau dans le réservoir par périodes */
+	protected double[] volumeMax;
 	/** Le turbinage */
 	protected double turbinage;
 	/** Les apports en eau pour chaque période */
@@ -26,7 +26,7 @@ public abstract class DataBase {
 	 * Retourne les coûts
 	 * @return les couts
 	 */
-	public double[][] getCouts() {
+	public double[] getCouts() {
 		return couts;
 	}
 	
@@ -34,7 +34,7 @@ public abstract class DataBase {
 	 * Retourne les productions maximales
 	 * @return les productions maximales
 	 */
-	public double[] getProductionsMax() {
+	public double[][] getProductionsMax() {
 		return productionsMax;
 	}
 
@@ -47,19 +47,21 @@ public abstract class DataBase {
 	}
 
 	/**
-	 * Retourne le volume minimum d'eau dans le réservoir
-	 * @return le volume minimum d'eau dans le réservoir
+	 * Retourne le volume minimum d'eau dans le réservoir pour un période
+	 * @param periode la période
+	 * @return le volume minimum d'eau dans le réservoir pour la période
 	 */
-	public double getVolumeMin() {
-		return volumeMin;
+	public double getVolumeMin(int periode) {
+		return volumeMin[periode];
 	}
 
 	/**
-	 * Retourne le volume maximum d'eau dans le réservoir
-	 * @return le volume maximum d'eau dans le réservoir
+	 * Retourne le volume maximum d'eau dans le réservoir pour un période
+	 * @param periode la période
+	 * @return le volume maximum d'eau dans le réservoir pour la période
 	 */
-	public double getVolumeMax() {
-		return volumeMax;
+	public double getVolumeMax(int periode) {
+		return volumeMax[periode];
 	}
 
 	/**
@@ -71,24 +73,24 @@ public abstract class DataBase {
 	}
 	
 	/**
-	 * Retourne le cout de production d'une centrale pour une période
-	 * @param periode la période
+	 * Retourne le cout de production d'une centrale
 	 * @param centrale la centrale
-	 * @return le cout de production d'une centrale pour une période
+	 * @return le cout de production d'une centrale
 	 */
-	public double getCoutPeriodeCentrale(int periode, int centrale)
+	public double getCoutPeriodeCentrale(int centrale)
 	{
-		return couts[periode][centrale];
+		return couts[centrale];
 	}
 	
 	/**
 	 * Retourne la production maximale d'une centrale
 	 * @param centrale la centrale
+	 * @param periode la période
 	 * @return les production maximale d'une centrale
 	 */
-	public double getProductionMaxCentrale(int centrale) 
+	public double getProductionMaxCentrale(int centrale, int periode) 
 	{
-		return productionsMax[centrale];
+		return productionsMax[centrale][periode];
 	}
 
 	/**
