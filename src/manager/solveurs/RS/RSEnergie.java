@@ -1,5 +1,7 @@
 package manager.solveurs.RS;
 
+import java.util.Random;
+
 import data.DataBinaire;
 import data.solution.Solution;
 import data.solution.SolutionEnergieBinaire;
@@ -18,13 +20,19 @@ public class RSEnergie extends RecuitSimule
 	private int iterationCourante;
 	/** La température à atteindre pour arrêter le recuit. */
 	private double temperatureFinale;
+	/** Le nombre de modifications pour lesquelles on garde le même scénarios */
+	private int nbTransformationsParScenarios;
+	/** Le nombre de transformations imposibles avant de changer de scénarios */
+	private int nbTestsTransformations;
+	/** Le nombre courant de modifications pour lesquelles on garde le même scénarios */
+	private int nbTransformationsParScenariosCourant;
 	
 	/**
 	 * Construit un recuit simulé spécialisé pour le problème de la p-médiane.
 	 * @param facteurDecroissance le facteur de décroissance de la température du recuit.
 	 * @param temperatureFinale la température à atteindre pour arrêter le recuit.
 	 */
-	public RSEnergie(double facteurDecroissance, DataBinaire donnees, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation)
+	public RSEnergie(double facteurDecroissance, DataBinaire donnees, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation, int nbTransformationsParScenarios, int nbTestsTransformations)
 	{
 		super(facteurDecroissance, tauxAcceptation);
 		solutionCourante = new SolutionEnergieBinaire(donnees);
@@ -32,7 +40,10 @@ public class RSEnergie extends RecuitSimule
 		this.temperatureFinale = temperatureFinale;
 		this.donnees = donnees;
 		this.nbIterationsParPalier = nbIterationsParPalier;
+		this.nbTestsTransformations = nbTestsTransformations;
+		this.nbTransformationsParScenarios = nbTransformationsParScenarios;
 		iterationCourante = 0;
+		nbTransformationsParScenariosCourant = 0;
 	}
 
 	/**
@@ -78,9 +89,94 @@ public class RSEnergie extends RecuitSimule
 	 */
 	protected Solution voisin()
 	{
-		SolutionEnergieBinaire solution = new SolutionEnergieBinaire(donnees);
+		SolutionEnergieBinaire solution = (SolutionEnergieBinaire) solutionCourante.clone();
 		
+		Random rand = new Random();
+		int nbTests;
+		nbTransformationsParScenariosCourant++;
+		
+		do
+		{
+			// Active ou desactive un scénario si c'est le moment
+			if(nbTransformationsParScenariosCourant >= nbTransformationsParScenarios)
+			{
+				nbTransformationsParScenariosCourant = 0;
+				int indiceScenarioChange;
+				do
+				{
+					indiceScenarioChange = rand.nextInt(solution.getZ().length);
+					solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
+				} while(probabiliteScenario(solution.getZ()) < donnees.getProbabilite());
+			}
+			
+			// Modifie les décisions
+			nbTests = 0;
+			do
+			{
+				nbTests++;
+				
+				// On modifie le palier d'une centrale pour une période
+				if(rand.nextInt() % 5 != 0)
+				{
+					int periodeChange;
+					int centraleChange;
+					int palierChange;
+					periodeChange = rand.nextInt(donnees.nbPeriodes);
+					centraleChange = rand.nextInt(donnees.nbCentrales);
+					
+					do
+					{
+						palierChange = rand.nextInt(donnees.nbPaliers[centraleChange]);
+					} while(palierChange == solution.getDecisionPeriodeCentrale(periodeChange, centraleChange));
+					
+					solution.setDecisionPeriodeCentrale(periodeChange, centraleChange, palierChange);
+				}
+				// Si la trajectoire hydrolique est modifiée
+				else
+				{					
+					int trajectoireChange;
+					do
+					{
+						trajectoireChange = rand.nextInt(donnees.nbTrajectoires);
+					} while(trajectoireChange == solution.getTrajectoire());
+					solution.setTrajectoire(trajectoireChange);
+				}
+			} while(nbTests < nbTestsTransformations);
+			
+		} while(!respecteContrainteDemande(solution) && nbTests == nbTestsTransformations);
 		
 		return solution;
+	}
+
+	private boolean respecteContrainteDemande(SolutionEnergieBinaire solution) {
+		
+		for(int s=0; s<donnees.nbScenarios; s++)
+		{
+			if(solution.isActived(s))
+			{
+				for(int p=0; p<donnees.nbPeriodes; p++)
+				{
+					double production = 0;
+					for(int c=0; c<donnees.nbCentrales; c++)
+					{
+						production += donnees.getScenario(s).getPaliersPeriodeCentrale(p, c)[solution.getDecisionPeriodeCentrale(p, c)];
+					}
+					
+					if(production < donnees.getScenario(s).getDemandePeriode(p))
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private double probabiliteScenario(boolean[] scenarios) {
+		double sommeProba = 0;
+		for(int i=0; i<scenarios.length; i++)
+		{
+			if(scenarios[i])
+				sommeProba += donnees.getScenario(i).getProbabilite();
+		}
+		return sommeProba;
 	}
 }
