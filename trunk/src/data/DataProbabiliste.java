@@ -22,7 +22,7 @@ public class DataProbabiliste extends DataBase {
 	 * @param fileName le chemin vers le fichier de données
 	 */
 	public DataProbabiliste(String fileName) {
-		
+		super(null, null);
 	}
 
 	/**

@@ -48,13 +48,13 @@ public class ScenarioBinaire {
 	
 	/**
 	 * Retourne les paliers de production d'une centrale pour une période
-	 * @param periode la periode
 	 * @param centrale la centrale
+	 * @param periode la periode
 	 * @return les paliers de production d'une centrale pour une période
 	 */
-	public double[] getPaliersPeriodeCentrale(int periode, int centrale)
+	public double[] getPaliersPeriodeCentrale(int centrale, int periode)
 	{
-		return productions[periode][centrale];
+		return productions[centrale][periode];
 	}
 	
 	/**
