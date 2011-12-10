@@ -106,7 +106,7 @@ public class RSEnergie extends RecuitSimule
 				{
 					indiceScenarioChange = rand.nextInt(solution.getZ().length);
 					solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
-				} while(probabiliteScenario(solution.getZ()) < donnees.getProbabilite());
+				} while(solution.probabiliteScenario() < donnees.getProbabilite());
 			}
 			
 			// Modifie les décisions
@@ -143,7 +143,7 @@ public class RSEnergie extends RecuitSimule
 				}
 			} while(nbTests < nbTestsTransformations);
 			
-		} while(!respecteContrainteDemande(solution) && nbTests == nbTestsTransformations);
+		} while(!solution.respecteContrainteDemande() && nbTests == nbTestsTransformations);
 		
 		return solution;
 	}
