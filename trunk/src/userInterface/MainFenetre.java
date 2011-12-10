@@ -31,7 +31,7 @@ public class MainFenetre extends JFrame {
 	 */
 
 	public enum State {
-		INITIAL, FICHIER_CHOISI, RESULTAT_CALCULE
+		INITIAL, FICHIER_CHOISI, CALCUL_EN_COURS, RESULTAT_CALCULE
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -321,6 +321,11 @@ public class MainFenetre extends JFrame {
 
 	public void setSolution(Solution solution) {
 		this.solution = solution;
+		cout.setText(""+solution.fonctionObjectif());
 	}
 
+	public void setDescription(String text){
+		descriptionFichier.setText(text);
+	}
+	
 }

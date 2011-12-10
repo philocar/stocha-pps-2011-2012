@@ -77,7 +77,7 @@ public class ZDialogParamRS extends JDialog {
 		panTempF.setPreferredSize(new Dimension(300, 40));
 		tempF = new JTextField();
 		tempF.setPreferredSize(new Dimension(50, 25));
-		tempF.setText("20000");
+		tempF.setText("0.01");
 		labTempF = new JLabel("Température finale :");
 		panTempF.add(labTempF);
 		panTempF.add(tempF);
@@ -176,7 +176,8 @@ public class ZDialogParamRS extends JDialog {
 
 				if (valide) {
 					System.out.println("début lecture des données");
-					DataBinaire data = new DataBinaire(0, fileName
+						
+					DataBinaire data = new DataBinaire(probabilite, fileName
 							+ "Données_Recuit_demandes.csv", fileName
 							+ "Données_Recuit_paliers1.csv", fileName
 							+ "Données_Recuit_paliers2.csv", fileName

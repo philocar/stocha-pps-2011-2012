@@ -19,7 +19,6 @@ public class Optimise extends AbstractAction {
 	private static final long serialVersionUID = 1L;
 	private MainFenetre fenetre;
 	private Solveur solveur;
-	private Solution solution;
 	private String fileName;
 
 	public Optimise(MainFenetre fenetre, String texte) {
@@ -73,8 +72,10 @@ public class Optimise extends AbstractAction {
 			}
 			System.out.println("début des calculs");
 			solveur.lancer();
+			fenetre.setDescription("calcul en cours");
 			System.out.println("fin des calculs");
 			fenetre.setSolution(solveur.getSolution());
+			fenetre.setDescription("calcul terminé");
 			fenetre.setEtat(MainFenetre.State.RESULTAT_CALCULE);
 		}
 
