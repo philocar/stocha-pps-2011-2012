@@ -17,7 +17,15 @@ public class DataBinaire extends DataBase {
 	/** Les trajectoires hydrauliques */
 	private double[] trajectoires;
 	/** La probabilité voulue que les scénarios se déroulent */
-	double probabilite;
+	private double probabilite;
+	/** Les paliers de chaque centrales thermiques */
+	private double[][] paliers;
+	
+	public final int nbScenarios = 100;
+	public final int nbTrajectoires = 8;
+	public final int[] nbPaliers = {3, 4, 4, 5};
+	public final int nbPeriodes = 7;
+	public final int nbCentrales = 4;
 	
 	/**
 	 * Construit une donnée binaire en fonction des fichiers. Les scénarios sont équiprobables
@@ -33,28 +41,21 @@ public class DataBinaire extends DataBase {
 	public DataBinaire(double probabilite, String demandesFile, String coeffCentrale1File, String coeffCentrale2File, String coeffCentrale3File, String coeffCentrale4File, String trajectoiresFile, String parametresHydrauliquesFile, String capaciteMaxFile) {
 		super(parametresHydrauliquesFile, capaciteMaxFile);
 		
-		int nbScenarios = 100;
-		int nbtrajectoires = 8;
-		int nbPaliers1 = 3;
-		int nbPaliers2 = 4;
-		int nbPaliers3 = 4;
-		int nbPaliers4 = 5;
-		
 		scenarios = new ScenarioBinaire[nbScenarios];
-		trajectoires = new double[nbtrajectoires];
+		trajectoires = new double[nbTrajectoires];
 		this.probabilite = probabilite;
 		
-		double[][] demandesTmp = new double[nbScenarios][7];
-		double[][][][] productionsTmp = new double[nbScenarios][4][7][];
+		double[][] demandesTmp = new double[nbScenarios][nbPeriodes];
+		double[][][][] productionsTmp = new double[nbScenarios][nbCentrales][nbPeriodes][];
 		
 		for(int i=0; i<nbScenarios; i++)
 		{
-			for(int j=0; j<7; j++)
+			for(int j=0; j<nbPeriodes; j++)
 			{
-				productionsTmp[i][0][j] = new double[nbPaliers1];
-				productionsTmp[i][1][j] = new double[nbPaliers2];
-				productionsTmp[i][2][j] = new double[nbPaliers3];
-				productionsTmp[i][3][j] = new double[nbPaliers4];
+				productionsTmp[i][0][j] = new double[nbPaliers[0]];
+				productionsTmp[i][1][j] = new double[nbPaliers[1]];
+				productionsTmp[i][2][j] = new double[nbPaliers[2]];
+				productionsTmp[i][3][j] = new double[nbPaliers[3]];
 			}
 		}
 
@@ -71,7 +72,7 @@ public class DataBinaire extends DataBase {
 				int i = 0;
 				// Lecture du fichier des demandes ligne par ligne. Cette boucle se termine
 				// quand la méthode retourne la valeur null.
-				while ((line = buffDemandes.readLine()) != null && i < 100) {
+				while ((line = buffDemandes.readLine()) != null && i < nbScenarios) {
 					StringTokenizer tokenizer = new StringTokenizer(line, ";");
 					int j = 0;
 					// Tant qu'il y a des tokens on les parcourt
@@ -88,8 +89,21 @@ public class DataBinaire extends DataBase {
 				// Lecture du fichier des coefficients de la centrale 1 ligne par ligne. Cette boucle se termine
 				// quand la méthode retourne la valeur null.
 				while ((line = buffCoeffCentrale1.readLine()) != null) {
-					// Les 3 premières lignes n'ont pas de données
-					if(i > 2)
+					if(i == 1)
+					{
+						StringTokenizer tokenizer = new StringTokenizer(line, ";");
+						// Le premier token n'est pas intéressant
+						tokenizer.nextToken();
+						int j = 0;
+						// On parcourt les n paliers
+						while(tokenizer.hasMoreTokens() && j < nbPaliers[0])
+						{
+							String token = tokenizer.nextToken();
+							paliers[0][j] = Double.parseDouble(token);
+							j++;
+						}
+					}
+					else if(i > 2)
 					{
 						StringTokenizer tokenizer = new StringTokenizer(line, ";");
 						// Le premier token n'est pas intéressant
@@ -99,7 +113,7 @@ public class DataBinaire extends DataBase {
 						while(tokenizer.hasMoreTokens())
 						{
 							String token = tokenizer.nextToken();
-							productionsTmp[i-3][0][j/nbPaliers1][j%nbPaliers1] = Double.parseDouble(token);
+							productionsTmp[i-3][0][j/nbPaliers[0]][j%nbPaliers[0]] = Double.parseDouble(token);
 							j++;
 						}
 					}
@@ -110,8 +124,21 @@ public class DataBinaire extends DataBase {
 				// Lecture du fichier des coefficients de la centrale 2 ligne par ligne. Cette boucle se termine
 				// quand la méthode retourne la valeur null.
 				while ((line = buffCoeffCentrale2.readLine()) != null) {
-					// Les 3 premières lignes n'ont pas de données
-					if(i > 2)
+					if(i == 1)
+					{
+						StringTokenizer tokenizer = new StringTokenizer(line, ";");
+						// Le premier token n'est pas intéressant
+						tokenizer.nextToken();
+						int j = 0;
+						// On parcourt les n paliers
+						while(tokenizer.hasMoreTokens() && j < nbPaliers[1])
+						{
+							String token = tokenizer.nextToken();
+							paliers[1][j] = Double.parseDouble(token);
+							j++;
+						}
+					}
+					else if(i > 2)
 					{
 						StringTokenizer tokenizer = new StringTokenizer(line, ";");
 						// Le premier token n'est pas intéressant
@@ -121,7 +148,7 @@ public class DataBinaire extends DataBase {
 						while(tokenizer.hasMoreTokens())
 						{
 							String token = tokenizer.nextToken();
-							productionsTmp[i-3][1][j/nbPaliers2][j%nbPaliers2] = Double.parseDouble(token);
+							productionsTmp[i-3][1][j/nbPaliers[1]][j%nbPaliers[1]] = Double.parseDouble(token);
 							j++;
 						}
 					}
@@ -132,8 +159,21 @@ public class DataBinaire extends DataBase {
 				// Lecture du fichier des coefficients de la centrale 3 ligne par ligne. Cette boucle se termine
 				// quand la méthode retourne la valeur null.
 				while ((line = buffCoeffCentrale3.readLine()) != null) {
-					// Les 3 premières lignes n'ont pas de données
-					if(i > 2)
+					if(i == 1)
+					{
+						StringTokenizer tokenizer = new StringTokenizer(line, ";");
+						// Le premier token n'est pas intéressant
+						tokenizer.nextToken();
+						int j = 0;
+						// On parcourt les n paliers
+						while(tokenizer.hasMoreTokens() && j < nbPaliers[2])
+						{
+							String token = tokenizer.nextToken();
+							paliers[2][j] = Double.parseDouble(token);
+							j++;
+						}
+					}
+					else if(i > 2)
 					{
 						StringTokenizer tokenizer = new StringTokenizer(line, ";");
 						// Le premier token n'est pas intéressant
@@ -143,7 +183,7 @@ public class DataBinaire extends DataBase {
 						while(tokenizer.hasMoreTokens())
 						{
 							String token = tokenizer.nextToken();
-							productionsTmp[i-3][2][j/nbPaliers3][j%nbPaliers3] = Double.parseDouble(token);
+							productionsTmp[i-3][2][j/nbPaliers[2]][j%nbPaliers[2]] = Double.parseDouble(token);
 							j++;
 						}
 					}
@@ -154,8 +194,21 @@ public class DataBinaire extends DataBase {
 				// Lecture du fichier des coefficients de la centrale 4 ligne par ligne. Cette boucle se termine
 				// quand la méthode retourne la valeur null.
 				while ((line = buffCoeffCentrale4.readLine()) != null) {
-					// Les 3 premières lignes n'ont pas de données
-					if(i > 2)
+					if(i == 1)
+					{
+						StringTokenizer tokenizer = new StringTokenizer(line, ";");
+						// Le premier token n'est pas intéressant
+						tokenizer.nextToken();
+						int j = 0;
+						// On parcourt les n paliers
+						while(tokenizer.hasMoreTokens() && j < nbPaliers[3])
+						{
+							String token = tokenizer.nextToken();
+							paliers[3][j] = Double.parseDouble(token);
+							j++;
+						}
+					}
+					else if(i > 2)
 					{
 						StringTokenizer tokenizer = new StringTokenizer(line, ";");
 						// Le premier token n'est pas intéressant
@@ -165,7 +218,7 @@ public class DataBinaire extends DataBase {
 						while(tokenizer.hasMoreTokens())
 						{
 							String token = tokenizer.nextToken();
-							productionsTmp[i-3][3][j/nbPaliers4][j%nbPaliers4] = Double.parseDouble(token);
+							productionsTmp[i-3][3][j/nbPaliers[3]][j%nbPaliers[3]] = Double.parseDouble(token);
 							j++;
 						}
 					}
@@ -229,7 +282,7 @@ public class DataBinaire extends DataBase {
 	 * @param scenario l'indice du scénario
 	 * @return le scénario voulu
 	 */
-	public ScenarioBinaire getScénario(int scenario)
+	public ScenarioBinaire getScenario(int scenario)
 	{
 		return scenarios[scenario];		
 	}
@@ -253,6 +306,15 @@ public class DataBinaire extends DataBase {
 		return trajectoires[trajectoire];
 	}
 	
+	/**
+	 * Retourne la probabilité voulue
+	 * @return la probabilité voulue
+	 */
+	public double getProbabilite()
+	{
+		return probabilite;
+	}
+	
 	public static void main(String[] args)
 	{
 		DataBinaire data = new DataBinaire(98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
@@ -265,5 +327,9 @@ public class DataBinaire extends DataBase {
 				System.out.println(palier);
 			}
 		}
+	}
+
+	public double getPalier(int centrale, int palier) {
+		return paliers[centrale][palier];
 	}
 }

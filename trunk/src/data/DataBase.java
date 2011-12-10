@@ -182,7 +182,7 @@ public abstract class DataBase {
 	 * @param centrale la centrale
 	 * @return le cout de production d'une centrale
 	 */
-	public double getCoutPeriodeCentrale(int centrale)
+	public double getCoutCentrale(int centrale)
 	{
 		return couts[centrale];
 	}
