@@ -255,7 +255,7 @@ public class DataBinaire extends DataBase {
 	
 	public static void main(String[] args)
 	{
-		DataBinaire data = new DataBinaire(98, "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_demandes.csv", "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_paliers1.csv", "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_paliers2.csv", "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_paliers3.csv", "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_paliers4.csv", "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_trajectoire_hydro.csv", "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_parametres_hydro.csv", "D:/Nicolas/Documents/Cours/CI3/Programmation stochastique/data/Données_Recuit_capacité.csv");
+		DataBinaire data = new DataBinaire(98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
 		for(ScenarioBinaire scenario : data.getScenarios())
 		{
 			double[] test = scenario.getPaliersPeriodeCentrale(0, 0);
