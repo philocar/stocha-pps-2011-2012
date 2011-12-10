@@ -1,4 +1,4 @@
-package src.data;
+package data;
 
 /** 
  * Cette classe représente un scénario pour le problème avec recours
