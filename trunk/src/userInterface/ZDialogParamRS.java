@@ -156,9 +156,8 @@ public class ZDialogParamRS extends JDialog {
 					params.setRsDec(Double.parseDouble(dec.getText()));
 					params.setChoixMethode(2);
 					params.activer(); */
-					solveur = new RSEnergie(Double.parseDouble(dec.getText()),
-							data, Double.parseDouble(tempF.getText()),
-							Integer.decode(iter.getText()), Double.parseDouble(taux.getText()));
+					solveur = new RSEnergie(data, Double.parseDouble(dec.getText()), Double.parseDouble(tempF.getText()),
+							Integer.decode(iter.getText()), Double.parseDouble(taux.getText()), 10, 100);
 				}else{
 					JOptionPane.showMessageDialog(null, rep, "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
