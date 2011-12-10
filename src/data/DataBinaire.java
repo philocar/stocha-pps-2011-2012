@@ -44,7 +44,11 @@ public class DataBinaire extends DataBase {
 		scenarios = new ScenarioBinaire[nbScenarios];
 		trajectoires = new double[nbTrajectoires];
 		this.probabilite = probabilite;
+		paliers = new double[nbCentrales][];
 		
+		for(int i=0; i<nbCentrales; i++)
+			paliers[i] = new double[nbPaliers[i]];
+			
 		double[][] demandesTmp = new double[nbScenarios][nbPeriodes];
 		double[][][][] productionsTmp = new double[nbScenarios][nbCentrales][nbPeriodes][];
 		
@@ -245,15 +249,7 @@ public class DataBinaire extends DataBase {
 				for(int scenario=0; scenario<nbScenarios; scenario++)
 				{
 					scenarios[scenario] = new ScenarioBinaire(productionsTmp[scenario], demandesTmp[scenario], 1/(double)nbScenarios);
-				}
-				
-				double[] test = productionsTmp[0][0][0];
-				System.out.println(test.length);
-				for(double palier : test)
-				{
-					System.out.println(palier);
-				}
-				
+				}			
 			} finally {
 				// dans tous les cas, on ferme nos flux
 				buffDemandes.close();

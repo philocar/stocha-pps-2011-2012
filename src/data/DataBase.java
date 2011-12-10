@@ -54,36 +54,40 @@ public abstract class DataBase {
 					if(i % 2 != 0)
 					{
 						StringTokenizer tokenizer = new StringTokenizer(line, ";");
-						// Saute le nom du paramètre
-						tokenizer.nextToken();
-
-						int j = 0;
-						// Tant qu'il y a des tokens on les parcourt
-						while(tokenizer.hasMoreTokens())
+						
+						if(i != 9)
 						{
-							String token = tokenizer.nextToken();
-							// On ne s'intéresse qu'aux tokens représentant une donnée qui est la production maximale
-							if(i == 1)
+							// Saute le nom du paramètre
+							tokenizer.nextToken();
+	
+							int j = 0;
+							// Tant qu'il y a des tokens on les parcourt
+							while(tokenizer.hasMoreTokens())
 							{
-								apports[j] = Double.parseDouble(token);
+								String token = tokenizer.nextToken();
+								// On ne s'intéresse qu'aux tokens représentant une donnée qui est la production maximale
+								if(i == 1)
+								{
+									apports[j] = Double.parseDouble(token);
+								}
+								else if(i == 3)
+								{
+									volumeMax[j] = Double.parseDouble(token);
+								}
+								else if(i == 5)
+								{
+									volumeInitial = Double.parseDouble(token);
+								}
+								else if(i == 7)
+								{
+									volumeMin[j] = Double.parseDouble(token);
+								}
+								j++;
 							}
-							else if(i == 3)
-							{
-								volumeMax[j] = Double.parseDouble(token);
-							}
-							else if(i == 5)
-							{
-								volumeInitial = Double.parseDouble(token);
-							}
-							else if(i == 7)
-							{
-								volumeMin[j] = Double.parseDouble(token);
-							}
-							else if(i == 9)
-							{
-								turbinage = Double.parseDouble(token);
-							}
-							j++;
+						}
+						else if(i == 9)
+						{
+							turbinage = Double.parseDouble(tokenizer.nextToken().substring(4));
 						}
 					}
 					i++;
