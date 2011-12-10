@@ -32,7 +32,7 @@ public class RSEnergie extends RecuitSimule
 	 * @param facteurDecroissance le facteur de décroissance de la température du recuit.
 	 * @param temperatureFinale la température à atteindre pour arrêter le recuit.
 	 */
-	public RSEnergie(double facteurDecroissance, DataBinaire donnees, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation, int nbTransformationsParScenarios, int nbTestsTransformations)
+	public RSEnergie( DataBinaire donnees, double facteurDecroissance, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation, int nbTransformationsParScenarios, int nbTestsTransformations)
 	{
 		super(facteurDecroissance, tauxAcceptation);
 		solutionCourante = new SolutionEnergieBinaire(donnees);
@@ -93,6 +93,7 @@ public class RSEnergie extends RecuitSimule
 		
 		Random rand = new Random();
 		int nbTests;
+		boolean recherche;
 		nbTransformationsParScenariosCourant++;
 		
 		do
@@ -104,47 +105,78 @@ public class RSEnergie extends RecuitSimule
 				int indiceScenarioChange;
 				do
 				{
+					recherche = false;
 					indiceScenarioChange = rand.nextInt(solution.getZ().length);
 					solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
-				} while(solution.probabiliteScenario() < donnees.getProbabilite());
+					
+					if(solution.probabiliteScenario() < donnees.getProbabilite())
+					{
+						solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
+						recherche = true;
+					}
+					
+				} while(recherche);
 			}
 			
 			// Modifie les décisions
 			nbTests = 0;
 			do
 			{
+				recherche = false;
 				nbTests++;
 				
 				// On modifie le palier d'une centrale pour une période
-				if(rand.nextInt() % 5 != 0)
+				if(rand.nextInt(1) < 80)
 				{
 					int periodeChange;
 					int centraleChange;
 					int palierChange;
 					periodeChange = rand.nextInt(donnees.nbPeriodes);
 					centraleChange = rand.nextInt(donnees.nbCentrales);
-					
+					int ancienPalier = solution.getDecisionPeriodeCentrale(periodeChange, centraleChange);
 					do
 					{
 						palierChange = rand.nextInt(donnees.nbPaliers[centraleChange]);
 					} while(palierChange == solution.getDecisionPeriodeCentrale(periodeChange, centraleChange));
 					
 					solution.setDecisionPeriodeCentrale(periodeChange, centraleChange, palierChange);
+					
+					if(!solution.respecteContrainteDemande())
+					{
+						recherche = true;
+						solution.setDecisionPeriodeCentrale(periodeChange, centraleChange, ancienPalier);
+					}
 				}
 				// Si la trajectoire hydrolique est modifiée
 				else
 				{					
 					int trajectoireChange;
+					int ancienneTrajectoire = solution.getTrajectoire();
 					do
 					{
 						trajectoireChange = rand.nextInt(donnees.nbTrajectoires);
 					} while(trajectoireChange == solution.getTrajectoire());
 					solution.setTrajectoire(trajectoireChange);
+					
+					if(!solution.respecteContrainteDemande())
+					{
+						recherche = true;
+						solution.setTrajectoire(ancienneTrajectoire);
+					}
 				}
-			} while(nbTests < nbTestsTransformations);
+			} while(recherche && nbTests < nbTestsTransformations);
 			
 		} while(!solution.respecteContrainteDemande() && nbTests == nbTestsTransformations);
 		
 		return solution;
+	}
+	
+	public static void main(String[] args)
+	{
+		DataBinaire data = new DataBinaire(0.98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
+		RSEnergie rs = new RSEnergie(data, 0.8, 20000, 16384, 0.8, 10, 100);
+		rs.lancer();
+		SolutionEnergieBinaire solution = (SolutionEnergieBinaire) rs.getSolution();
+		System.out.println(solution);
 	}
 }
