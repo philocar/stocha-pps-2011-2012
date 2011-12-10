@@ -46,13 +46,12 @@ public class ZDialogSave extends JDialog {
 	 * @param title
 	 * @param modal
 	 */
-	public ZDialogSave(JFrame parent, String title,  Parametres p) {
+	public ZDialogSave(JFrame parent, String title) {
 		super(parent, title);
 		this.setSize(300, 100);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		this.params = p;
 		this.initComponent();
 	}
 

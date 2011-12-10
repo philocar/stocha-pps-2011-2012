@@ -32,6 +32,7 @@ public class ZDialogCharger extends JDialog {
 	private JLabel labCharger;
 	private JTextField charger;
 	private String fileName;
+	private boolean directoryOnly;
 	
 	/**
 	 * Constructeur
@@ -39,13 +40,14 @@ public class ZDialogCharger extends JDialog {
 	 * @param title
 	 * @param modal
 	 */
-	public ZDialogCharger(MainFenetre parent, String title, boolean modal){
+	public ZDialogCharger(MainFenetre parent, String title, boolean modal, boolean directoryOnly){
 		super(parent, title, modal);
 		this.setSize(400, 180);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.initComponent();
 		this.parent = parent;
+		this.directoryOnly = directoryOnly;
 		
 	}
 	
@@ -78,7 +80,8 @@ public class ZDialogCharger extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser chooser = new JFileChooser();
-
+				if(directoryOnly)
+					chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int returnVal = chooser.showOpenDialog(parent);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					charger.setText(chooser.getSelectedFile().getAbsolutePath());

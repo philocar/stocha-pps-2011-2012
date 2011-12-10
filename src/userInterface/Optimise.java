@@ -1,6 +1,7 @@
 package userInterface;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 
@@ -17,15 +18,13 @@ public class Optimise extends AbstractAction {
          */
 	private static final long serialVersionUID = 1L;
 	private MainFenetre fenetre;
-	private Parametres params;
 	private Solveur solveur;
 	private Solution solution;
 	private String fileName;
 
-	public Optimise(MainFenetre fenetre, String texte, Parametres params) {
+	public Optimise(MainFenetre fenetre, String texte) {
 		super(texte);
 		this.fenetre = fenetre;
-		this.params = params;
 	}
 
 	public void setFileName(String fileName) {
@@ -37,27 +36,45 @@ public class Optimise extends AbstractAction {
 		fenetre.setEtat(MainFenetre.State.FICHIER_CHOISI);
 		String methodeName = (String) fenetre.getChoixMethode()
 				.getSelectedItem();
-		if (methodeName.equals("recuit simulé")) {
 
-			DataBinaire data = new DataBinaire(0, null, null, null, null, null, null, null, null);
-			ZDialogParamRS zd = new ZDialogParamRS(fenetre,
-					"Choix des paramètres", true, params, data);
-			zd.setVisible(true);
-			solveur = zd.getSolveur();
-
-		} else if (methodeName.equals("modèle probabiliste")) {
+		if (methodeName.equals("modèle probabiliste")) {
 			ZDialogParamDeter zd = new ZDialogParamDeter(fenetre,
-					"Choix des paramètres", true, params);
+					"Choix des paramètres", true);
 			zd.setVisible(true);
 		} else {
-			if (methodeName.equals("modèle avec recours")) {
-				DataRecours data = new DataRecours(null, null, null, null, null, null, null);
+			// on normalise les répertoires
+			if (fileName.charAt(fileName.length() - 1) != File.separatorChar)
+				fileName += File.separator;
+
+			if (methodeName.equals("recuit simulé")) {
+
+				ZDialogParamRS zd = new ZDialogParamRS(fenetre,
+						"Choix des paramètres", true, fileName);
+				zd.setVisible(true);
+				solveur = zd.getSolveur();
+			} else if (methodeName.equals("modèle avec recours")) {
+				DataRecours data = new DataRecours(
+						fileName + "Données_Recours_parametres_hydraulique.csv",
+						fileName + "Données_Recours_capacite_max.csv",
+						fileName + "Données_Recours_scenarios_demande.csv",
+						fileName
+								+ "Données_Recours_scenarios_coeff_dispo_centrale1.csv",
+						fileName
+								+ "Données_Recours_scenarios_coeff_dispo_centrale2.csv",
+						fileName
+								+ "Données_Recours_scenarios_coeff_dispo_centrale3.csv",
+						fileName
+								+ "Données_Recours_scenarios_coeff_dispo_centrale4.csv");
 				solveur = new CplexEnergieRecours(data);
 			} else if (methodeName.equals("relaxation du binaire")) {
-				DataBinaire data = new DataBinaire(0, null, null, null, null, null, null, null, null);
+				DataBinaire data = new DataBinaire(0, null, null, null, null,
+						null, null, null, null);
 				solveur = new CplexEnergieBinaireRelaxe(data);
 			}
-			fenetre.setSolution( solveur.getSolution() );
+			System.out.println("début des calculs");
+			solveur.lancer();
+			System.out.println("fin des calculs");
+			fenetre.setSolution(solveur.getSolution());
 			fenetre.setEtat(MainFenetre.State.RESULTAT_CALCULE);
 		}
 
