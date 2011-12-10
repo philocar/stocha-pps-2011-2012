@@ -35,6 +35,13 @@ public class RSEnergie extends RecuitSimule
 	public RSEnergie( DataBinaire donnees, double facteurDecroissance, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation, int nbTransformationsParScenarios, int nbTestsTransformations)
 	{
 		super(facteurDecroissance, tauxAcceptation);
+		System.out.println(donnees);
+		System.out.println(facteurDecroissance);
+		System.out.println(temperatureFinale);
+		System.out.println(nbIterationsParPalier);
+		System.out.println(tauxAcceptation);
+		System.out.println(nbTransformationsParScenarios);
+		System.out.println(nbTestsTransformations);
 		solutionCourante = new SolutionEnergieBinaire(donnees);
 		meilleureSolution = new SolutionEnergieBinaire(donnees);
 		this.temperatureFinale = temperatureFinale;

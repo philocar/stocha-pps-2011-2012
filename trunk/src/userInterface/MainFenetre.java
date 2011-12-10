@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,6 +21,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import data.solution.Solution;
 
@@ -45,16 +47,18 @@ public class MainFenetre extends JFrame {
 	private Optimise optimiser;
 
 	private ActionListener charger;
-	private Parametres params;
 	private JButton enregistrer;
 	private JButton resultat;
 	private JLabel cout;
 	private JButton suivant;
 
+	private JLabel descriptionFichier;
+
+	private HashMap<String, String> descriptionChoix;
+
 	public MainFenetre() {
 		super();
 		etat = State.INITIAL;
-		params = new Parametres();
 		me = this;
 		build();// On initialise notre fenêtre
 	}
@@ -64,7 +68,7 @@ public class MainFenetre extends JFrame {
 
 		JMenu menu1 = new JMenu("Menu");
 
-		optimiser = new Optimise(this, "Suivant", params);
+		optimiser = new Optimise(this, "Suivant");
 		JMenuItem suivant = new JMenuItem(optimiser);
 		menu1.add(suivant);
 
@@ -73,8 +77,15 @@ public class MainFenetre extends JFrame {
 		charger = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
+				me.etat = State.INITIAL;
+				me.fileName.setText("");
+				boolean directory = true;
+				String methode = (String) me.choixMethode.getSelectedItem();
+				if (methode.equals("modèle probabiliste"))
+					directory = false;
+
 				ZDialogCharger zd = new ZDialogCharger(me,
-						"Fichier de données", true);
+						"Fichier de données", true, directory);
 				zd.setVisible(true);
 			}
 		};
@@ -121,7 +132,7 @@ public class MainFenetre extends JFrame {
 
 		setTitle("Programmation stochastique"); // On donne un titre à
 												// l'application
-		setSize(600, 300); // On donne une taille à notre fenêtre
+		setSize(600, 500); // On donne une taille à notre fenêtre
 		setLocationRelativeTo(null); // On centre la fenêtre sur l'écran
 		setResizable(false); // On interdit la redimensionnement de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // On dit à
@@ -135,19 +146,62 @@ public class MainFenetre extends JFrame {
 		panel = new JPanel();
 		panel.setBackground(Color.white);
 
-		GridLayout layout = new GridLayout(2, 3);
-		layout.setVgap(8);
+		GridLayout layout = new GridLayout(3, 1);
 		panel.setLayout(layout);
+		JPanel premiereLigne = new JPanel();
+		premiereLigne.setLayout(new GridLayout(1, 3));
+		premiereLigne.setBackground(Color.white);
+		JPanel troisiemeLigne = new JPanel();
+		troisiemeLigne.setLayout(new GridLayout(1, 3));
+		panel.add(premiereLigne);
 
 		methodeText = new JLabel("methode de résolution : ");
 		Object[] listeMethode = new Object[] { "modèle probabiliste",
 				"modèle avec recours", "recuit simulé", "relaxation du binaire" };
+		descriptionChoix = new HashMap<String, String>();
+		descriptionChoix.put("modèle probabiliste",
+				"Le fichier doit contenir le modèle probabiliste");
+		descriptionChoix
+				.put("modèle avec recours",
+						"<HTML>Le répertoire doit contenir les fichiers avec les noms suivants : <br>"
+								+ " Données_Recours.xls<br>"
+								+ " Données_Recours_capacite_max.csv  <br>"
+								+ " Données_Recours_parametres_hydraulique.csv <br>"
+								+ " Données_Recours_scenarios_coeff_dispo_centrale<sub>i</sub>.csv &nbsp;&nbsp;&nbsp;<sub>i</sub> allant de 1 à 4<br>"
+								+ " Données_Recours_scenarios_demande.csv <br>"
+								+ "</HTML>");
+
+		descriptionChoix
+				.put("recuit simulé",
+						"<HTML>Le répertoire doit contenir les fichiers avec les noms suivants : <br>"
+								+ " Données_Recuit.xls<br>"
+								+ " Données_Recuit_capacité.csv  <br>"
+								+ " Données_Recuit_demandes.csv <br>"
+								+ " Données_Recuit_paliers<sub>i</sub>.csv &nbsp;&nbsp;&nbsp;<sub>i</sub> allant de 1 à 4<br>"
+								+ " Données_Recuit_parametres_hydro.csv<br>"
+								+ " Données_Recuit_trajectoire_hydro.csv<br>"
+								+ "</HTML>");
+
+		descriptionChoix.put("relaxation du binaire",
+				descriptionChoix.get("recuit simulé"));
+
+		descriptionFichier = new JLabel(
+				descriptionChoix.get("modèle probabiliste"));
 		choixMethode = new JComboBox(listeMethode);
+		choixMethode.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				me.descriptionFichier.setText(descriptionChoix.get(choixMethode
+						.getSelectedItem()));
+			}
+		});
+
 		JPanel configurePanel = new JPanel();
 		GridLayout configureLayout = new GridLayout(2, 1);
 		configurePanel.setLayout(configureLayout);
 		configurePanel.setBackground(Color.white);
-		panel.add(configurePanel);
+		premiereLigne.add(configurePanel);
 		JPanel methodePanel = new JPanel();
 		methodePanel.setBackground(Color.white);
 		methodePanel.add(methodeText);
@@ -155,7 +209,7 @@ public class MainFenetre extends JFrame {
 		configurePanel.add(methodePanel);
 		JPanel fichierPanel = new JPanel();
 		fichierPanel.setBackground(Color.white);
-		panel.add(fichierPanel);
+		premiereLigne.add(fichierPanel);
 		JButton fileButton = new JButton("charger fichier");
 		fileButton.addActionListener(charger);
 		fichierPanel.add(fileButton);
@@ -167,7 +221,7 @@ public class MainFenetre extends JFrame {
 		enregistrer = new JButton("enregister le résultat");
 		enregistrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ZDialogSave(me, "enregistrer le résultat", params)
+				new ZDialogSave(me, "enregistrer le résultat")
 						.setVisible(true);
 			}
 		});
@@ -176,14 +230,20 @@ public class MainFenetre extends JFrame {
 		suite = new JPanel();
 		suite.setBackground(Color.white);
 		suite.add(enregistrer);
+		premiereLigne.add(suite);
+
+		suite = new JPanel();
+		suite.add(descriptionFichier);
+		suite.setBackground(Color.white);
 		panel.add(suite);
 
+		panel.add(troisiemeLigne);
 		suite = new JPanel();
 		suite.setBackground(Color.white);
 		FlowLayout l = new FlowLayout();
 		l.setHgap(30);
 		suite.setLayout(l);
-		panel.add(suite);
+		troisiemeLigne.add(suite);
 		Solution s = null;
 		resultat = new JButton(new AfficheResultat(this, "voir le résultat", s));
 		// resultat.setVisible(false);
@@ -194,13 +254,13 @@ public class MainFenetre extends JFrame {
 		suivant = new JButton(optimiser);
 		suite.setBackground(Color.white);
 		suite.add(suivant);
-		panel.add(suite);
+		troisiemeLigne.add(suite);
 
 		suite = new JPanel();
 		suite.setBackground(Color.white);
 		cout = new JLabel("coût optimal : 89 083");
 		suite.add(cout);
-		panel.add(suite);
+		troisiemeLigne.add(suite);
 
 		updateVisibility();
 
@@ -263,5 +323,4 @@ public class MainFenetre extends JFrame {
 		this.solution = solution;
 	}
 
-	
 }

@@ -31,7 +31,6 @@ public class ZDialogParamDeter extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField tempF, taux, dec, fichier;
-	private Parametres params = new Parametres();
 	private MainFenetre parent;
 
 	/**
@@ -41,15 +40,13 @@ public class ZDialogParamDeter extends JDialog {
 	 * @param title
 	 * @param modal
 	 */
-	public ZDialogParamDeter(MainFenetre parent, String title, boolean modal,
-			Parametres p) {
+	public ZDialogParamDeter(MainFenetre parent, String title, boolean modal) {
 		super(parent, title, modal);
 		this.parent = parent;
 		this.setSize(500, 200);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.initComponent();
-		this.params = p;
 		parent.setEtat(MainFenetre.State.FICHIER_CHOISI);
 		parent.updateVisibility();
 	}
@@ -123,7 +120,6 @@ public class ZDialogParamDeter extends JDialog {
 
 		cancelBouton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				params.defaut();
 				setVisible(false);
 			}
 		});

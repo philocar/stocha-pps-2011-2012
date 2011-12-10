@@ -19,8 +19,9 @@ import data.DataBinaire;
 /**
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
- *
- * Fenêtre de dialogue demandant à l'utilisateur d'entrer les paramètres à utiliser pour le traitement par RS
+ * 
+ *         Fenêtre de dialogue demandant à l'utilisateur d'entrer les paramètres
+ *         à utiliser pour le traitement par RS
  */
 public class ZDialogParamRS extends JDialog {
 
@@ -30,9 +31,11 @@ public class ZDialogParamRS extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JLabel labIter, labTempF, labTaux, labDec;
 	private JTextField iter, tempF, taux, dec;
-	private Parametres params = new Parametres();
 	private RSEnergie solveur;
-	private DataBinaire data;
+	private String fileName;
+	private double probabilite;
+	private JTextField proba;
+	private JLabel labProba;
 
 	/**
 	 * Constructeur
@@ -42,17 +45,16 @@ public class ZDialogParamRS extends JDialog {
 	 * @param modal
 	 */
 	public ZDialogParamRS(MainFenetre parent, String title, boolean modal,
-			Parametres p, DataBinaire data) {
+			String fileName) {
 		super(parent, title, modal);
-		this.setSize(350, 260);
+		this.setSize(350, 310);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.initComponent();
-		this.params = p;
 		parent.setEtat(MainFenetre.State.FICHIER_CHOISI);
 		parent.updateVisibility();
 		solveur = null;
-		this.data = data;
+		this.fileName = fileName;
 	}
 
 	/**
@@ -65,7 +67,7 @@ public class ZDialogParamRS extends JDialog {
 		panIter.setPreferredSize(new Dimension(300, 40));
 		iter = new JTextField();
 		iter.setPreferredSize(new Dimension(50, 25));
-		iter.setText((new Integer(params.getRsIter())).toString());
+		iter.setText("16384");
 		labIter = new JLabel("Nombre d'itérations par palier :");
 		panIter.add(labIter);
 		panIter.add(iter);
@@ -75,7 +77,7 @@ public class ZDialogParamRS extends JDialog {
 		panTempF.setPreferredSize(new Dimension(300, 40));
 		tempF = new JTextField();
 		tempF.setPreferredSize(new Dimension(50, 25));
-		tempF.setText((new Double(params.getRsTempF())).toString());
+		tempF.setText("20000");
 		labTempF = new JLabel("Température finale :");
 		panTempF.add(labTempF);
 		panTempF.add(tempF);
@@ -85,7 +87,7 @@ public class ZDialogParamRS extends JDialog {
 		panTaux.setPreferredSize(new Dimension(300, 40));
 		taux = new JTextField();
 		taux.setPreferredSize(new Dimension(50, 25));
-		taux.setText((new Double(params.getRsTaux())).toString());
+		taux.setText("0.8");
 		labTaux = new JLabel("Taux d'acceptation température initiale :");
 		panTaux.add(labTaux);
 		panTaux.add(taux);
@@ -95,10 +97,20 @@ public class ZDialogParamRS extends JDialog {
 		panDec.setPreferredSize(new Dimension(300, 40));
 		dec = new JTextField();
 		dec.setPreferredSize(new Dimension(50, 25));
-		dec.setText((new Double(params.getRsDec())).toString());
+		dec.setText("0.9");
 		labDec = new JLabel("décroissance de la température :");
 		panDec.add(labDec);
 		panDec.add(dec);
+
+		JPanel panProba = new JPanel();
+		panProba.setBackground(Color.white);
+		panProba.setPreferredSize(new Dimension(300, 40));
+		proba = new JTextField();
+		proba.setPreferredSize(new Dimension(50, 25));
+		proba.setText("0.98");
+		labProba = new JLabel("probabilité des scénarios :");
+		panProba.add(labProba);
+		panProba.add(proba);
 
 		JPanel content = new JPanel();
 		content.setBackground(Color.white);
@@ -106,14 +118,17 @@ public class ZDialogParamRS extends JDialog {
 		content.add(panTempF);
 		content.add(panTaux);
 		content.add(panDec);
+		content.add(panProba);
 
 		JPanel control = new JPanel();
 		control.setBackground(Color.white);
 		JButton okBouton = new JButton("OK");
 		JButton cancelBouton = new JButton("Annuler");
 
-		//Création du bouton "OK" dont l'exécution vérifie que les paramètres entrés sont corrects
-		//S'ils ne le sont pas un message d'information est transmis à l'utilisateur 
+		// Création du bouton "OK" dont l'exécution vérifie que les paramètres
+		// entrés sont corrects
+		// S'ils ne le sont pas un message d'information est transmis à
+		// l'utilisateur
 		okBouton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String rep = new String();
@@ -127,8 +142,8 @@ public class ZDialogParamRS extends JDialog {
 						"^([0-9]+)|([0-9]+.[0-9]+)|(.[0-9]+)$")) {
 					valide = false;
 					rep += "le champ \"température finale\" n'est pas valide.\n";
-				}else{
-					if(Double.parseDouble(tempF.getText()) == 0.0){
+				} else {
+					if (Double.parseDouble(tempF.getText()) == 0.0) {
 						valide = false;
 						rep += "le champ \"température finale\" n'est pas valide.\n";
 					}
@@ -147,19 +162,39 @@ public class ZDialogParamRS extends JDialog {
 					valide = false;
 					rep += "le champ \"décroissance température\" n'est pas valide.\n";
 				}
-				
-				if(valide){
+				try {
+					probabilite = Double.parseDouble(proba.getText());
+					if (probabilite > 1 || probabilite < 0) {
+						valide = false;
+						rep += "le champ \"probabilité des scénarios\" n'est pas valide.\n";
+					}
+
+				} catch (java.lang.NumberFormatException e) {
+					valide = false;
+					rep += "le champ \"probabilité des scénarios\" n'est pas valide.\n";
+				}
+
+				if (valide) {
+					System.out.println("début lecture des données");
+					DataBinaire data = new DataBinaire(0, fileName
+							+ "Données_Recuit_demandes.csv", fileName
+							+ "Données_Recuit_paliers1.csv", fileName
+							+ "Données_Recuit_paliers2.csv", fileName
+							+ "Données_Recuit_paliers3.csv", fileName
+							+ "Données_Recuit_paliers4.csv", fileName
+							+ "Données_Recuit_trajectoire_hydro.csv", fileName
+							+ "Données_Recours_parametres_hydraulique.csv",
+							fileName + "Données_Recours_capacite_max.csv");
+					System.out.println("fin lecture des données");
 					setVisible(false);
-				/*	params.setRsIter(Integer.decode(iter.getText()));
-					params.setRsTempF(Double.parseDouble(tempF.getText()));
-					params.setRsTaux(Double.parseDouble(taux.getText()));
-					params.setRsDec(Double.parseDouble(dec.getText()));
-					params.setChoixMethode(2);
-					params.activer(); */
-					solveur = new RSEnergie(data, Double.parseDouble(dec.getText()), Double.parseDouble(tempF.getText()),
-							Integer.decode(iter.getText()), Double.parseDouble(taux.getText()), 10, 100);
-				}else{
-					JOptionPane.showMessageDialog(null, rep, "Erreur", JOptionPane.ERROR_MESSAGE);
+					solveur = new RSEnergie(data, Double.parseDouble(dec
+							.getText()), Double.parseDouble(tempF.getText()),
+							Integer.decode(iter.getText()), Double
+									.parseDouble(taux.getText()), 10, 100);
+					System.out.println("solveur construit");
+				} else {
+					JOptionPane.showMessageDialog(null, rep, "Erreur",
+							JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
@@ -167,7 +202,6 @@ public class ZDialogParamRS extends JDialog {
 
 		cancelBouton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				params.defaut();
 				setVisible(false);
 			}
 		});
