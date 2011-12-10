@@ -39,7 +39,7 @@ public class Optimise extends AbstractAction {
 				.getSelectedItem();
 		if (methodeName.equals("recuit simulé")) {
 
-			DataBinaire data = new DataBinaire(fileName);
+			DataBinaire data = new DataBinaire(0, null, null, null, null, null, null, null, null);
 			ZDialogParamRS zd = new ZDialogParamRS(fenetre,
 					"Choix des paramètres", true, params, data);
 			zd.setVisible(true);
@@ -51,10 +51,10 @@ public class Optimise extends AbstractAction {
 			zd.setVisible(true);
 		} else {
 			if (methodeName.equals("modèle avec recours")) {
-				DataRecours data = new DataRecours(fileName);
+				DataRecours data = new DataRecours(null, null, null, null, null, null, null);
 				solveur = new CplexEnergieRecours(data);
 			} else if (methodeName.equals("relaxation du binaire")) {
-				DataBinaire data = new DataBinaire(fileName);
+				DataBinaire data = new DataBinaire(0, null, null, null, null, null, null, null, null);
 				solveur = new CplexEnergieBinaireRelaxe(data);
 			}
 			fenetre.setSolution( solveur.getSolution() );
