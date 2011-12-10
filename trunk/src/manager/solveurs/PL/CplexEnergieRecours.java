@@ -35,8 +35,6 @@ public class CplexEnergieRecours extends PLEnergieRecours
 	 */
 	public void lancer()
 	{
-		// min couts * x + probabilitesPrix * y
-		// une contrainte par scénario et par période pour l'offre et la demande
 		
 		try {
 			IloCplex cplex = new IloCplex();
@@ -77,6 +75,7 @@ public class CplexEnergieRecours extends PLEnergieRecours
 			double sommeApports = 0;
 			for(int p = 0; p < 7; p++)
 			{
+				// Contraintes sur la demande
 				for(int s = 0; s < 100; s++)
 				{
 					IloNumVar[] x2 = new IloNumVar[4];
@@ -92,8 +91,8 @@ public class CplexEnergieRecours extends PLEnergieRecours
 					cplex.add(eq);
 				}
 			
+				// Contraintes sur les bornes hydrauliques
 				sommeApports += donnees.getApportsPeriode(p);
-				//System.out.println("apport :  "+sommeApports);
 				IloNumVar[] xi5 = new IloNumVar[p+1];
 				double[] un = new double[p+1];
 				for(int ip = 0; ip <= p; ip++)
@@ -112,20 +111,23 @@ public class CplexEnergieRecours extends PLEnergieRecours
 			{
 				System.out.println("Solution status = " + cplex.getStatus());
 				System.out.println("Solution value = " + cplex.getObjValue());
-				double[] val = cplex.getValues(x);
+				double[] valX = cplex.getValues(x);
+				double[] valYP = cplex.getValues(yp);
+				double[] valYM = cplex.getValues(ym);
 				
-//				// Si la variable xii est à 1 alors i est un centre
-//				for(int i=0; i<donnees.getNbEntites(); i++)
-//				{
-//					for(int j=0; j<donnees.getNbEntites(); j++)
-//					{
-//						if(i == j && val[i*donnees.getNbEntites()+j] > 0)
-//						{
-//							solution.setCentre(true, j);
-//						}
-//					}
-//				}
-				
+				for(int i = 0; i < valX.length; i++)
+				{
+					solution.setX(i / (donnees.nbCentralesThermiques+1), i % (donnees.nbCentralesThermiques+1), valX[i]);
+				}
+				for(int i = 0; i < valYP.length; i++)
+				{
+					solution.setyAchat(i / donnees.nbScenarios, i % donnees.nbScenarios, valYP[i]);
+				}
+				for(int i = 0; i < valYM.length; i++)
+				{
+					solution.setyVente(i / donnees.nbScenarios, i % donnees.nbScenarios, valYM[i]);
+				}
+				System.out.println(solution.toString());
 				cplex.end();
 			}
 			

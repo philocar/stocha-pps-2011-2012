@@ -21,16 +21,16 @@ public class DataRecours extends DataBase {
 	/** La liste des scénarios */
 	private ScenarioRecours[] scenarios;
 	
+	public final int nbScenarios = 100;
+	public final int nbPeriodes = 7;
+	public final int nbCentralesThermiques = 4;
+	
 	/**
 	 * Construit une donnée en fonction d'un fichier
 	 * @param fileName le chemin vers le fichier de données
 	 */
 	public DataRecours(String paramHydroFile, String capaciteMaxFile, String demandesFile, String coeffCentrale1File, String coeffCentrale2File, String coeffCentrale3File, String coeffCentrale4File) {
 		super(paramHydroFile, capaciteMaxFile);
-		
-		int nbScenarios = 100;
-		int nbPeriodes = 7;
-		int nbCentralesThermiques = 4;
 		
 		scenarios = new ScenarioRecours[nbScenarios];
 		prixAchat = new double[nbPeriodes];

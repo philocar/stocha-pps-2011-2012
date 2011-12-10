@@ -31,11 +31,12 @@ public abstract class PLEnergieRecours implements Solveur {
 	public PLEnergieRecours(DataRecours donnees)
 	{
 		this.donnees = donnees;
+		solution = new SolutionEnergieRecours(donnees);
 		genererPL();
 	}
 
 	/**
-	 * Génère le programme linéaire de la p-mediane à partir des données.
+	 * Génère le programme linéaire à partir des données.
 	 * Remplit les tableaux du problème.
 	 */
 	private void genererPL()
