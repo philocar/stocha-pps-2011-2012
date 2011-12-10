@@ -1,5 +1,10 @@
 package data;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
 /**
  * Cette classe contient les informations de base concernant une instance du problème.
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
@@ -29,7 +34,97 @@ public abstract class DataBase {
 	 */
 	public DataBase(String parametresHydrauliquesFile, String capaciteMaxFile)
 	{
+		apports = new double[7];
+		volumeMax = new double[7];
+		volumeMin = new double[7];
+		couts = new double[5];
+		productionsMax = new double[5][7];
 		
+		try{
+			BufferedReader buffParamHydro = new BufferedReader(new FileReader(parametresHydrauliquesFile));
+			BufferedReader buffCapaciteMax = new BufferedReader(new FileReader(capaciteMaxFile));
+
+			try {
+				String line;
+				int i = 0;
+				// Lecture du fichier des paramètres hydrauliques ligne par ligne. Cette boucle se termine
+				// quand la méthode retourne la valeur null.
+				while ((line = buffParamHydro.readLine()) != null) {
+					// On saut les lignes sans donnée
+					if(i % 2 != 0)
+					{
+						StringTokenizer tokenizer = new StringTokenizer(line, ";");
+						// Saute le nom du paramètre
+						tokenizer.nextToken();
+
+						int j = 0;
+						// Tant qu'il y a des tokens on les parcourt
+						while(tokenizer.hasMoreTokens())
+						{
+							String token = tokenizer.nextToken();
+							// On ne s'intéresse qu'aux tokens représentant une donnée qui est la production maximale
+							if(i == 1)
+							{
+								apports[j] = Double.parseDouble(token);
+							}
+							else if(i == 3)
+							{
+								volumeMax[j] = Double.parseDouble(token);
+							}
+							else if(i == 5)
+							{
+								volumeInitial = Double.parseDouble(token);
+							}
+							else if(i == 7)
+							{
+								volumeMin[j] = Double.parseDouble(token);
+							}
+							else if(i == 9)
+							{
+								turbinage = Double.parseDouble(token);
+							}
+							j++;
+						}
+					}
+					i++;
+				}
+				
+				// Lecture du fichier des capacités max
+				i = 0;
+				while ((line = buffCapaciteMax.readLine()) != null) {
+					// On saut les lignes sans donnée
+					if(i % 2 != 0)
+					{
+						StringTokenizer tokenizer = new StringTokenizer(line, ";");
+						// Saute le nom de la centrale
+						tokenizer.nextToken();
+						// Le deuxième token contient le cout de production
+						couts[i/2] = Double.parseDouble(tokenizer.nextToken());
+
+						int j = 0;
+						// Tant qu'il y a des tokens on les parcourt
+						while(tokenizer.hasMoreTokens())
+						{
+							String token = tokenizer.nextToken();
+							// On ne s'intéresse qu'aux tokens représentant une donnée qui est la production maximale
+							if(!token.equals("MW") && !token.equals("m3"))
+							{
+								productionsMax[i/2][j] = Double.parseDouble(token);
+								j++;
+							}
+						}
+					}
+					i++;
+				}
+			} finally {
+				// dans tous les cas, on ferme nos flux
+				buffParamHydro.close();
+				buffCapaciteMax.close();
+			}
+		} catch (IOException ioe) {
+			// erreur de fermeture des flux
+			System.out.println("Erreur --" + ioe.toString());
+		}
 	}
 	
 	/**

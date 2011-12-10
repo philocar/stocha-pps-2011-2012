@@ -20,7 +20,7 @@ public class DataRecours extends DataBase {
 	 * @param fileName le chemin vers le fichier de données
 	 */
 	public DataRecours(String fileName) {
-
+		super(null, null);
 	}
 
 	/**
