@@ -147,36 +147,4 @@ public class RSEnergie extends RecuitSimule
 		
 		return solution;
 	}
-
-	private boolean respecteContrainteDemande(SolutionEnergieBinaire solution) {
-		
-		for(int s=0; s<donnees.nbScenarios; s++)
-		{
-			if(solution.isActived(s))
-			{
-				for(int p=0; p<donnees.nbPeriodes; p++)
-				{
-					double production = 0;
-					for(int c=0; c<donnees.nbCentrales; c++)
-					{
-						production += donnees.getScenario(s).getPaliersPeriodeCentrale(p, c)[solution.getDecisionPeriodeCentrale(p, c)];
-					}
-					
-					if(production < donnees.getScenario(s).getDemandePeriode(p))
-						return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	private double probabiliteScenario(boolean[] scenarios) {
-		double sommeProba = 0;
-		for(int i=0; i<scenarios.length; i++)
-		{
-			if(scenarios[i])
-				sommeProba += donnees.getScenario(i).getProbabilite();
-		}
-		return sommeProba;
-	}
 }

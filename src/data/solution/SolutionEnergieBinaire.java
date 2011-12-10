@@ -1,5 +1,7 @@
 package data.solution;
 
+import java.util.Random;
+
 import data.DataBinaire;
 
 /**
@@ -68,7 +70,58 @@ public class SolutionEnergieBinaire extends Solution {
 
 	@Override
 	public void solutionInitiale() {
+		Random rand = new Random();
 		
+		int scenarioActive;
+		do
+		{
+			scenarioActive = rand.nextInt(z.length);
+			if(!z[scenarioActive])
+				z[scenarioActive] = true;
+		} while(probabiliteScenario() < donnees.getProbabilite());
+		
+		do
+		{
+			for(int p=0; p<donnees.nbPeriodes; p++)
+			{
+				for(int c=0; c<donnees.nbCentrales; c++)
+				{
+					y[p][c] = rand.nextInt(donnees.nbPaliers[c]);
+				}
+			}
+		} while(!respecteContrainteDemande());
+	}
+	
+	public boolean respecteContrainteDemande() {
+		
+		for(int s=0; s<donnees.nbScenarios; s++)
+		{
+			if(isActived(s))
+			{
+				for(int p=0; p<donnees.nbPeriodes; p++)
+				{
+					double production = 0;
+					for(int c=0; c<donnees.nbCentrales; c++)
+					{
+						production += donnees.getScenario(s).getPaliersPeriodeCentrale(p, c)[getDecisionPeriodeCentrale(p, c)];
+					}
+					
+					if(production < donnees.getScenario(s).getDemandePeriode(p))
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public double probabiliteScenario() {
+		double sommeProba = 0;
+		for(int i=0; i<z.length; i++)
+		{
+			if(z[i])
+				sommeProba += donnees.getScenario(i).getProbabilite();
+		}
+		return sommeProba;
 	}
 	
 	public boolean[] getZ()
