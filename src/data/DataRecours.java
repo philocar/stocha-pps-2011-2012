@@ -43,7 +43,7 @@ public class DataRecours extends DataBase {
 		}
 		
 		double[][] demandesTmp = new double[nbScenarios][nbPeriodes];
-		double[][][] facteursTmp = new double[nbScenarios][nbCentralesThermiques][nbPeriodes];
+		double[][][] facteursTmp = new double[nbScenarios][nbPeriodes][nbCentralesThermiques];
 		
 		try{
 			BufferedReader buffDemandes = new BufferedReader(new FileReader(demandesFile));
@@ -87,7 +87,7 @@ public class DataRecours extends DataBase {
 							while(tokenizer.hasMoreTokens())
 							{
 								String token = tokenizer.nextToken();
-								facteursTmp[i-1][0][j] = Double.parseDouble(token);
+								facteursTmp[i-1][j][0] = Double.parseDouble(token);
 								j++;
 							}
 						}
@@ -112,7 +112,7 @@ public class DataRecours extends DataBase {
 							while(tokenizer.hasMoreTokens())
 							{
 								String token = tokenizer.nextToken();
-								facteursTmp[i-1][1][j] = Double.parseDouble(token);
+								facteursTmp[i-1][j][1] = Double.parseDouble(token);
 								j++;
 							}
 						}
@@ -137,7 +137,7 @@ public class DataRecours extends DataBase {
 							while(tokenizer.hasMoreTokens())
 							{
 								String token = tokenizer.nextToken();
-								facteursTmp[i-1][2][j] = Double.parseDouble(token);
+								facteursTmp[i-1][j][2] = Double.parseDouble(token);
 								j++;
 							}
 						}
@@ -162,7 +162,7 @@ public class DataRecours extends DataBase {
 							while(tokenizer.hasMoreTokens())
 							{
 								String token = tokenizer.nextToken();
-								facteursTmp[i-1][3][j] = Double.parseDouble(token);
+								facteursTmp[i-1][j][3] = Double.parseDouble(token);
 								j++;
 							}
 						}
@@ -253,8 +253,9 @@ public class DataRecours extends DataBase {
 		DataRecours data = new DataRecours("Data/Données_Recours_parametres_hydraulique.csv", "Data/Données_Recours_capacite_max.csv", "Data/Données_Recours_scenarios_demande.csv", "Data/Données_Recours_scenarios_coeff_dispo_centrale1.csv", "Data/Données_Recours_scenarios_coeff_dispo_centrale2.csv", "Data/Données_Recours_scenarios_coeff_dispo_centrale3.csv", "Data/Données_Recours_scenarios_coeff_dispo_centrale4.csv");
 		for(ScenarioRecours scenario : data.getScenarios())
 		{
-			double test = scenario.getPaliersPeriodeCentrale(0, 0);
-			System.out.println(test);
+			double test = scenario.getDemandePeriode(6);
+			System.out.println(test+"\n");
 		}
+//		System.out.println(data.getScenario(0).getPaliersPeriodeCentrale(0, 4));
 	}
 }

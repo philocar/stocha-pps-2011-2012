@@ -30,6 +30,7 @@ public abstract class PLEnergieRecours implements Solveur {
 	 */
 	public PLEnergieRecours(DataRecours donnees)
 	{
+		this.donnees = donnees;
 		genererPL();
 	}
 
@@ -39,6 +40,26 @@ public abstract class PLEnergieRecours implements Solveur {
 	 */
 	private void genererPL()
 	{
+		facteursDisponibilite = new double[100][7][5];
+		for(int s = 0; s < 100; s++)
+		{
+			for(int p = 0; p < 7; p++)
+			{
+				for(int c = 0; c < 4; c++)
+				{
+					facteursDisponibilite[s][p][c] = donnees.getScenario(s).getPaliersPeriodeCentrale(p, c);
+				}
+			}
+		}
+		couts = new double[7*5];
+		
+		for(int p = 0; p < 7; p++)
+		{
+			for(int c = 0; c < 5; c++)
+			{
+				couts[p*5 + c] = donnees.getCoutCentrale(c);
+			}
+		}
 		
 	}
 	
