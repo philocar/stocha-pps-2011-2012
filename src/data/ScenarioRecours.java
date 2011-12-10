@@ -1,4 +1,4 @@
-package data;
+package src.data;
 
 /** 
  * Cette classe représente un scénario pour le problème avec recours
@@ -19,8 +19,10 @@ public class ScenarioRecours {
 	 * @param demandes les demandes par période
 	 * @param probabilite la probabilité que le scénario se déroule
 	 */
-	public ScenarioRecours(double[][] facteurDisponibilite, double[] demandes, double[] apports, double probabilite) {
-		
+	public ScenarioRecours(double[][] facteurDisponibilite, double[] demandes, double probabilite) {
+		this.facteursDisponibilite = facteurDisponibilite;
+		this.demandes = demandes;
+		this.probabilite = probabilite;
 	}
 
 	/**
