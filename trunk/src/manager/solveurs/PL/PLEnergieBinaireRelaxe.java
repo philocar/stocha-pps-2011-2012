@@ -45,17 +45,18 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 	 */
 	private void genererPL()
 	{
-		couts = new double[donnees.nbPeriodes*(donnees.nbPaliers[0]+donnees.nbPaliers[1]+donnees.nbPaliers[2]+donnees.nbPaliers[3])+donnees.nbTrajectoires];	
 		int nbPaliers = donnees.nbPaliers[0]+donnees.nbPaliers[1]+donnees.nbPaliers[2]+donnees.nbPaliers[3];
+		couts = new double[donnees.nbPeriodes*nbPaliers+donnees.nbTrajectoires];	
+		
 		for(int p = 0; p < donnees.nbPeriodes; p++)
 		{
-			int sommePalliers = 0;
+			int sommePaliers = 0;
 			for(int c = 0; c < donnees.nbCentrales; c++)
 			{
-				for(int numPallier = 0; numPallier < donnees.nbPaliers[c]; numPallier++)
+				for(int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++)
 				{
-					couts[p*nbPaliers + sommePalliers] = donnees.getCoutCentrale(c);
-					sommePalliers++;
+					couts[p*nbPaliers + sommePaliers] = donnees.getCoutCentrale(c);
+					sommePaliers++;
 				}
 			}
 		}
