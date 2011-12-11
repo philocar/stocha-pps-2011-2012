@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import data.solution.Solution;
+import data.solution.SolutionCentrale;
 
 public class MainFenetre extends JFrame {
 	/**
@@ -55,6 +56,8 @@ public class MainFenetre extends JFrame {
 	private JLabel descriptionFichier;
 
 	private HashMap<String, String> descriptionChoix;
+
+	private AfficheResultat affichage;
 
 	public MainFenetre() {
 		super();
@@ -244,8 +247,8 @@ public class MainFenetre extends JFrame {
 		l.setHgap(30);
 		suite.setLayout(l);
 		troisiemeLigne.add(suite);
-		Solution s = null;
-		resultat = new JButton(new AfficheResultat(this, "voir le résultat", s));
+		affichage = new AfficheResultat(this, "voir le résultat");
+		resultat = new JButton(affichage);
 		// resultat.setVisible(false);
 		suite.add(resultat);
 
@@ -321,7 +324,9 @@ public class MainFenetre extends JFrame {
 
 	public void setSolution(Solution solution) {
 		this.solution = solution;
+		affichage.setSolution( ((SolutionCentrale)solution).genererSolutionEnergie());
 		cout.setText(""+solution.fonctionObjectif());
+		System.out.println("solution : "+solution);
 	}
 
 	public void setDescription(String text){

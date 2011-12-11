@@ -17,9 +17,9 @@ public class DessinCentrale extends JComponent {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	double[] nuage;
-	double[] fonction;
+	private double[] nuage;
 	private double pmax;
+	private double[] tabPmax;
 
 	public DessinCentrale() {
 		super();
@@ -38,12 +38,17 @@ public class DessinCentrale extends JComponent {
 	
 	
 	
-	public void setNuage(double[] nua, double puissanceMax) {
+	public void setNuage(double[] nua, double[] tabPuissanceMax) {
 		if (nua.length < 1 ) {
 			return;
 		}
 		nuage = nua;
-		pmax = puissanceMax;
+		tabPmax = tabPuissanceMax;
+		pmax = 0; 
+		for(int i=0; i<tabPuissanceMax.length; i++){
+			if(pmax < tabPuissanceMax[i])
+				pmax = tabPuissanceMax[i];
+		}
 	}
 
 	public void paint(Graphics g) {
@@ -52,7 +57,7 @@ public class DessinCentrale extends JComponent {
 
 		// compute min & max from nuage
 		double xmin = 0, xmax = 10, ymin = -10;
-		double ymax = pmax;
+		double ymax = pmax  *1.1;
 		double y = 0;
 		if (nuage != null) {
 			xmin = 0;
@@ -79,38 +84,41 @@ public class DessinCentrale extends JComponent {
 		int hauteurAxe = (getHeight() - 5) - ydr;
 		g.drawLine(0, hauteurAxe, getWidth(),hauteurAxe);
 		
-		// puissance max
-		int hauteurMax =  getHeight() - 5 - (int) ((pmax - ymin) * getHeight() / (ymax - ymin));
-		g.setColor(new Color(180, 0, 0));
-		g.drawLine(0, hauteurMax, getWidth(),  hauteurMax );
-		char[] text = ("puissance max (MW) : "+pmax).toCharArray();
-		g.drawChars(text, 0, text.length, 10, hauteurMax+15);
-
 		if (nuage != null) {
 			int delta = (getHeight()+getWidth())/100;
+			int delta_x = (int) (xmin * getWidth() / ( xmin - xmax));
 			for (int i=0; i<nuage.length; i++) {
 
 				y = nuage[i];
 				idr = (int) ((i - xmin) * getWidth() / (xmax - xmin));
 				ydr = (int) ((y - ymin) * getHeight() / (ymax - ymin));
+				
 				//jours sur l'axe
 				g.setColor(new Color(0, 129, 21));
 				g.drawLine(idr, hauteurAxe-delta , idr, hauteurAxe + delta );
-				text = (""+i).toCharArray();
-				g.drawChars(text, 0, text.length, idr, hauteurAxe+delta+10);
+				g.drawString( ""+i, idr, hauteurAxe+delta+10);
 				
 				
 				// dessin d'une petite croix
 				g.setColor(Color.WHITE);
-				g.drawLine(idr + delta, getHeight() - 5 - ydr, idr - delta, getHeight()
+			/*	g.drawLine(idr + delta, getHeight() - 5 - ydr, idr - delta, getHeight()
 						- 5 - ydr);
 				g.drawLine(idr,getHeight() - 5 - ydr+delta, idr, getHeight() - 5 - ydr-delta);
-				
+			*/
+				g.fillRect(idr, getHeight() - 5 - ydr, delta_x, hauteurAxe - (getHeight() - 5 - ydr));
 			}
 			//nom de l'abscisse
 			g.setColor(new Color(0, 129, 21));
-			text = "jours".toCharArray();
-			g.drawChars(text, 0, text.length, idr/nuage.length*(nuage.length+1), hauteurAxe+delta+10);
+			g.drawString("jours", idr/nuage.length*(nuage.length+1), hauteurAxe+delta+10);
+		
+			// puissance max
+			int hauteurMax =  getHeight() - 5 - (int) ((pmax - ymin) * getHeight() / (ymax - ymin));
+			g.setColor(new Color(180, 0, 0));
+			g.drawLine(delta_x, hauteurMax, getWidth(),  hauteurMax );
+			g.drawString("puissance max : "+(int)pmax+" MW", delta_x + 5, hauteurMax - 5);
+
+				
+		
 		}
 
 	}
@@ -121,14 +129,9 @@ public class DessinCentrale extends JComponent {
 
 		// points y Ã  dessiner autour de la courbe, x allant de 0 à max.
 		double[] nua = {  2 , 1 , 4 , 0 , 2 , 3 , 1, 10 };
-		double pmax = 10;
+		double[] tabPuissance = {  4 , 5 , 7 , 9 , 2 , 1 , 13, 4 };
 		DessinCentrale lf = new DessinCentrale(true);
-	/*	JFrame frame = new JFrame("centrale");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(lf);
-		frame.setSize(400, 400);
-		frame.setVisible(true); */
-		lf.setNuage(nua, pmax);
+		lf.setNuage(nua, tabPuissance);
 	}
 
 }
