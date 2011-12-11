@@ -13,7 +13,7 @@ import data.DataBinaire;
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
-public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
+public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 
 	/**
 	 * Crée un nouveau CPlexEnergie
@@ -53,7 +53,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
 
 			double M = 200000;
 
-			cplex.addMinimize(cplex.scalProd(couts, y));
+			cplex.addMinimize(cplex.diff(cplex.scalProd(couts, y), gains));
 
 			// Un seul palier accepté par période et par centrale
 			for (int p = 0; p < donnees.nbPeriodes; p++) {
@@ -114,29 +114,22 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
 				double[] valYn = cplex.getValues(yn);
 				double[] valZ = cplex.getValues(z);
 
-				for (int p = 0; p < donnees.nbPeriodes; p++) {
+				for (int p = 0; p < donnees.nbPeriodes; p++) {					
 					int sommePaliers = 0;
 					for (int c = 0; c < donnees.nbCentrales; c++) {
 						for (int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++) {
-							if (valYt[p * nbPaliers + sommePaliers] > 0) {
-								solution.setDecisionPeriodeCentrale(p, c, numPalier);
-							}
-
+							solution.setDecisionPeriodeCentrale(p, c, numPalier, valYt[p * nbPaliers + sommePaliers]);
 							sommePaliers++;
 						}
 					}
 				}
 
 				for (int i = 0; i < valYn.length; i++) {
-					if (valYn[i] > 0)
-						solution.setTrajectoire(i);
+					solution.setChoixTrajectoire(i, valYn[i]);
 				}
-
+				
 				for (int s = 0; s < valZ.length; s++) {
-					if (valZ[s] > 0)
-						solution.active(s, true);
-					else
-						solution.active(s, false);
+					solution.setZ(s, valZ[s]);
 				}
 
 				System.out.println(solution.toString());

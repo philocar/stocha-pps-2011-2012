@@ -21,6 +21,8 @@ public abstract class PLEnergieBinaire implements Solveur {
 	protected SolutionEnergieBinaire solution;
 	/** Le vecteur de coûts */
 	protected double[] couts;
+	/** Le gain avec les apports en eau */
+	protected double gains;
 	/** Les probabilités des scénarios */
 	protected double[] probabilites;
 
@@ -43,7 +45,7 @@ public abstract class PLEnergieBinaire implements Solveur {
 	private void genererPL() {
 		int nbPaliers = donnees.nbPaliers[0] + donnees.nbPaliers[1] + donnees.nbPaliers[2] + donnees.nbPaliers[3];
 		couts = new double[donnees.nbPeriodes * nbPaliers + donnees.nbTrajectoires];
-
+		gains = 0;
 		for (int p = 0; p < donnees.nbPeriodes; p++) {
 			int sommePaliers = 0;
 			for (int c = 0; c < donnees.nbCentrales; c++) {
@@ -52,12 +54,12 @@ public abstract class PLEnergieBinaire implements Solveur {
 					sommePaliers++;
 				}
 			}
+			gains += donnees.getApportsPeriode(p) *  donnees.getCoutCentrale(4);
 		}
 		for (int i = 0; i < donnees.nbTrajectoires; i++) {
 			couts[donnees.nbPeriodes * nbPaliers + i] = donnees.nbPeriodes * donnees.getCoutCentrale(4)
 					* donnees.getTrajectoire(i) / donnees.getTurbinage();
 		}
-
 	}
 
 	/**

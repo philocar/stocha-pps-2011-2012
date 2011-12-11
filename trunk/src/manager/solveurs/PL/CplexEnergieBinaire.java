@@ -54,7 +54,7 @@ public class CplexEnergieBinaire extends PLEnergieBinaire {
 
 			double M = 200000;
 
-			cplex.addMinimize(cplex.scalProd(couts, y));
+			cplex.addMinimize(cplex.diff(cplex.scalProd(couts, y), gains));
 
 			// Un seul palier accepté par période et par centrale
 			for (int p = 0; p < donnees.nbPeriodes; p++) {

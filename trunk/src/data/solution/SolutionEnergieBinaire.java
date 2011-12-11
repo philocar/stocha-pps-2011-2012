@@ -6,7 +6,6 @@ import data.DataBinaire;
 
 /**
  * Une solution du problème de management de la production d'énergie en binaire
- * mais aussi pour sa relaxation.
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
