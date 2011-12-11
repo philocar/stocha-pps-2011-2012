@@ -19,7 +19,6 @@ public class DessinCentrale extends JComponent {
 	private static final long serialVersionUID = 1L;
 	private double[] nuage;
 	private double pmax;
-	private double[] tabPmax;
 
 	public DessinCentrale() {
 		super();
@@ -43,7 +42,6 @@ public class DessinCentrale extends JComponent {
 			return;
 		}
 		nuage = nua;
-		tabPmax = tabPuissanceMax;
 		pmax = 0; 
 		for(int i=0; i<tabPuissanceMax.length; i++){
 			if(pmax < tabPuissanceMax[i])

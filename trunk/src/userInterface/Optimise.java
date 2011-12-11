@@ -6,11 +6,8 @@ import java.io.File;
 import javax.swing.AbstractAction;
 
 import manager.solveurs.Solveur;
-import manager.solveurs.PL.CplexEnergieBinaireRelaxe;
 import manager.solveurs.PL.CplexEnergieRecours;
-import data.DataBinaire;
 import data.DataRecours;
-import data.solution.Solution;
 
 public class Optimise extends AbstractAction {
 	/**

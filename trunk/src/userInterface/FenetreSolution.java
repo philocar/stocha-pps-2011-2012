@@ -5,13 +5,10 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import data.solution.Solution;
-import data.solution.SolutionCentrale;
 import data.solution.SolutionEnergie;
 
 public class FenetreSolution extends JFrame {
@@ -22,7 +19,6 @@ public class FenetreSolution extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel panel;
 	private double[][] points;
-	private double min;
 	private double max[];
 	private SolutionEnergie solution;
 	
@@ -193,7 +189,6 @@ public class FenetreSolution extends JFrame {
 		double[] nuages = {  10000 , 1550 , 7040 , 29000 , 16232 , 36980 , 55982, 60000 };
 		max[4] = 60000;
 		points[4] = nuages;
-		min = 1400;
 		DessinReservoir reservoir = new DessinReservoir();
 		//reservoir.setNuage(points[4]);
 		reservoir.setNuage(solution.getEnergies()[4]);
