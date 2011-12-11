@@ -20,23 +20,28 @@ public class DataBinaire extends DataBase {
 	private double probabilite;
 	/** Les paliers de chaque centrales thermiques */
 	private double[][] paliers;
-	
+	/** Le nombre de scénarios */
 	public final int nbScenarios = 100;
+	/** Le nombre de trajectoires */
 	public final int nbTrajectoires = 8;
+	/** Le nombre de paliers pour chaque centrale thermique */
 	public final int[] nbPaliers = {3, 4, 4, 5};
+	/** Le nombre de périodes */
 	public final int nbPeriodes = 7;
+	/** Le nombre de centrales */
 	public final int nbCentrales = 4;
 	
 	/**
 	 * Construit une donnée binaire en fonction des fichiers. Les scénarios sont équiprobables
-	 * @param demandesFile
-	 * @param coeffCentrale1File
-	 * @param coeffCentrale2File
-	 * @param coeffCentrale3File
-	 * @param coeffCentrale4File
-	 * @param trajectoiresFile
+	 * @param probabilie la probabilité voulue que les scénarios se déroulent
+	 * @param demandesFile le fichier csv contenant les scénarios de demandes
+	 * @param coeffCentrale1File le fichier csv contenant les paliers de la centrale 1
+	 * @param coeffCentrale2File le fichier csv contenant les paliers de la centrale 2
+	 * @param coeffCentrale3File le fichier csv contenant les paliers de la centrale 3
+	 * @param coeffCentrale4File le fichier csv contenant les paliers de la centrale 4
+	 * @param trajectoiresFile le fichier csv contenant les trajectoires hydrauliques
 	 * @param parametresHydrauliquesFile le fichier csv contenant les paramètres hydrauliques
-	 * @param capaciteMaxFile le fichier csv contenant la capacité max
+	 * @param capaciteMaxFile le fichier csv contenant la capacité max et les coûts
 	 */
 	public DataBinaire(double probabilite, String demandesFile, String coeffCentrale1File, String coeffCentrale2File, String coeffCentrale3File, String coeffCentrale4File, String trajectoiresFile, String parametresHydrauliquesFile, String capaciteMaxFile) {
 		super(parametresHydrauliquesFile, capaciteMaxFile);
