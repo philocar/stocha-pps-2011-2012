@@ -304,8 +304,7 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 				tabEnergie[c][p] = donnees.getPalier(c, y[p][c]);
 			}
 
-			tabEnergie[c][p] = ((donnees.getTrajectoire(trajectoire) / donnees.getTurbinage()) - donnees
-					.getApportsPeriode(p));
+			tabEnergie[c][p] = donnees.getTrajectoire(trajectoire) / donnees.getTurbinage();
 		}
 		e.setEnergies(tabEnergie);
 

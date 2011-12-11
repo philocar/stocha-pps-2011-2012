@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import manager.PreparationMatlab;
+
 /**
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
@@ -185,43 +187,7 @@ public class ZDialogParamDeter extends JDialog {
 	}
 	
 	private void genererFichier(String file) {
-
-		System.out.println("fichier de sauvegarde : "+file);
-		String contenu = "";
-		try {
-			System.out.println("lecture");
-			File f = new File(directory
-					+ "Données_Modèle_Probabiliste_Variables_Réelles.m");
-			Scanner sc;
-
-			sc = new Scanner(f);
-
-			while (sc.hasNext()) {
-				contenu += sc.nextLine() + "\n";
-			}
-			contenu += ajout;
-		//	System.out.println(contenu + "\n fin lecture");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		// écriture des données
-		FileWriter writer = null;
-		try {
-			writer = new FileWriter(file, false);
-			writer.write(contenu, 0, contenu.length());
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
+		PreparationMatlab.generer(file, directory+ "Données_Modèle_Probabiliste_Variables_Réelles.m");
 	}
 
 	
