@@ -13,7 +13,7 @@ import data.solution.SolutionEnergieBinaire;
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  * 
  */
-public abstract class PLEnergieBinaireRelaxe implements Solveur {
+public abstract class PLEnergieBinaire implements Solveur {
 
 	/** Variable contenant les données du problème */
 	protected DataBinaire donnees;
@@ -30,7 +30,7 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 	 * @param donnees
 	 *            les données du problème
 	 */
-	public PLEnergieBinaireRelaxe(DataBinaire donnees) {
+	public PLEnergieBinaire(DataBinaire donnees) {
 		this.donnees = donnees;
 		solution = new SolutionEnergieBinaire(donnees);
 		genererPL();
@@ -48,15 +48,14 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 			int sommePaliers = 0;
 			for (int c = 0; c < donnees.nbCentrales; c++) {
 				for (int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++) {
-					couts[p * nbPaliers + sommePaliers] = donnees.getCoutCentrale(c)
-							* donnees.getPalier(c, numPalier);
+					couts[p * nbPaliers + sommePaliers] = donnees.getCoutCentrale(c) * donnees.getPalier(c, numPalier);
 					sommePaliers++;
 				}
 			}
 		}
 		for (int i = 0; i < donnees.nbTrajectoires; i++) {
-			couts[donnees.nbPeriodes * nbPaliers + i] = donnees.nbPeriodes
-					* donnees.getCoutCentrale(4) * donnees.getTrajectoire(i) / donnees.getTurbinage();
+			couts[donnees.nbPeriodes * nbPaliers + i] = donnees.nbPeriodes * donnees.getCoutCentrale(4)
+					* donnees.getTrajectoire(i) / donnees.getTurbinage();
 		}
 
 	}

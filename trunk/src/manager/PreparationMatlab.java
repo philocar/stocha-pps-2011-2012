@@ -1,7 +1,5 @@
 package manager;
 
-import data.DataProbabiliste;
-
 /**
  * Classe permettant la création d'un fichier exécutable par Matlab pour la résolution du problème déterministe dérivé du problème probabiliste.
  * 
@@ -12,10 +10,9 @@ public class PreparationMatlab {
 	
 	/**
 	 * Génère un fichier .m utilisable dans Matlab sous la forme d'un programme cvx.
-	 * @param donnees Les données du problème
 	 * @param fichier Le fichier d'écriture
 	 */
-	public static void generer(DataProbabiliste donnees, String fichier){
+	public static void generer(String fichier){
 		
 	}
 }
