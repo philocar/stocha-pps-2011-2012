@@ -126,7 +126,7 @@ public class RSEnergie extends RecuitSimule
 				nbTests++;
 				
 				// On modifie le palier d'une centrale pour une période
-				if(rand.nextInt(1) < 80)
+				if(rand.nextDouble() < 0.78)
 				{
 					int periodeChange;
 					int centraleChange;
@@ -166,7 +166,7 @@ public class RSEnergie extends RecuitSimule
 				}
 			} while(recherche && nbTests < nbTestsTransformations);
 			
-		} while(!solution.respecteContrainteDemande() && nbTests == nbTestsTransformations);
+		} while(recherche && nbTests == nbTestsTransformations);
 		
 		return solution;
 	}
@@ -174,7 +174,7 @@ public class RSEnergie extends RecuitSimule
 	public static void main(String[] args)
 	{
 		DataBinaire data = new DataBinaire(0.98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
-		RSEnergie rs = new RSEnergie(data, 0.8, 20000, 16384, 0.8, 10, 100);
+		RSEnergie rs = new RSEnergie(data, 0.9, 0.01, 16384, 0.8, 10, 100);
 		rs.lancer();
 		SolutionEnergieBinaire solution = (SolutionEnergieBinaire) rs.getSolution();
 		System.out.println(solution);

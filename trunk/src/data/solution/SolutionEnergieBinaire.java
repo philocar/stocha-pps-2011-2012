@@ -75,6 +75,9 @@ public class SolutionEnergieBinaire extends Solution {
 	public void solutionInitiale() {
 		Random rand = new Random();
 
+		for(int i=0; i<z.length; i++)
+			z[i] = false;
+		
 		int scenarioActive;
 		do
 		{
@@ -135,6 +138,8 @@ public class SolutionEnergieBinaire extends Solution {
 				}
 			}
 		} while(!respecteContrainteDemande());
+		
+		System.out.println(fonctionObjectif());
 	}
 	
 	public boolean respecteContrainteDemande() {
@@ -150,6 +155,7 @@ public class SolutionEnergieBinaire extends Solution {
 					{
 						production += donnees.getScenario(s).getPaliersPeriodeCentrale(c, p)[getDecisionPeriodeCentrale(p, c)];
 					}
+					production += donnees.getTrajectoire(trajectoire);
 					
 					if(production < donnees.getScenario(s).getDemandePeriode(p))
 						return false;
@@ -170,6 +176,7 @@ public class SolutionEnergieBinaire extends Solution {
 				{
 					production += donnees.getScenario(s).getPaliersPeriodeCentrale(c, periode)[getDecisionPeriodeCentrale(periode, c)];
 				}
+				production += donnees.getTrajectoire(trajectoire);
 				
 				if(production < donnees.getScenario(s).getDemandePeriode(periode))
 					return false;
