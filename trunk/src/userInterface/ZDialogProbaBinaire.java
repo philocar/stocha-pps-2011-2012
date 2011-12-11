@@ -30,8 +30,6 @@ public class ZDialogProbaBinaire extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel labIter, labTempF, labTaux, labDec;
-	private JTextField iter, tempF, taux, dec;
 	private String fileName;
 	private double probabilite;
 	private JTextField proba;
