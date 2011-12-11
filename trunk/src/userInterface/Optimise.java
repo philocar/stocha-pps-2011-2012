@@ -66,19 +66,22 @@ public class Optimise extends AbstractAction {
 								+ "Données_Recours_scenarios_coeff_dispo_centrale4.csv");
 				solveur = new CplexEnergieRecours(data);
 			} else if (methodeName.equals("relaxation du binaire")) {
-				DataBinaire data = new DataBinaire(0, null, null, null, null,
-						null, null, null, null);
-				solveur = new CplexEnergieBinaireRelaxe(data);
-			}
-			System.out.println("début des calculs");
-			solveur.lancer();
-			fenetre.setDescription("calcul en cours");
-			System.out.println("fin des calculs");
-			fenetre.setSolution(solveur.getSolution());
-			fenetre.setDescription("calcul terminé");
-			fenetre.setEtat(MainFenetre.State.RESULTAT_CALCULE);
-		}
 
+				ZDialogProbaBinaire zd = new ZDialogProbaBinaire (fenetre,
+						"Choix des paramètres", true, fileName);
+				zd.setVisible(true);
+				solveur = zd.getSolveur();
+			}
+			if(solveur != null){	// si l'utilisateur a annulé l'action
+				System.out.println("début des calculs");
+				fenetre.setDescription("calcul en cours");
+				solveur.lancer();
+				System.out.println("fin des calculs");
+				fenetre.setSolution(solveur.getSolution());
+				fenetre.setDescription("calcul terminé");
+				fenetre.setEtat(MainFenetre.State.RESULTAT_CALCULE);
+			}
+		}
 		fenetre.updateVisibility();
 
 	}

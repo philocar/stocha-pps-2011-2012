@@ -10,6 +10,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import data.solution.Solution;
+import data.solution.SolutionCentrale;
+import data.solution.SolutionEnergie;
+
 public class FenetreSolution extends JFrame {
 
 	/**
@@ -20,9 +24,12 @@ public class FenetreSolution extends JFrame {
 	private double[][] points;
 	private double min;
 	private double max[];
+	private SolutionEnergie solution;
 	
-	public FenetreSolution() {
+	public FenetreSolution(SolutionEnergie solution) {
 		super();
+		this.solution = solution;
+		System.out.println(solution);
 		build();// On initialise notre fenêtre
 	}
 
@@ -46,19 +53,22 @@ public class FenetreSolution extends JFrame {
 		
 		DessinCentrale centrale = new DessinCentrale();
 		// points y Ã  dessiner autour de la courbe, x allant de 0 à max.
+	//*
 		double[] nu = {  200 , 100 , 400 , 0 , 200 , 300 , 100, 1000 };
 		points = new double[5][];
 		points[0] = nu;
 		max = new double[5];
 		max[0] = 1000;
-		centrale.setNuage(points[0], max[0]);
-		
+	//	centrale.setNuage(points[0], max[0]);
+		//*/
+		centrale.setNuage(solution.getEnergies()[0], solution.getEnergiesMax()[0]);
+	
 		JPanel centralePanel = new JPanel();
 		BorderLayout configureLayout = new BorderLayout();
 		centralePanel.setLayout(configureLayout);
 		panel.add(centralePanel);
 		centralePanel.add(centrale, BorderLayout.CENTER);
-		centralePanel.add(new JLabel("centrale nucléaire"), BorderLayout.NORTH);
+		centralePanel.add(new JLabel("centrale 1"), BorderLayout.NORTH);
 		centralePanel.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent arg0) {
 			}
@@ -75,7 +85,8 @@ public class FenetreSolution extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				DessinCentrale centrale = new DessinCentrale(true);
-				centrale.setNuage(points[0], max[0]);
+				//centrale.setNuage(points[0], max[0]);
+				centrale.setNuage(solution.getEnergies()[0], solution.getEnergiesMax()[0]);
 			}
 		});
 
@@ -83,13 +94,14 @@ public class FenetreSolution extends JFrame {
 		max[1] = 150;
 		points[1] = nua;
 		centrale = new DessinCentrale();
-		centrale.setNuage(points[1] , max[1]);
+	//	centrale.setNuage(points[1] , max[1]);
+		centrale.setNuage(solution.getEnergies()[1], solution.getEnergiesMax()[1]);
 		centralePanel = new JPanel();
 		configureLayout = new BorderLayout();
 		centralePanel.setLayout(configureLayout);
 		panel.add(centralePanel);
 		centralePanel.add(centrale, BorderLayout.CENTER);
-		centralePanel.add(new JLabel("centrale charbon"), BorderLayout.NORTH);
+		centralePanel.add(new JLabel("centrale 2"), BorderLayout.NORTH);
 		centralePanel.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent arg0) {
 			}
@@ -106,7 +118,8 @@ public class FenetreSolution extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				DessinCentrale centrale = new DessinCentrale(true);
-				centrale.setNuage(points[1], max[1]);
+				//centrale.setNuage(points[1], max[1]);
+				centrale.setNuage(solution.getEnergies()[1], solution.getEnergiesMax()[1]);
 			}
 		});
 	
@@ -115,13 +128,14 @@ public class FenetreSolution extends JFrame {
 		max[2] = 200;
 		points[2] = nuag;
 		centrale = new DessinCentrale();
-		centrale.setNuage(points[2], max[2]);
+//		centrale.setNuage(points[2], max[2]);
+		centrale.setNuage(solution.getEnergies()[2], solution.getEnergiesMax()[2]);
 		centralePanel = new JPanel();
 		configureLayout = new BorderLayout();
 		centralePanel.setLayout(configureLayout);
 		panel.add(centralePanel);
 		centralePanel.add(centrale, BorderLayout.CENTER);
-		centralePanel.add(new JLabel("centrale à gaz"), BorderLayout.NORTH);
+		centralePanel.add(new JLabel("centrale 3"), BorderLayout.NORTH);
 		centralePanel.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent arg0) {
 			}
@@ -138,7 +152,8 @@ public class FenetreSolution extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				DessinCentrale centrale = new DessinCentrale(true);
-				centrale.setNuage(points[2], max[2]);
+				//centrale.setNuage(points[2], max[2]);
+				centrale.setNuage(solution.getEnergies()[2], solution.getEnergiesMax()[2]);
 			}
 		});
 		
@@ -146,13 +161,14 @@ public class FenetreSolution extends JFrame {
 		max[3] = 80;
 		points[3] = nuage;
 		centrale = new DessinCentrale();
-		centrale.setNuage(points[3], max[3]);
+	//	centrale.setNuage(points[3], max[3]);
+		centrale.setNuage(solution.getEnergies()[3], solution.getEnergiesMax()[3]);
 		centralePanel = new JPanel();
 		configureLayout = new BorderLayout();
 		centralePanel.setLayout(configureLayout);
 		panel.add(centralePanel);
 		centralePanel.add(centrale, BorderLayout.CENTER);
-		centralePanel.add(new JLabel("centrale au fioul"), BorderLayout.NORTH);
+		centralePanel.add(new JLabel("centrale 4"), BorderLayout.NORTH);
 		centralePanel.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent arg0) {
 			}
@@ -169,7 +185,8 @@ public class FenetreSolution extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				DessinCentrale centrale = new DessinCentrale(true);
-				centrale.setNuage(points[3], max[3]);
+		//		centrale.setNuage(points[3], max[3]);
+				centrale.setNuage(solution.getEnergies()[3], solution.getEnergiesMax()[3]);
 			}
 		});
 		
@@ -178,7 +195,8 @@ public class FenetreSolution extends JFrame {
 		points[4] = nuages;
 		min = 1400;
 		DessinReservoir reservoir = new DessinReservoir();
-		reservoir.setNuage(points[4], max[4], min);
+		//reservoir.setNuage(points[4]);
+		reservoir.setNuage(solution.getEnergies()[4]);
 		centralePanel = new JPanel();
 		configureLayout = new BorderLayout();
 		centralePanel.setLayout(configureLayout);
@@ -200,7 +218,7 @@ public class FenetreSolution extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				DessinReservoir reservoir = new DessinReservoir(true);
-				reservoir.setNuage(points[4], max[4], min);
+				reservoir.setNuage(points[4]);
 			}
 		});
 		
@@ -208,9 +226,11 @@ public class FenetreSolution extends JFrame {
 		
 		
 		DessinHistogramme histogramme = new DessinHistogramme();
-		final double[][] liste_points = { { 2, 1, 3, 0, 2, 3, 1, 1 },
-				{ 2, 1, 1, 0, 2, 3, 0, 1 }, { 2, 1, 0, 2, 2, 3, 1, 1 },
-				{ 2, 1, 1, 0, 2, 3, 1, 1 }, { 2, 1, 4, 0, 2, 3, 1, 1 } };
+		final double[][] liste_points = { solution.getEnergies()[0], 
+				solution.getEnergies()[1],
+				solution.getEnergies()[2],
+				solution.getEnergies()[3],
+				solution.getEnergies()[4]};
 		histogramme.setNuage(liste_points);
 		centralePanel = new JPanel();
 		configureLayout = new BorderLayout();

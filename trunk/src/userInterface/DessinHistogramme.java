@@ -7,8 +7,6 @@ package userInterface;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
-
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -22,10 +20,10 @@ public class DessinHistogramme extends JComponent {
 	private int nbJours;
 	private static Color[] couleurs = {
 		new Color(157, 164, 244), 
-		new Color(26, 40, 223), 
 		new Color(253, 200, 0), 
 		new Color(255, 255, 0), 
-		new Color(170, 85, 0)
+		new Color(170, 85, 0),
+		new Color(26, 40, 223)
 	};
 
 	public DessinHistogramme() {
@@ -85,6 +83,7 @@ public class DessinHistogramme extends JComponent {
 		int ydr, idr;
 		int delta = (getHeight() + getWidth()) / 100;
 		int delta_x = getWidth() / 50;
+		int offset_x = (int) (xmin * getWidth() / ( xmin - xmax));
 		int delta_y = getHeight() / 40;
 		
 		// axis
@@ -98,32 +97,32 @@ public class DessinHistogramme extends JComponent {
 
 		g.setColor(couleurs[0]);
 		g.fillRect(idr,  delta_y, 4*delta_x, (int) (1.5*delta_y));
-		g.drawString("centrale gaz", delta_x*10, (int) (2*delta_y+2));
+		g.drawString("centrale 1", delta_x*10, (int) (2*delta_y+2));
 		
 		g.setColor(couleurs[1]);
 		g.fillRect(idr,  4*delta_y, 4*delta_x, (int) (1.5*delta_y));
-		g.drawString("centrale hydraulique", delta_x*10, (int) (5*delta_y+2));
+		g.drawString("centrale 2", delta_x*10, (int) (5*delta_y+2));
 		
 		g.setColor(couleurs[2]);
 		g.fillRect(idr,  7*delta_y, 4*delta_x, (int) (1.5*delta_y));
-		g.drawString("centrale nucléaire", delta_x*10, (int) (8*delta_y+2));
+		g.drawString("centrale 3", delta_x*10, (int) (8*delta_y+2));
 
 
 		g.setColor(couleurs[3]);
-		g.fillRect(idr+30*delta_x,  delta_y, 4*delta_x, (int) (1.5*delta_y));
-		g.drawString("centrale fioul", delta_x*40, (int) (2*delta_y+2));
+		g.fillRect(idr+20*delta_x,  delta_y, 4*delta_x, (int) (1.5*delta_y));
+		g.drawString("centrale 4", delta_x*30, (int) (2*delta_y+2));
 		
 		g.setColor(couleurs[4]);
-		g.fillRect(idr+30*delta_x,  4*delta_y, 4*delta_x, (int) (1.5*delta_y));
-		g.drawString("centrale charbon", delta_x*40, (int) (5*delta_y+2));
+		g.fillRect(idr+20*delta_x,  4*delta_y, 4*delta_x, (int) (1.5*delta_y));
+		g.drawString("réservoir hydraulique", delta_x*30, (int) (5*delta_y+2));
 
 
 		// puissance max
 		int hauteurMax = getHeight() - 5
 				- (int) ((pmax - ymin) * getHeight() / (ymax - ymin));
 		g.setColor(new Color(180, 0, 0));
-		g.drawLine(0, hauteurMax, getWidth(), hauteurMax);
-		g.drawString("puissance (MW) : " + pmax, idr+10, hauteurMax + 15);
+		g.drawLine(offset_x, hauteurMax, getWidth(), hauteurMax);
+		g.drawString("puissance max : " + (int)pmax+" MW",  delta_x*24, hauteurMax - 5);
 
 		double puissance = hauteurAxe;
 		int ydrPrec;
