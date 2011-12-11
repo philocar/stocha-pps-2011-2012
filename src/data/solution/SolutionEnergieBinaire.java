@@ -10,8 +10,7 @@ import data.DataBinaire;
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
-public class SolutionEnergieBinaire extends Solution implements
-		SolutionCentrale {
+public class SolutionEnergieBinaire extends Solution implements SolutionCentrale {
 
 	/**
 	 * La matrice de décision pour chaque periode, une centrale choisie un
@@ -70,12 +69,10 @@ public class SolutionEnergieBinaire extends Solution implements
 		for (int p = 0; p < donnees.nbPeriodes; p++) {
 			for (int c = 0; c < donnees.nbCentrales; c++) {
 
-				val += donnees.getPalier(c, y[p][c])
-						* donnees.getCoutCentrale(c);
+				val += donnees.getPalier(c, y[p][c]) * donnees.getCoutCentrale(c);
 			}
 
-			val += ((donnees.getTrajectoire(trajectoire) / donnees
-					.getTurbinage()) - donnees.getApportsPeriode(p))
+			val += ((donnees.getTrajectoire(trajectoire) / donnees.getTurbinage()) - donnees.getApportsPeriode(p))
 					* donnees.getCoutCentrale(4);
 		}
 		return val;
@@ -85,9 +82,9 @@ public class SolutionEnergieBinaire extends Solution implements
 	public void solutionInitiale() {
 		Random rand = new Random();
 
-		for(int i=0; i<z.length; i++)
+		for (int i = 0; i < z.length; i++)
 			z[i] = false;
-		
+
 		int scenarioActive;
 		do {
 			scenarioActive = rand.nextInt(z.length);
@@ -112,8 +109,7 @@ public class SolutionEnergieBinaire extends Solution implements
 		do {
 			double coutMin = Integer.MAX_VALUE;
 			for (int i = 0; i < donnees.getCouts().length; i++) {
-				if (!centraleUtilisee[i]
-						&& donnees.getCoutCentrale(i) <= coutMin) {
+				if (!centraleUtilisee[i] && donnees.getCoutCentrale(i) <= coutMin) {
 					coutMin = donnees.getCoutCentrale(i);
 					centraleCoutMin = i;
 				}
@@ -123,22 +119,20 @@ public class SolutionEnergieBinaire extends Solution implements
 			for (int p = 0; p < donnees.nbPeriodes; p++) {
 				if (centraleCoutMin < donnees.nbCentrales) {
 					int palier = 0;
-					while (palier < donnees.nbPaliers[centraleCoutMin] - 1
-							&& !respecteContrainteDemandePeriode(p)) {
+					while (palier < donnees.nbPaliers[centraleCoutMin] - 1 && !respecteContrainteDemandePeriode(p)) {
 						palier++;
 						y[p][centraleCoutMin] = palier;
 					}
 				} else {
 					int trajectoire2 = 0;
-					while (trajectoire < donnees.nbTrajectoires - 1
-							&& !respecteContrainteDemandePeriode(p)) {
+					while (trajectoire < donnees.nbTrajectoires - 1 && !respecteContrainteDemandePeriode(p)) {
 						trajectoire2++;
 						trajectoire = trajectoire2;
 					}
 				}
 			}
 		} while (!respecteContrainteDemande());
-		
+
 		System.out.println(fonctionObjectif());
 	}
 
@@ -149,13 +143,12 @@ public class SolutionEnergieBinaire extends Solution implements
 				for (int p = 0; p < donnees.nbPeriodes; p++) {
 					double production = 0;
 					for (int c = 0; c < donnees.nbCentrales; c++) {
-						production += donnees.getScenario(s)
-								.getPaliersPeriodeCentrale(c, p)[getDecisionPeriodeCentrale(
+						production += donnees.getScenario(s).getPaliersPeriodeCentrale(c, p)[getDecisionPeriodeCentrale(
 								p, c)];
 					}
 
 					production += donnees.getTrajectoire(trajectoire);
-					if(production < donnees.getScenario(s).getDemandePeriode(p))
+					if (production < donnees.getScenario(s).getDemandePeriode(p))
 						return false;
 				}
 			}
@@ -163,18 +156,17 @@ public class SolutionEnergieBinaire extends Solution implements
 		return true;
 	}
 
-	private boolean respecteContrainteDemandePeriode(int periode) {
+	public boolean respecteContrainteDemandePeriode(int periode) {
 		for (int s = 0; s < donnees.nbScenarios; s++) {
 			if (isActived(s)) {
 				double production = 0;
 				for (int c = 0; c < donnees.nbCentrales; c++) {
-					production += donnees.getScenario(s)
-							.getPaliersPeriodeCentrale(c, periode)[getDecisionPeriodeCentrale(
+					production += donnees.getScenario(s).getPaliersPeriodeCentrale(c, periode)[getDecisionPeriodeCentrale(
 							periode, c)];
 				}
 
 				production += donnees.getTrajectoire(trajectoire);
-				if(production < donnees.getScenario(s).getDemandePeriode(periode))
+				if (production < donnees.getScenario(s).getDemandePeriode(periode))
 					return false;
 			}
 		}
@@ -245,8 +237,8 @@ public class SolutionEnergieBinaire extends Solution implements
 				tabEnergie[c][p] = donnees.getPalier(c, y[p][c]);
 			}
 
-			tabEnergie[c][p] = ((donnees.getTrajectoire(trajectoire) / donnees
-					.getTurbinage()) - donnees.getApportsPeriode(p));
+			tabEnergie[c][p] = ((donnees.getTrajectoire(trajectoire) / donnees.getTurbinage()) - donnees
+					.getApportsPeriode(p));
 		}
 		e.setEnergies(tabEnergie);
 

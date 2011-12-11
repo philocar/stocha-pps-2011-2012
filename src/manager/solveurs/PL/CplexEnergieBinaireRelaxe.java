@@ -32,166 +32,131 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 	 * Lance la résolution du programme linéaire. Crée le programme à partir des
 	 * tableaux de coefficients.
 	 */
-	public void lancer()
-	{
+	public void lancer() {
 		try {
 			IloCplex cplex = new IloCplex();
-			int nbPaliers = donnees.nbPaliers[0]+donnees.nbPaliers[1]+donnees.nbPaliers[2]+donnees.nbPaliers[3];
-			
-			IloIntVar[] y = cplex.boolVarArray(donnees.nbPeriodes*nbPaliers+donnees.nbTrajectoires);
+			int nbPaliers = donnees.nbPaliers[0] + donnees.nbPaliers[1] + donnees.nbPaliers[2] + donnees.nbPaliers[3];
+
+			IloIntVar[] y = cplex.boolVarArray(donnees.nbPeriodes * nbPaliers + donnees.nbTrajectoires);
 			IloIntVar[] z = cplex.boolVarArray(donnees.nbScenarios);
-			
-			int ythetaSize = donnees.nbPeriodes*nbPaliers;
+
+			int ythetaSize = donnees.nbPeriodes * nbPaliers;
 			int ynSize = donnees.nbTrajectoires;
-			
+
 			IloIntVar[] ytheta = cplex.boolVarArray(ythetaSize);
 			IloIntVar[] yn = cplex.boolVarArray(ynSize);
-			for(int i = 0; i < ythetaSize; i++)
-			{
+			for (int i = 0; i < ythetaSize; i++) {
 				ytheta[i] = y[i];
 			}
-			for(int i = 0; i < ynSize; i++)
-			{
-				yn[i] = y[i+ythetaSize];
+			for (int i = 0; i < ynSize; i++) {
+				yn[i] = y[i + ythetaSize];
 			}
-			
+
 			double M = 200000;
-			
-			double[] coutsReels = new double[donnees.nbPeriodes*nbPaliers+donnees.nbTrajectoires];
-			for(int p = 0; p < donnees.nbPeriodes; p++)
-			{
+
+			cplex.addMinimize(cplex.scalProd(couts, y));
+
+			// Un seul palier accepté par période et par centrale
+			for (int p = 0; p < donnees.nbPeriodes; p++) {
 				int sommePaliers = 0;
-				for(int c = 0; c < donnees.nbCentrales; c++)
-				{
-					for(int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++)
-					{
-						coutsReels[p*nbPaliers + sommePaliers] = couts[p*nbPaliers + sommePaliers] * donnees.getPalier(c, numPalier);
-						sommePaliers++;
-					}
-				}
-			}
-			for(int i = 0; i < donnees.nbTrajectoires; i++)
-			{
-				coutsReels[donnees.nbPeriodes*nbPaliers + i] = couts[donnees.nbPeriodes*nbPaliers + i] * donnees.getTrajectoire(i);
-			}
-			
-			cplex.addMinimize(cplex.scalProd(coutsReels, y));
-			
-			// Un seul pallier accepté par période et par centrale
-			for(int p = 0; p < donnees.nbPeriodes; p++)
-			{
-				int sommePaliers = 0;
-				for(int c = 0; c < donnees.nbCentrales; c++)
-				{
+				for (int c = 0; c < donnees.nbCentrales; c++) {
 					IloIntVar[] varY = new IloIntVar[donnees.nbPaliers[c]];
-					for(int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++)
-					{
-						varY[numPalier] = ytheta[p*nbPaliers + sommePaliers];
+					for (int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++) {
+						varY[numPalier] = ytheta[p * nbPaliers + sommePaliers];
 						sommePaliers++;
 					}
 					IloRange eq = cplex.eq(cplex.sum(varY), 1);
 					cplex.add(eq);
 				}
 			}
-			
+
 			// Une seule trajectoire est choisie
 			IloRange eq = cplex.eq(cplex.sum(yn), 1);
 			cplex.add(eq);
-			
+
 			// La somme des probabilités des scénarios doit être supérieurs à p
 			double[] probabilites = new double[donnees.nbScenarios];
-			for(int i = 0; i < donnees.nbScenarios; i++)
-			{
+			for (int i = 0; i < donnees.nbScenarios; i++) {
 				probabilites[i] = donnees.getScenario(i).getProbabilite();
 			}
 			IloRange eqg = cplex.ge(cplex.scalProd(probabilites, z), donnees.getProbabilite());
 			cplex.add(eqg);
-			
-			
+
 			// Contraintes sur les demandes
 			IloLinearNumExpr exprYn = cplex.scalProd(donnees.getTrajectoires(), yn);
-			for(int p = 0; p < donnees.nbPeriodes; p++)
-			{
+			for (int p = 0; p < donnees.nbPeriodes; p++) {
 				IloNumVar[] varYt = new IloNumVar[nbPaliers];
-				
-				for(int i = 0; i < nbPaliers; i++)
-				{
-					varYt[i] = ytheta[p*nbPaliers + i];
+
+				for (int i = 0; i < nbPaliers; i++) {
+					varYt[i] = ytheta[p * nbPaliers + i];
 				}
 
-				for(int s = 0; s < donnees.nbScenarios; s++)
-				{
+				for (int s = 0; s < donnees.nbScenarios; s++) {
 					double[] prod = new double[nbPaliers];
 					int sommePaliers = 0;
-					for(int c = 0; c < donnees.nbCentrales; c++)
-					{
-						for(int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++)
-						{
+					for (int c = 0; c < donnees.nbCentrales; c++) {
+						for (int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++) {
 							prod[sommePaliers] = donnees.getScenario(s).getPaliersPeriodeCentrale(c, p)[numPalier];
 							sommePaliers++;
 						}
 					}
 					IloLinearNumExpr exprYt = cplex.scalProd(prod, varYt);
-					IloRange ge = cplex.ge(cplex.sum(exprYt, exprYn, cplex.prod(-1*(donnees.getScenario(s).getDemandePeriode(p) + M), z[s])), -M);
+					IloRange ge = cplex.ge(
+							cplex.sum(exprYt, exprYn,
+									cplex.prod(-1 * (donnees.getScenario(s).getDemandePeriode(p) + M), z[s])), -M);
 					cplex.add(ge);
 				}
 			}
-				
-			if (cplex.solve())
-			{
+
+			if (cplex.solve()) {
 				System.out.println("Solution status = " + cplex.getStatus());
 				System.out.println("Solution value = " + cplex.getObjValue());
 				double[] valYt = cplex.getValues(ytheta);
 				double[] valYn = cplex.getValues(yn);
 				double[] valZ = cplex.getValues(z);
-				
-				for(int p = 0; p < donnees.nbPeriodes; p++)
-				{
+
+				for (int p = 0; p < donnees.nbPeriodes; p++) {
 					int sommePaliers = 0;
-					for(int c = 0; c < donnees.nbCentrales; c++)
-					{
-						for(int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++)
-						{
-							if(valYt[p*nbPaliers + sommePaliers] > 0)
-							{
+					for (int c = 0; c < donnees.nbCentrales; c++) {
+						for (int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++) {
+							if (valYt[p * nbPaliers + sommePaliers] > 0) {
 								solution.setDecisionPeriodeCentrale(p, c, numPalier);
 							}
-							
+
 							sommePaliers++;
 						}
 					}
 				}
-				
-				for(int i = 0; i < valYn.length; i++)
-				{
-					if(valYn[i] > 0)
+
+				for (int i = 0; i < valYn.length; i++) {
+					if (valYn[i] > 0)
 						solution.setTrajectoire(i);
 				}
-				
-				for(int s = 0; s < valZ.length; s++)
-				{
-					if(valZ[s] > 0)
+
+				for (int s = 0; s < valZ.length; s++) {
+					if (valZ[s] > 0)
 						solution.active(s, true);
 					else
 						solution.active(s, false);
 				}
-				
+
 				System.out.println(solution.toString());
 				cplex.end();
 			}
-			
+
 		} catch (IloException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void main(String[] args)
-	{
-		DataBinaire data = new DataBinaire(0.98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
+
+	public static void main(String[] args) {
+		DataBinaire data = new DataBinaire(0.98, "Data/Données_Recuit_demandes.csv",
+				"Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv",
+				"Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv",
+				"Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv",
+				"Data/Données_Recuit_capacité.csv");
 		CplexEnergieBinaireRelaxe test = new CplexEnergieBinaireRelaxe(data);
 		test.lancer();
-		
-	}
 
-	
+	}
 }

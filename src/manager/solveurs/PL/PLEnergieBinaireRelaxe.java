@@ -6,8 +6,10 @@ import data.DataBinaire;
 import data.solution.SolutionEnergieBinaire;
 
 /**
- * Cette classe permet d'écrire un programme linéaire à partir de données pour le problème de management de la production d'énergie.
- * Ce PL est utilisé par un solveur de programmes linéaires.
+ * Cette classe permet d'écrire un programme linéaire à partir de données pour
+ * le problème de management de la production d'énergie. Ce PL est utilisé par
+ * un solveur de programmes linéaires.
+ * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  * 
  */
@@ -19,62 +21,54 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 	protected SolutionEnergieBinaire solution;
 	/** Le vecteur de coûts */
 	protected double[] couts;
-	/** La matrice pour l'unicité du palier de production thermique par centrale */
-	protected int[][] h;
-	/** Le vecteur pour l'unicité de la trajectoire d'utilisation de l'eau */
-	protected int[] u;
 	/** Les probabilités des scénarios */
 	protected double[] probabilites;
-	/** La matrice qui pour chaque scénario et chaque période associe la liste des paliers de production et les trajectoires */
-	protected double[][][] productions;
-	
+
 	/**
 	 * Crée un nouveau PLEnergie.
-	 * @param donnees les données du problème
+	 * 
+	 * @param donnees
+	 *            les données du problème
 	 */
-	public PLEnergieBinaireRelaxe(DataBinaire donnees)
-	{
+	public PLEnergieBinaireRelaxe(DataBinaire donnees) {
 		this.donnees = donnees;
 		solution = new SolutionEnergieBinaire(donnees);
 		genererPL();
 	}
 
 	/**
-	 * Génère le programme linéaire à partir des données.
-	 * Remplit les tableaux du problème.
+	 * Génère le programme linéaire à partir des données. Remplit les tableaux
+	 * du problème.
 	 */
-	private void genererPL()
-	{
-		int nbPaliers = donnees.nbPaliers[0]+donnees.nbPaliers[1]+donnees.nbPaliers[2]+donnees.nbPaliers[3];
-		couts = new double[donnees.nbPeriodes*nbPaliers+donnees.nbTrajectoires];	
-		
-		for(int p = 0; p < donnees.nbPeriodes; p++)
-		{
+	private void genererPL() {
+		int nbPaliers = donnees.nbPaliers[0] + donnees.nbPaliers[1] + donnees.nbPaliers[2] + donnees.nbPaliers[3];
+		couts = new double[donnees.nbPeriodes * nbPaliers + donnees.nbTrajectoires];
+
+		for (int p = 0; p < donnees.nbPeriodes; p++) {
 			int sommePaliers = 0;
-			for(int c = 0; c < donnees.nbCentrales; c++)
-			{
-				for(int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++)
-				{
-					couts[p*nbPaliers + sommePaliers] = donnees.getCoutCentrale(c);
+			for (int c = 0; c < donnees.nbCentrales; c++) {
+				for (int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++) {
+					couts[p * nbPaliers + sommePaliers] = donnees.getCoutCentrale(c)
+							* donnees.getPalier(c, numPalier);
 					sommePaliers++;
 				}
 			}
 		}
-		for(int i = donnees.nbPeriodes*nbPaliers; i < couts.length; i++)
-		{
-			couts[i] = donnees.getCoutCentrale(4);
+		for (int i = 0; i < donnees.nbTrajectoires; i++) {
+			couts[donnees.nbPeriodes * nbPaliers + i] = donnees.nbPeriodes
+					* donnees.getCoutCentrale(4) * donnees.getTrajectoire(i) / donnees.getTurbinage();
 		}
-		
-	
+
 	}
-	
+
 	/**
 	 * Renvoie la solution calculée.
+	 * 
 	 * @return la solution calculée
 	 */
 	public SolutionEnergieBinaire getSolution() {
 		return solution;
 	}
-	
+
 	public abstract void lancer();
 }
