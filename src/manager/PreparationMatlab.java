@@ -73,14 +73,13 @@ public class PreparationMatlab {
 	 * Génère un fichier .m utilisable dans Matlab sous la forme d'un programme cvx.
 	 * @param fichier Le fichier d'écriture
 	 */
-	public static void generer(String file, String directory){
+	public static void generer(String saveFile, String dataFile){
 		
-		System.out.println("fichier de sauvegarde : "+file);
+		System.out.println("fichier de sauvegarde : "+saveFile);
 		String contenu = "";
 		try {
 			System.out.println("lecture");
-			File f = new File(directory
-					+ "Données_Modèle_Probabiliste_Variables_Réelles.m");
+			File f = new File(dataFile);
 			Scanner sc;
 
 			sc = new Scanner(f);
@@ -97,7 +96,7 @@ public class PreparationMatlab {
 		// écriture des données
 		FileWriter writer = null;
 		try {
-			writer = new FileWriter(file, false);
+			writer = new FileWriter(saveFile, false);
 			writer.write(contenu, 0, contenu.length());
 		} catch (IOException ex) {
 			ex.printStackTrace();
