@@ -69,7 +69,7 @@ public abstract class PLEnergieRecours implements Solveur {
 	 * @return la solution calculée
 	 */
 	public SolutionEnergieRecours getSolution() {
-		return null;
+		return solution;
 	}
 	
 	public abstract void lancer();
