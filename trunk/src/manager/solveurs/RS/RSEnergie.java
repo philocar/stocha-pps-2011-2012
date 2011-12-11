@@ -89,10 +89,11 @@ public class RSEnergie extends RecuitSimule
 	 */
 	protected Solution voisin()
 	{
+		// La solution voisine est dans un premier temps une copie de la solution courante
 		SolutionEnergieBinaire solution = (SolutionEnergieBinaire) solutionCourante.clone();
 		
 		Random rand = new Random();
-		int nbTests;
+		int nbTests; // Le nombre de test de solution pour un jeu de scénarios
 		boolean recherche;
 		nbTransformationsParScenariosCourant++;
 		
@@ -103,12 +104,14 @@ public class RSEnergie extends RecuitSimule
 			{
 				nbTransformationsParScenariosCourant = 0;
 				int indiceScenarioChange;
+				// On essaie des modifications tant que ça ne répond pas à la probabilité voulue
 				do
 				{
 					recherche = false;
 					indiceScenarioChange = rand.nextInt(solution.getZ().length);
 					solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
 					
+					// Repasse dans l'état initial si ça ne répond pas à la probabilité voulue
 					if(solution.probabiliteScenario() < donnees.getProbabilite())
 					{
 						solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
@@ -118,7 +121,7 @@ public class RSEnergie extends RecuitSimule
 				} while(recherche);
 			}
 			
-			// Modifie les décisions
+			// Essaie de modifier les décisions tant que ça ne répond pas à la demande
 			nbTests = 0;
 			do
 			{
@@ -126,38 +129,54 @@ public class RSEnergie extends RecuitSimule
 				nbTests++;
 				
 				// On modifie le palier d'une centrale pour une période
-				if(rand.nextDouble() < 0.78)
+				// Il faut choisir entre modifier le choix d'un palier thermique ou bien la trajectoire
+				// Cela se décide en fonction du nombre de paliers et du nombre de trajectoires
+				double proba = (donnees.nbCentrales * donnees.nbPeriodes) / (double) (donnees.nbCentrales * donnees.nbPeriodes + donnees.nbTrajectoires);
+				
+				// On modifie un choix de palier
+				if(rand.nextDouble() < proba)
 				{
 					int periodeChange;
 					int centraleChange;
 					int palierChange;
+					// Choix de la période à modifier
 					periodeChange = rand.nextInt(donnees.nbPeriodes);
+					// choix de la centrale thermique à modifier
 					centraleChange = rand.nextInt(donnees.nbCentrales);
+					// L'ancienne valeur est sauvegardée
 					int ancienPalier = solution.getDecisionPeriodeCentrale(periodeChange, centraleChange);
+					// On tire le niveau choix de palier, il doit être différent de l'ancien
 					do
 					{
 						palierChange = rand.nextInt(donnees.nbPaliers[centraleChange]);
-					} while(palierChange == solution.getDecisionPeriodeCentrale(periodeChange, centraleChange));
+					} while(palierChange == ancienPalier);
 					
+					// On modifie la solution
 					solution.setDecisionPeriodeCentrale(periodeChange, centraleChange, palierChange);
 					
-					if(!solution.respecteContrainteDemande())
+					// Si la solution ne repond pas à la demande, on repasse dans l'état initial et on refait une modification
+					if(!solution.respecteContrainteDemandePeriode(periodeChange))
 					{
 						recherche = true;
 						solution.setDecisionPeriodeCentrale(periodeChange, centraleChange, ancienPalier);
 					}
 				}
-				// Si la trajectoire hydrolique est modifiée
+				// On modifie la trajectoire hydraulique
 				else
-				{					
+				{			
 					int trajectoireChange;
+					// On sauvegarde l'ancienne trajectoire
 					int ancienneTrajectoire = solution.getTrajectoire();
+					// On tire une trajectoire, elle doit être différente de l'ancienne
 					do
 					{
 						trajectoireChange = rand.nextInt(donnees.nbTrajectoires);
 					} while(trajectoireChange == solution.getTrajectoire());
+					
+					// Modifie la trajectoire
 					solution.setTrajectoire(trajectoireChange);
 					
+					// Si ça ne répond pas à la demande, on repasse dans l'état initial et on refait une modification
 					if(!solution.respecteContrainteDemande())
 					{
 						recherche = true;
@@ -165,8 +184,8 @@ public class RSEnergie extends RecuitSimule
 					}
 				}
 			} while(recherche && nbTests < nbTestsTransformations);
-			
-		} while(recherche && nbTests == nbTestsTransformations);
+			// On refait une modification si ça ne répond pas à la demande et que le nombre maximum de modifications par modification de scénarios n'est pas atteint
+		} while(recherche && nbTests == nbTestsTransformations); // On modifie les scenarios si aucune solution n'a été trouvée
 		
 		return solution;
 	}

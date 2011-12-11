@@ -50,7 +50,6 @@ public abstract class RecuitSimule implements Solveur
 		// Les paliers de température
 		while(testerCondition1())
 		{
-			System.out.println(temperature);
 			// Les itérations par palier
 			while(testerCondition2())
 			{
