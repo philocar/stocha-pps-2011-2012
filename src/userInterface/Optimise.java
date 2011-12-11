@@ -37,8 +37,10 @@ public class Optimise extends AbstractAction {
 				.getSelectedItem();
 
 		if (methodeName.equals("modèle probabiliste")) {
+			
+			
 			ZDialogParamDeter zd = new ZDialogParamDeter(fenetre,
-					"Choix des paramètres", true);
+					"Choix des paramètres", true, fileName);
 			zd.setVisible(true);
 		} else {
 			// on normalise les répertoires
