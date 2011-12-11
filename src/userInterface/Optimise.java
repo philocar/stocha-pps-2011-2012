@@ -67,10 +67,10 @@ public class Optimise extends AbstractAction {
 				solveur = new CplexEnergieRecours(data);
 			} else if (methodeName.equals("relaxation du binaire")) {
 
-				ZDialogProbaBinaire zd = new ZDialogProbaBinaire (fenetre,
+				ZDialogProbaBinaire proba = new ZDialogProbaBinaire (fenetre,
 						"Choix des paramètres", true, fileName);
-				zd.setVisible(true);
-				solveur = zd.getSolveur();
+				proba.setVisible(true);
+				solveur = proba.getSolveur();
 			}
 			if(solveur != null){	// si l'utilisateur a annulé l'action
 				System.out.println("début des calculs");
@@ -93,5 +93,4 @@ public class Optimise extends AbstractAction {
 	public void setSolveur(Solveur solveur) {
 		this.solveur = solveur;
 	}
-
 }
