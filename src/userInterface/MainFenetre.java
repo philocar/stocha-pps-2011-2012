@@ -160,7 +160,7 @@ public class MainFenetre extends JFrame {
 
 		methodeText = new JLabel("methode de résolution : ");
 		Object[] listeMethode = new Object[] { "modèle probabiliste",
-				"modèle avec recours", "recuit simulé", "relaxation du binaire" };
+				"modèle avec recours", "recuit simulé", "modèle binaire", "relaxation du binaire"};
 		descriptionChoix = new HashMap<String, String>();
 		descriptionChoix.put("modèle probabiliste",
 				"Le fichier doit contenir le modèle probabiliste");
@@ -186,6 +186,8 @@ public class MainFenetre extends JFrame {
 								+ "</HTML>");
 
 		descriptionChoix.put("relaxation du binaire",
+				descriptionChoix.get("recuit simulé"));
+		descriptionChoix.put("modèle binaire",
 				descriptionChoix.get("recuit simulé"));
 
 		descriptionFichier = new JLabel(
