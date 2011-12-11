@@ -18,6 +18,8 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 	/** Les données du problèmes */
 	private DataRecours donnees;
 	
+	private double value;
+	
 	/**
 	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie avec recours
 	 */
@@ -56,8 +58,12 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 
 	@Override
 	public double fonctionObjectif() {
-		// TODO Auto-generated method stub
-		return 0;
+		return value;
+	}
+	
+	
+	public void setValue(double value) {
+		this.value = value;
 	}
 
 	@Override
@@ -152,7 +158,14 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 	@Override
 	public SolutionEnergie genererSolutionEnergie() {
 		SolutionEnergie e = new SolutionEnergie();
-		e.setEnergies(x);
+		int size = x[0].length;
+		double[][] values = new double[size][x.length];
+		
+		for(int i = 0; i<size; i++)
+			for(int j=0; j<x.length; j++)
+				values[i][j] = x[j][i];		
+		
+		e.setEnergies(values);
 		e.setEnergiesMax(donnees.getProductionsMax());
 		
 		return e;
