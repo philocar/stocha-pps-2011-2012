@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import manager.solveurs.PL.CplexEnergieBinaire;
 import manager.solveurs.PL.CplexEnergieBinaireRelaxe;
-import manager.solveurs.RS.RSEnergie;
 import data.DataBinaire;
 
 /**
@@ -32,11 +32,11 @@ public class ZDialogProbaBinaire extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JLabel labIter, labTempF, labTaux, labDec;
 	private JTextField iter, tempF, taux, dec;
-	private CplexEnergieBinaireRelaxe solveur;
 	private String fileName;
 	private double probabilite;
 	private JTextField proba;
 	private JLabel labProba;
+	private DataBinaire data;
 
 	/**
 	 * Constructeur
@@ -54,7 +54,6 @@ public class ZDialogProbaBinaire extends JDialog {
 		this.initComponent();
 		parent.setEtat(MainFenetre.State.FICHIER_CHOISI);
 		parent.updateVisibility();
-		solveur = null;
 		this.fileName = fileName;
 	}
 
@@ -87,6 +86,7 @@ public class ZDialogProbaBinaire extends JDialog {
 		// S'ils ne le sont pas un message d'information est transmis à
 		// l'utilisateur
 		okBouton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent arg0) {
 				String rep = new String();
 				boolean valide = true;
@@ -106,7 +106,7 @@ public class ZDialogProbaBinaire extends JDialog {
 				if (valide) {
 					System.out.println("début lecture des données");
 
-					DataBinaire data = new DataBinaire(probabilite, fileName
+					data = new DataBinaire(probabilite, fileName
 							+ "Données_Recuit_demandes.csv", fileName
 							+ "Données_Recuit_paliers1.csv", fileName
 							+ "Données_Recuit_paliers2.csv", fileName
@@ -117,7 +117,6 @@ public class ZDialogProbaBinaire extends JDialog {
 							fileName + "Données_Recours_capacite_max.csv");
 					System.out.println("fin lecture des données");
 					setVisible(false);
-					solveur = new CplexEnergieBinaireRelaxe(data);
 					System.out.println("solveur construit");
 				} else {
 					JOptionPane.showMessageDialog(null, rep, "Erreur",
@@ -140,8 +139,12 @@ public class ZDialogProbaBinaire extends JDialog {
 		this.getContentPane().add(control, BorderLayout.SOUTH);
 	}
 
-	public CplexEnergieBinaireRelaxe getSolveur() {
-		return solveur;
+	public CplexEnergieBinaireRelaxe getSolveurRelaxe() {
+		return new CplexEnergieBinaireRelaxe(data);
+	}
+	
+	public CplexEnergieBinaire getSolveurBinaire(){
+		return new CplexEnergieBinaire(data);
 	}
 
 }

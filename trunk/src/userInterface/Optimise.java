@@ -37,8 +37,7 @@ public class Optimise extends AbstractAction {
 				.getSelectedItem();
 
 		if (methodeName.equals("modèle probabiliste")) {
-			
-			
+
 			ZDialogParamDeter zd = new ZDialogParamDeter(fenetre,
 					"Choix des paramètres", true, fileName);
 			zd.setVisible(true);
@@ -69,12 +68,21 @@ public class Optimise extends AbstractAction {
 				solveur = new CplexEnergieRecours(data);
 			} else if (methodeName.equals("relaxation du binaire")) {
 
-				ZDialogProbaBinaire proba = new ZDialogProbaBinaire (fenetre,
+				ZDialogProbaBinaire proba = new ZDialogProbaBinaire(fenetre,
 						"Choix des paramètres", true, fileName);
 				proba.setVisible(true);
-				solveur = proba.getSolveur();
+				solveur = proba.getSolveurRelaxe();
 			}
-			if(solveur != null){	// si l'utilisateur a annulé l'action
+
+			else if (methodeName.equals("modèle binaire")) {
+
+				ZDialogProbaBinaire proba = new ZDialogProbaBinaire(fenetre,
+						"Choix des paramètres", true, fileName);
+				proba.setVisible(true);
+				solveur = proba.getSolveurBinaire();
+			}
+
+			if (solveur != null) { // si l'utilisateur a annulé l'action
 				System.out.println("début des calculs");
 				fenetre.setDescription("calcul en cours");
 				solveur.lancer();
