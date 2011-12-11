@@ -51,7 +51,7 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 	 * @return la solution calculée
 	 */
 	public SolutionEnergieBinaire getSolution() {
-		return null;
+		return solution;
 	}
 	
 	public abstract void lancer();

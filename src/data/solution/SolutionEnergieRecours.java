@@ -1,6 +1,5 @@
 package data.solution;
 
-import data.DataBinaire;
 import data.DataRecours;
 
 /**
@@ -32,8 +31,21 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 	
 	@Override
 	public Solution clone() {
-		// TODO Auto-generated method stub
-		return null;
+		SolutionEnergieRecours res = new SolutionEnergieRecours(donnees);
+
+		for (int i = 0; i < x.length; i++)
+			for(int j=0; j<x[i].length; j++)
+				res.x[i][j] = x[i][j];
+
+		for (int i = 0; i < yAchat.length; i++)
+			for(int j=0; j<yAchat[i].length; j++)
+				res.yAchat[i][j] = yAchat[i][j];
+
+		for (int i = 0; i < yVente.length; i++)
+			for(int j=0; j<yVente[i].length; j++)
+				res.yVente[i][j] = yVente[i][j];
+	
+		return res;
 	}
 
 	@Override
@@ -139,7 +151,10 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 
 	@Override
 	public SolutionEnergie genererSolutionEnergie() {
-		// TODO Auto-generated method stub
-		return null;
+		SolutionEnergie e = new SolutionEnergie();
+		e.setEnergies(x);
+		e.setEnergiesMax(donnees.getProductionsMax());
+		
+		return e;
 	}
 }

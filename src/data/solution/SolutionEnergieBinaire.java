@@ -49,7 +49,7 @@ public class SolutionEnergieBinaire extends Solution implements
 		SolutionEnergieBinaire res = new SolutionEnergieBinaire(donnees);
 
 		for (int i = 0; i < z.length; i++)
-			res.getZ()[i] = z[i];
+			res.z[i] = z[i];
 		for (int i = 0; i < y.length; i++) {
 			for (int j = 0; j < y[i].length; j++)
 				res.setDecisionPeriodeCentrale(i, j, y[i][j]);
@@ -248,22 +248,9 @@ public class SolutionEnergieBinaire extends Solution implements
 			tabEnergie[c][p] = ((donnees.getTrajectoire(trajectoire) / donnees
 					.getTurbinage()) - donnees.getApportsPeriode(p));
 		}
-		e.setNbJours(donnees.nbPeriodes);
 		e.setEnergies(tabEnergie);
 
 		double[][] energiesMax = donnees.getProductionsMax();
-
-		// TODO : prendre le vrai max
-		double[] maxMax = new double[donnees.nbCentrales];
-		for (int i = 0; i < donnees.nbCentrales; i++) {
-			maxMax[i] = 0;
-			for (int j = 0; j < donnees.nbPeriodes; j++) {
-				if(maxMax[i] < energiesMax[i][j])
-					maxMax[i] = energiesMax[i][j];
-			}
-		}
-
-		e.setMaxMax(maxMax);
 		e.setEnergiesMax(energiesMax);
 
 		return e;

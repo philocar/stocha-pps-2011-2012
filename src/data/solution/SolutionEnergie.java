@@ -9,34 +9,17 @@ package data.solution;
  */
 public class SolutionEnergie {
 
-	private int nbJours;
 	private double[][] energies;
-	private double[] maxMax;
 	private double[][] energiesMax;
 
 	public SolutionEnergie() {
 		super();
-		nbJours = 0;
-		maxMax = null;
 		energies = null;
 	}
 
-	public int getNbJours() {
-		return nbJours;
-	}
-
-	public void setNbJours(int nbJours) {
-		this.nbJours = nbJours;
-	}
-
-	
-
-
 	public void setEnergies(double[][] energies) {
-
 		this.energies = energies;
 	}
-	
 	
 	
 	public double[][] getEnergiesMax() {
@@ -54,15 +37,6 @@ public class SolutionEnergie {
 	 */
 	public double[][] getEnergies() {
 		return energies;
-	}
-
-
-	public void setMaxMax(double[] maxMax) {
-		this.maxMax = maxMax;
-	}
-
-	public double[] getMaxMax() {
-		return maxMax;
 	}
 
 	
