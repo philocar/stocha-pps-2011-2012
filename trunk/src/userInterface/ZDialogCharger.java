@@ -59,6 +59,7 @@ public class ZDialogCharger extends JDialog {
 		JPanel panCharger = new JPanel();
 		panCharger.setBackground(Color.white);
 		charger = new JTextField(25);
+		charger.setText("data");
 		labCharger = new JLabel("fichier :");
 		panCharger.add(labCharger);
 		panCharger.add(charger);

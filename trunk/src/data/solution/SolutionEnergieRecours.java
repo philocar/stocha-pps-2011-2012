@@ -159,7 +159,7 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 	public SolutionEnergie genererSolutionEnergie() {
 		SolutionEnergie e = new SolutionEnergie();
 		int size = x[0].length;
-		double[][] values = new double[size][x.length];
+		double[][] values = new double[size][x.length];	// dans l'interface, les valeurs sont échangées
 		
 		for(int i = 0; i<size; i++)
 			for(int j=0; j<x.length; j++)
