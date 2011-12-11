@@ -137,12 +137,8 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 			{
 				coutsReels[donnees.nbPeriodes*nbPaliers + i] = couts[donnees.nbPeriodes*nbPaliers + i] * donnees.getTrajectoire(i);
 			}
-//			for(int i = 0; i < coutsReels.length; i++)
-//			{
-//				System.out.println("i : "+i+"  val : "+coutsReels[i]);
-//			}
 			
-			cplex.addMinimize(cplex.scalProd(couts, y));
+			cplex.addMinimize(cplex.scalProd(coutsReels, y));
 			
 			// Un seul pallier accepté par période et par centrale
 			for(int p = 0; p < donnees.nbPeriodes; p++)
@@ -165,7 +161,17 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 			IloRange eq = cplex.eq(cplex.sum(yn), 1);
 			cplex.add(eq);
 			
+			// La somme des probabilités des scénarios doit être supérieurs à p
+			double[] probabilites = new double[donnees.nbScenarios];
+			for(int i = 0; i < donnees.nbScenarios; i++)
+			{
+				probabilites[i] = donnees.getScenario(i).getProbabilite();
+			}
+			IloRange eqg = cplex.ge(cplex.scalProd(probabilites, z), donnees.getProbabilite());
+			cplex.add(eqg);
 			
+			
+			// Contraintes sur les demandes
 			IloLinearNumExpr exprYn = cplex.scalProd(donnees.getTrajectoires(), yn);
 			for(int p = 0; p < donnees.nbPeriodes; p++)
 			{
@@ -188,13 +194,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 							sommePaliers++;
 						}
 					}
-//					for(int i = 0; i < nbPaliers; i++)
-//					{
-//						System.out.print(prod[i]+" ");
-//					}System.out.println();
-					
 					IloLinearNumExpr exprYt = cplex.scalProd(prod, varYt);
-//					System.out.println(-(donnees.getScenario(s).getDemandePeriode(p) + M));
 					IloRange ge = cplex.ge(cplex.sum(exprYt, exprYn, cplex.prod(-1*(donnees.getScenario(s).getDemandePeriode(p) + M), z[s])), -M);
 					cplex.add(ge);
 				}
@@ -204,12 +204,42 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 			{
 				System.out.println("Solution status = " + cplex.getStatus());
 				System.out.println("Solution value = " + cplex.getObjValue());
-				double[] valY = cplex.getValues(y);
+				double[] valYt = cplex.getValues(ytheta);
+				double[] valYn = cplex.getValues(yn);
+				double[] valZ = cplex.getValues(z);
 				
-//				for(int i = 0; i < valY.length; i++)
-//				{
-//					System.out.println("i : "+i+"   val : "+valY[i]);
-//				}
+				for(int p = 0; p < donnees.nbPeriodes; p++)
+				{
+					int sommePaliers = 0;
+					for(int c = 0; c < donnees.nbCentrales; c++)
+					{
+						for(int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++)
+						{
+							if(valYt[p*nbPaliers + sommePaliers] > 0)
+							{
+								solution.setDecisionPeriodeCentrale(p, c, numPalier);
+							}
+							
+							sommePaliers++;
+						}
+					}
+				}
+				
+				for(int i = 0; i < valYn.length; i++)
+				{
+					if(valYn[i] > 0)
+						solution.setTrajectoire(i);
+				}
+				
+				for(int s = 0; s < valZ.length; s++)
+				{
+					if(valZ[s] > 0)
+						solution.active(s, true);
+					else
+						solution.active(s, false);
+				}
+				
+				System.out.println(solution.toString());
 				cplex.end();
 			}
 			
@@ -220,7 +250,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 	
 	public static void main(String[] args)
 	{
-		DataBinaire data = new DataBinaire(98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
+		DataBinaire data = new DataBinaire(0.98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
 		CplexEnergieBinaireRelaxe test = new CplexEnergieBinaireRelaxe(data, "Data");
 		test.lancer();
 		
