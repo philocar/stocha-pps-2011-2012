@@ -101,16 +101,10 @@ public class ZDialogParamDeter extends JDialog {
 
 				try {
 					String fileName = fichier.getText();
-					File file = new File(fileName);
-					if (!file.exists()) {
-						JOptionPane.showMessageDialog(null,
-								"Le fichier est introuvable", "Erreur",
-								JOptionPane.ERROR_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(parent,
-								"Le fichier a bien été sauvegardé");
-						setVisible(false);
-					}
+/*
+					JOptionPane.showMessageDialog(parent,
+							"Le fichier a bien été sauvegardé"); */
+					setVisible(false);
 
 				} catch (IllegalFormatException e) {
 					e.printStackTrace();
