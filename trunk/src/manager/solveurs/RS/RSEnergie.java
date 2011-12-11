@@ -29,10 +29,15 @@ public class RSEnergie extends RecuitSimule
 	
 	/**
 	 * Construit un recuit simulé spécialisé pour le problème de la p-médiane.
+	 * @param donnees les données du problème
 	 * @param facteurDecroissance le facteur de décroissance de la température du recuit.
 	 * @param temperatureFinale la température à atteindre pour arrêter le recuit.
+	 * @param nbIterationsParPalier le nombre d'itérations par palier
+	 * @param tauxAcceptation le taux d'acceptation de solutions coûteuses acceptées par le recuit à la température initiale
+	 * @param nbTransformationsParScenarios le nombre de modifications pour lesquelles on garde le même scénarios
+	 * @param nbTestsTransformations le nombre de transformations imposibles avant de changer de scénarios
 	 */
-	public RSEnergie( DataBinaire donnees, double facteurDecroissance, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation, int nbTransformationsParScenarios, int nbTestsTransformations)
+	public RSEnergie(DataBinaire donnees, double facteurDecroissance, double temperatureFinale, int nbIterationsParPalier, double tauxAcceptation, int nbTransformationsParScenarios, int nbTestsTransformations)
 	{
 		super(facteurDecroissance, tauxAcceptation);
 		solutionCourante = new SolutionEnergieBinaire(donnees);

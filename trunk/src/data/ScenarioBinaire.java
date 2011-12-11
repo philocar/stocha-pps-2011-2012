@@ -41,6 +41,10 @@ public class ScenarioBinaire {
 		return demandes;
 	}
 	
+	/**
+	 * Retourne la probabilité que le scénario se déroule
+	 * @return la probabilité que le scénario se déroule
+	 */
 	public double getProbabilite()
 	{
 		return probabilite;

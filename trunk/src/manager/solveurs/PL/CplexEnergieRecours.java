@@ -1,16 +1,11 @@
 package manager.solveurs.PL;
 
-import java.awt.DisplayMode;
-
 import ilog.concert.IloException;
-import ilog.concert.IloIntVar;
 import ilog.concert.IloLinearNumExpr;
 import ilog.concert.IloNumVar;
-import ilog.concert.IloNumVarType;
 import ilog.concert.IloRange;
 import ilog.cplex.IloCplex;
 import data.DataRecours;
-import data.ScenarioRecours;
 
 /**
  * Cette classe permet de résoudre une instance du problème de management de la
