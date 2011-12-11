@@ -1,6 +1,7 @@
 package manager.solveurs.PL;
 
 import ilog.concert.IloException;
+import ilog.concert.IloIntVar;
 import ilog.concert.IloLinearNumExpr;
 import ilog.concert.IloNumVar;
 import ilog.concert.IloRange;
@@ -13,7 +14,7 @@ import data.DataBinaire;
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
-public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
+public class CplexEnergieBinaire extends PLEnergieBinaire {
 
 	/**
 	 * Crée un nouveau CPlexEnergie
@@ -22,7 +23,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
 	 *            les données du problème
 	 * @param fileName
 	 */
-	public CplexEnergieBinaireRelaxe(DataBinaire donnees) {
+	public CplexEnergieBinaire(DataBinaire donnees) {
 		super(donnees);
 		System.out.println("solveur relaxe");
 	}
@@ -36,14 +37,14 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
 			IloCplex cplex = new IloCplex();
 			int nbPaliers = donnees.nbPaliers[0] + donnees.nbPaliers[1] + donnees.nbPaliers[2] + donnees.nbPaliers[3];
 
-			IloNumVar[] y = cplex.numVarArray(donnees.nbPeriodes * nbPaliers + donnees.nbTrajectoires, 0, 1);
-			IloNumVar[] z = cplex.numVarArray(donnees.nbScenarios, 0, 1);
+			IloIntVar[] y = cplex.boolVarArray(donnees.nbPeriodes * nbPaliers + donnees.nbTrajectoires);
+			IloIntVar[] z = cplex.boolVarArray(donnees.nbScenarios);
 
 			int ythetaSize = donnees.nbPeriodes * nbPaliers;
 			int ynSize = donnees.nbTrajectoires;
 
-			IloNumVar[] ytheta = cplex.numVarArray(ythetaSize, 0, 1);
-			IloNumVar[] yn = cplex.numVarArray(ynSize, 0, 1);
+			IloIntVar[] ytheta = cplex.boolVarArray(ythetaSize);
+			IloIntVar[] yn = cplex.boolVarArray(ynSize);
 			for (int i = 0; i < ythetaSize; i++) {
 				ytheta[i] = y[i];
 			}
@@ -59,7 +60,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
 			for (int p = 0; p < donnees.nbPeriodes; p++) {
 				int sommePaliers = 0;
 				for (int c = 0; c < donnees.nbCentrales; c++) {
-					IloNumVar[] varY = new IloNumVar[donnees.nbPaliers[c]];
+					IloIntVar[] varY = new IloIntVar[donnees.nbPaliers[c]];
 					for (int numPalier = 0; numPalier < donnees.nbPaliers[c]; numPalier++) {
 						varY[numPalier] = ytheta[p * nbPaliers + sommePaliers];
 						sommePaliers++;
@@ -154,8 +155,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaire {
 				"Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv",
 				"Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv",
 				"Data/Données_Recuit_capacité.csv");
-		CplexEnergieBinaireRelaxe test = new CplexEnergieBinaireRelaxe(data);
+		CplexEnergieBinaire test = new CplexEnergieBinaire(data);
 		test.lancer();
-
 	}
 }
