@@ -316,6 +316,16 @@ public class DataBinaire extends DataBase {
 		return probabilite;
 	}
 	
+	/**
+	 * Retourne la production du palier demandé de la centrale voulue
+	 * @param centrale la centrale
+	 * @param palier le palier
+	 * @return La production du palier demandé de la centrale voulue
+	 */
+	public double getPalier(int centrale, int palier) {
+		return paliers[centrale][palier];
+	}
+	
 	public static void main(String[] args)
 	{
 		DataBinaire data = new DataBinaire(98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
@@ -328,9 +338,5 @@ public class DataBinaire extends DataBase {
 				System.out.println(palier);
 			}
 		}
-	}
-
-	public double getPalier(int centrale, int palier) {
-		return paliers[centrale][palier];
 	}
 }
