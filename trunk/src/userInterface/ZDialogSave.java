@@ -8,16 +8,18 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import data.solution.Solution;
+import data.solution.SolutionCentrale;
 
 /**
  * 
@@ -34,10 +36,8 @@ public class ZDialogSave extends JDialog {
 	private JLabel labSave;
 	private JTextField save;
 	private Parametres params = new Parametres();
+	private MainFenetre fenetre;
 	
-	ArrayList<Integer> listeCentres;
-	HashMap<Integer, ArrayList<Integer>> liste;
-	double valFonctionObjectif;
 	
 	/**
 	 * Constructeur
@@ -46,13 +46,14 @@ public class ZDialogSave extends JDialog {
 	 * @param title
 	 * @param modal
 	 */
-	public ZDialogSave(JFrame parent, String title) {
+	public ZDialogSave(MainFenetre parent, String title) {
 		super(parent, title);
 		this.setSize(300, 100);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		this.initComponent();
+		fenetre = parent;
 	}
 
 	/**
@@ -78,6 +79,21 @@ public class ZDialogSave extends JDialog {
 		JButton saveBouton = new JButton("Sauvegarder");
 		JButton cancelBouton = new JButton("Annuler");
 		JButton explorerBouton = new JButton("Explorer");
+		
+		explorerBouton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				JFileChooser chooser = new JFileChooser();
+
+				int returnVal = chooser.showOpenDialog(fenetre);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					save.setText(chooser.getSelectedFile().getAbsolutePath());
+				}
+
+			}
+		});
 
 		saveBouton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -91,15 +107,16 @@ public class ZDialogSave extends JDialog {
 					fichier = new String(save.getText());
 				}
 				if(!fichier.matches("^[a-zA-Z0-9.]*.txt$")){
-					fichier = new String(fichier+".txt");
+					fichier = new String(fichier);
 				}
 				
 				File f;
 				FileWriter fw;
 				try {
-					f = new File(new String("Data/")+fichier);
+					Solution sol = fenetre.getSolution();
+					f = new File(fichier);
 					fw = new FileWriter(f);
-					fw.write("valeur de la fonction objectif : "+valFonctionObjectif+"\n");
+					fw.write(""+sol+"\n\n"+((SolutionCentrale)sol).genererSolutionEnergie());
 					fw.close();
 					setVisible(false);
 					JOptionPane.showMessageDialog(null, "La sauvegarde des résultats a bien été faite dans "+fichier, "Infos", JOptionPane.INFORMATION_MESSAGE);
