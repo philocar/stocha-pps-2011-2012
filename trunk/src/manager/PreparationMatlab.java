@@ -14,6 +14,9 @@ import java.util.Scanner;
  */
 public class PreparationMatlab {
 	
+	private static String ajoutFile = "Data" + File.separator + "ajouts.txt";
+	
+	/*
 	private static String ajout = "mn = m*n;\n"
 			+ "	c = [cth w cth w cth w cth w cth w cth w cth w];\n"
 			+ "	M=[amoy1(1) amoy2(1) amoy3(1) amoy4(1) rau; amoy1(2) amoy2(2) amoy3(2) amoy4(2) rau; amoy1(3) amoy2(3) amoy3(3) amoy4(3) rau; amoy1(4) amoy2(4) amoy3(4) amoy4(4) rau; amoy1(5) amoy2(5) amoy3(5) amoy4(5) rau; amoy1(6) amoy2(6) amoy3(6) amoy4(6) rau; amoy1(7) amoy2(7) amoy3(7) amoy4(7) rau];\n"
@@ -67,7 +70,7 @@ public class PreparationMatlab {
 			+ "		norm(A7*x(6*n+1:7*n)+b7,2) <= f7*x(6*n+1:7*n)+d7;\n"
 			+ "	    x>=0;\n" + "	    x<=Xmax;\n" + "	    H*x5 <= q1;\n"
 			+ "	    H*x5 >= q2;\n" + "	cvx_end ";
-
+*/
 	
 	/**
 	 * Génère un fichier .m utilisable dans Matlab sous la forme d'un programme cvx.
@@ -81,13 +84,20 @@ public class PreparationMatlab {
 			System.out.println("lecture");
 			File f = new File(dataFile);
 			Scanner sc;
-
 			sc = new Scanner(f);
 
 			while (sc.hasNext()) {
 				contenu += sc.nextLine() + "\n";
 			}
-			contenu += ajout;
+			
+			f = new File(ajoutFile);
+			sc = new Scanner(f);
+			contenu += "\n\n\n";
+			while (sc.hasNext()) {
+				contenu += sc.nextLine() + "\n";
+			}
+			
+			
 		//	System.out.println(contenu + "\n fin lecture");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
