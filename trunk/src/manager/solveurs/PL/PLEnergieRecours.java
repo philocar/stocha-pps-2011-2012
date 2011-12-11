@@ -52,8 +52,8 @@ public abstract class PLEnergieRecours implements Solveur {
 				}
 			}
 		}
-		couts = new double[7*5];
 		
+		couts = new double[7*5];		
 		for(int p = 0; p < 7; p++)
 		{
 			for(int c = 0; c < 5; c++)

@@ -34,16 +34,37 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 	 */
 	public PLEnergieBinaireRelaxe(DataBinaire donnees)
 	{
+		this.donnees = donnees;
+		solution = new SolutionEnergieBinaire(donnees);
 		genererPL();
 	}
 
 	/**
-	 * Génère le programme linéaire de la p-mediane à partir des données.
+	 * Génère le programme linéaire à partir des données.
 	 * Remplit les tableaux du problème.
 	 */
 	private void genererPL()
 	{
+		couts = new double[donnees.nbPeriodes*(donnees.nbPaliers[0]+donnees.nbPaliers[1]+donnees.nbPaliers[2]+donnees.nbPaliers[3])+donnees.nbTrajectoires];	
+		int nbPaliers = donnees.nbPaliers[0]+donnees.nbPaliers[1]+donnees.nbPaliers[2]+donnees.nbPaliers[3];
+		for(int p = 0; p < donnees.nbPeriodes; p++)
+		{
+			int sommePalliers = 0;
+			for(int c = 0; c < donnees.nbCentrales; c++)
+			{
+				for(int numPallier = 0; numPallier < donnees.nbPaliers[c]; numPallier++)
+				{
+					couts[p*nbPaliers + sommePalliers] = donnees.getCoutCentrale(c);
+					sommePalliers++;
+				}
+			}
+		}
+		for(int i = donnees.nbPeriodes*nbPaliers; i < couts.length; i++)
+		{
+			couts[i] = donnees.getCoutCentrale(4);
+		}
 		
+	
 	}
 	
 	/**
