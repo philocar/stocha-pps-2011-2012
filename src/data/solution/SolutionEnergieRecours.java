@@ -8,7 +8,7 @@ import data.DataRecours;
  * 
  * @author Fabien BINI & Nathanaël MASRI & Nicolas POIRIER
  */
-public class SolutionEnergieRecours extends Solution {
+public class SolutionEnergieRecours extends Solution implements SolutionCentrale{
 
 	/** Le vecteur de productions */
 	private double[][] x;
@@ -135,5 +135,11 @@ public class SolutionEnergieRecours extends Solution {
 			string += "YM"+((i/donnees.nbScenarios)+1)+((i%donnees.nbScenarios)+1)+" = "+getyVente(i/donnees.nbScenarios, i%donnees.nbScenarios)+"\n";
 		}
 		return string;
+	}
+
+	@Override
+	public SolutionEnergie genererSolutionEnergie() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
