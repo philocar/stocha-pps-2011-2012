@@ -1,0 +1,61 @@
+mn = m*n;
+c = [cth w cth w cth w cth w cth w cth w cth w];
+M=[amoy1(1) amoy2(1) amoy3(1) amoy4(1) rau; amoy1(2) amoy2(2) amoy3(2) amoy4(2) rau; amoy1(3) amoy2(3) amoy3(3) amoy4(3) rau; amoy1(4) amoy2(4) amoy3(4) amoy4(4) rau; amoy1(5) amoy2(5) amoy3(5) amoy4(5) rau; amoy1(6) amoy2(6) amoy3(6) amoy4(6) rau; amoy1(7) amoy2(7) amoy3(7) amoy4(7) rau];
+Xmax=[x1max(1); x2max(1); x3max(1); x4max(1); x5max(1); x1max(2); x2max(2); x3max(2); x4max(2); x5max(2); x1max(3); x2max(3); x3max(3); x4max(3); x5max(3); x1max(4); x2max(4); x3max(4); x4max(4); x5max(4); x1max(5); x2max(5); x3max(5); x4max(5); x5max(5); x1max(6); x2max(6); x3max(6); x4max(6); x5max(6); x1max(7); x2max(7); x3max(7); x4max(7); x5max(7)];
+q1=[v0+ah(1)-vmin(1); v0+ah(2)-vmin(2); v0+ah(3)-vmin(3); v0+ah(4)-vmin(4); v0+ah(5)-vmin(5); v0+ah(6)-vmin(6); v0+ah(7)-vmin(7)];
+q2=[v0+ah(1)-vmax(1); v0+ah(2)-vmax(2); v0+ah(3)-vmax(3); v0+ah(4)-vmax(4); v0+ah(5)-vmax(5); v0+ah(6)-vmax(6); v0+ah(7)-vmax(7)];
+H=tril(ones(m,m));
+
+A1=[siga1(1) 0 0 0 0; 0 siga2(1) 0 0 0; 0 0 siga3(1) 0 0; 0 0 0 siga4(1) 0; 0 0 0 0 0; 0 0 0 0 0];
+b1=[0 0 0 0 0 sigb(1)]';
+f1=M(1,1:n)/phinv(1);
+d1=-bmoy(1)/phinv(1);
+
+A2=[siga1(2) 0 0 0 0; 0 siga2(2) 0 0 0; 0 0 siga3(2) 0 0; 0 0 0 siga4(2) 0; 0 0 0 0 0; 0 0 0 0 0];
+b2=[0 0 0 0 0 sigb(2)]';
+f2=M(2,1:n)/phinv(2);
+d2=-bmoy(2)/phinv(2);
+
+A3=[siga1(3) 0 0 0 0; 0 siga2(3) 0 0 0; 0 0 siga3(3) 0 0; 0 0 0 siga4(3) 0; 0 0 0 0 0; 0 0 0 0 0];
+b3=[0 0 0 0 0 sigb(3)]';
+f3=M(3,1:n)/phinv(3);
+d3=-bmoy(3)/phinv(3);
+
+A4=[siga1(4) 0 0 0 0; 0 siga2(4) 0 0 0; 0 0 siga3(4) 0 0; 0 0 0 siga4(4) 0; 0 0 0 0 0; 0 0 0 0 0];
+b4=[0 0 0 0 0 sigb(4)]';
+f4=M(4,1:n)/phinv(4);
+d4=-bmoy(4)/phinv(4);
+
+A5=[siga1(5) 0 0 0 0; 0 siga2(5) 0 0 0; 0 0 siga3(5) 0 0; 0 0 0 siga4(5) 0; 0 0 0 0 0; 0 0 0 0 0];
+b5=[0 0 0 0 0 sigb(5)]';
+f5=M(5,1:n)/phinv(5);
+d5=-bmoy(5)/phinv(5);
+
+A6=[siga1(6) 0 0 0 0; 0 siga2(6) 0 0 0; 0 0 siga3(6) 0 0; 0 0 0 siga4(6) 0; 0 0 0 0 0; 0 0 0 0 0];
+b6=[0 0 0 0 0 sigb(6)]';
+f6=M(6,1:n)/phinv(6);
+d6=-bmoy(6)/phinv(6);
+
+A7=[siga1(7) 0 0 0 0; 0 siga2(7) 0 0 0; 0 0 siga3(7) 0 0; 0 0 0 siga4(7) 0; 0 0 0 0 0; 0 0 0 0 0];
+b7=[0 0 0 0 0 sigb(7)]';
+f7=M(7,1:n)/phinv(7);
+d7=-bmoy(7)/phinv(7);
+
+
+cvx_begin
+    variable x(mn)  
+    minimize (c*x)
+    subject to
+    x5=[x(n) x(2*n) x(3*n) x(4*n) x(5*n) x(6*n) x(7*n)]';
+    norm(A1*x(1:n)+b1,2) <= f1*x(1:n)+d1;
+    norm(A2*x(n+1:2*n)+b2,2) <= f2*x(n+1:2*n)+d2;
+	norm(A3*x(2*n+1:3*n)+b3,2) <= f3*x(2*n+1:3*n)+d3;
+	norm(A4*x(3*n+1:4*n)+b4,2) <= f4*x(3*n+1:4*n)+d4;
+	norm(A5*x(4*n+1:5*n)+b5,2) <= f5*x(4*n+1:5*n)+d5;
+	norm(A6*x(5*n+1:6*n)+b6,2) <= f6*x(5*n+1:6*n)+d6;
+	norm(A7*x(6*n+1:7*n)+b7,2) <= f7*x(6*n+1:7*n)+d7;
+    x>=0;
+    x<=Xmax;
+    H*x5 <= q1;
+    H*x5 >= q2;
+cvx_end 

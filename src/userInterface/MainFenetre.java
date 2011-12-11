@@ -21,7 +21,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import data.solution.Solution;
 import data.solution.SolutionCentrale;
@@ -249,7 +248,7 @@ public class MainFenetre extends JFrame {
 		l.setHgap(30);
 		suite.setLayout(l);
 		troisiemeLigne.add(suite);
-		affichage = new AfficheResultat(this, "voir le résultat");
+		affichage = new AfficheResultat("voir le résultat");
 		resultat = new JButton(affichage);
 		// resultat.setVisible(false);
 		suite.add(resultat);
