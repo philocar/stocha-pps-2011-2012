@@ -33,7 +33,6 @@ public class ZDialogParamRS extends JDialog {
 	private JTextField iter, tempF, taux, dec;
 	private RSEnergie solveur;
 	private String fileName;
-	private JLabel labProba;
 
 	/**
 	 * Constructeur
