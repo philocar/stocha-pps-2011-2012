@@ -45,8 +45,8 @@ gains=w*(ah(1)+ah(2)+ah(3)+ah(4)+ah(5)+ah(6)+ah(7));
 
 
 cvx_begin
-    variable x(mn-gains)  
-    minimize (c*x)
+    variable x(mn)  
+    minimize (c*x-gains)
     subject to
     x5=[x(n) x(2*n) x(3*n) x(4*n) x(5*n) x(6*n) x(7*n)]';
     norm(A1*x(1:n)+b1,2) <= f1*x(1:n)+d1;
