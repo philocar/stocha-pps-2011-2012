@@ -48,8 +48,8 @@ public class CplexEnergieRecours extends PLEnergieRecours {
 				for (int s = 0; s < 100; s++) {
 					lb2[p * 100 + s] = 0.0;
 					ub2[p * 100 + s] = Double.MAX_VALUE;
-					qplus[p * 100 + s] = 100 * 0.01;
-					qmoins[p * 100 + s] = 200 * 0.01;
+					qplus[p * 100 + s] = 100 * donnees.getScenario(s).getProbabilite();
+					qmoins[p * 100 + s] = 200 * donnees.getScenario(s).getProbabilite();
 				}
 			}
 
@@ -60,7 +60,7 @@ public class CplexEnergieRecours extends PLEnergieRecours {
 			IloLinearNumExpr cx = cplex.scalProd(couts, x);
 			IloLinearNumExpr cyp = cplex.scalProd(qplus, yp);
 			IloLinearNumExpr cym = cplex.scalProd(qmoins, ym);
-			cplex.addMinimize(cplex.sum(cx, cyp, cym));
+			cplex.addMinimize(cplex.diff(cplex.sum(cx, cyp, cym), gains));
 
 			double sommeApports = 0;
 			for (int p = 0; p < 7; p++) {
@@ -102,26 +102,24 @@ public class CplexEnergieRecours extends PLEnergieRecours {
 			if (cplex.solve()) {
 				System.out.println("Solution status = " + cplex.getStatus());
 				System.out.println("Solution value = " + cplex.getObjValue());
-				solution.setValue(cplex.getObjValue());
 				double[] valX = cplex.getValues(x);
 				double[] valYP = cplex.getValues(yp);
 				double[] valYM = cplex.getValues(ym);
 
-				for (int i = 0; i < valX.length; i++) {
-					solution.setX(i / (donnees.nbCentralesThermiques + 1), i
-							% (donnees.nbCentralesThermiques + 1), valX[i]);
-				}
-				for (int i = 0; i < valYP.length; i++) {
-					solution.setyAchat(i / donnees.nbScenarios, i
-							% donnees.nbScenarios, valYP[i]);
-				}
-				for (int i = 0; i < valYM.length; i++) {
-					solution.setyVente(i / donnees.nbScenarios, i
-							% donnees.nbScenarios, valYM[i]);
+				for (int p = 0; p < donnees.nbPeriodes; p++) {
+					for(int c=0; c<donnees.nbCentralesThermiques+1; c++)
+					{
+						solution.setX(p, c, valX[p*5+c]);
+					}
+					for(int s=0; s<donnees.nbScenarios; s++)
+					{
+						solution.setyAchat(p, s, valYP[p*donnees.nbScenarios+s]);
+						solution.setyVente(p, s, valYM[p*donnees.nbScenarios+s]);
+					}
 				}
 				
-//				System.out.println(solution.toString());
-//				System.out.println(solution.fonctionObjectif());
+				System.out.println(solution.toString());
+				System.out.println(solution.fonctionObjectif());
 				cplex.end();
 			}
 
