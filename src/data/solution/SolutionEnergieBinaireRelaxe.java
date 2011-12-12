@@ -203,24 +203,6 @@ public class SolutionEnergieBinaireRelaxe extends Solution implements SolutionCe
 	}
 
 	public SolutionEnergie genererSolutionEnergie() {
-		/*	SolutionEnergie e = new SolutionEnergie();
-		double[][] tabEnergie = new double[donnees.nbCentrales + 1][donnees.nbPeriodes];
-
-		int c;
-		for (int p = 0; p < donnees.nbPeriodes; p++) {
-			for (c = 0; c < donnees.nbCentrales; c++) {
-				tabEnergie[c][p] = donnees.getPalier(c, y[p][c]);
-			}
-
-			tabEnergie[c][p] = ((donnees.getTrajectoire(trajectoire) / donnees.getTurbinage()) - donnees
-					.getApportsPeriode(p));
-		}
-		e.setEnergies(tabEnergie);
-
-		double[][] energiesMax = donnees.getProductionsMax();
-		e.setEnergiesMax(energiesMax);
-
-		return e;*/
 		return null;
 	}
 }
