@@ -65,17 +65,13 @@ public class Optimise extends AbstractAction {
 				solveur = new CplexEnergieRecours(data);
 			} else if (methodeName.equals("relaxation du binaire")) {
 
-				ZDialogProbaBinaire proba = new ZDialogProbaBinaire(fenetre,
-						"Choix des paramètres", true, fileName);
-				proba.setVisible(true);
+				ZDialogProbaBinaire proba = new ZDialogProbaBinaire(fenetre, fileName);
 				solveur = proba.getSolveurRelaxe();
 			}
 
 			else if (methodeName.equals("modèle binaire")) {
 
-				ZDialogProbaBinaire proba = new ZDialogProbaBinaire(fenetre,
-						"Choix des paramètres", true, fileName);
-				proba.setVisible(true);
+				ZDialogProbaBinaire proba = new ZDialogProbaBinaire(fenetre, fileName);
 				solveur = proba.getSolveurBinaire();
 			}
 
@@ -90,6 +86,11 @@ public class Optimise extends AbstractAction {
 			}
 		}
 		fenetre.updateVisibility();
+		// la relaxation du binaire ne peut pas afficher de solution
+		 if (methodeName.equals("relaxation du binaire")) {
+			 fenetre.cacherResultat();
+		 }
+		 
 
 	}
 

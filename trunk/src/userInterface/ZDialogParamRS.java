@@ -33,8 +33,6 @@ public class ZDialogParamRS extends JDialog {
 	private JTextField iter, tempF, taux, dec;
 	private RSEnergie solveur;
 	private String fileName;
-	private double probabilite;
-	private JTextField proba;
 	private JLabel labProba;
 
 	/**
@@ -47,7 +45,7 @@ public class ZDialogParamRS extends JDialog {
 	public ZDialogParamRS(MainFenetre parent, String title, boolean modal,
 			String fileName) {
 		super(parent, title, modal);
-		this.setSize(350, 310);
+		this.setSize(350, 260);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.initComponent();
@@ -102,15 +100,6 @@ public class ZDialogParamRS extends JDialog {
 		panDec.add(labDec);
 		panDec.add(dec);
 
-		JPanel panProba = new JPanel();
-		panProba.setBackground(Color.white);
-		panProba.setPreferredSize(new Dimension(300, 40));
-		proba = new JTextField();
-		proba.setPreferredSize(new Dimension(50, 25));
-		proba.setText("0.98");
-		labProba = new JLabel("probabilité des scénarios :");
-		panProba.add(labProba);
-		panProba.add(proba);
 
 		JPanel content = new JPanel();
 		content.setBackground(Color.white);
@@ -118,8 +107,6 @@ public class ZDialogParamRS extends JDialog {
 		content.add(panTempF);
 		content.add(panTaux);
 		content.add(panDec);
-		content.add(panProba);
-
 		JPanel control = new JPanel();
 		control.setBackground(Color.white);
 		JButton okBouton = new JButton("OK");
@@ -162,22 +149,12 @@ public class ZDialogParamRS extends JDialog {
 					valide = false;
 					rep += "le champ \"décroissance température\" n'est pas valide.\n";
 				}
-				try {
-					probabilite = Double.parseDouble(proba.getText());
-					if (probabilite > 1 || probabilite < 0) {
-						valide = false;
-						rep += "le champ \"probabilité des scénarios\" n'est pas valide.\n";
-					}
-
-				} catch (java.lang.NumberFormatException e) {
-					valide = false;
-					rep += "le champ \"probabilité des scénarios\" n'est pas valide.\n";
-				}
+				
 
 				if (valide) {
 					System.out.println("début lecture des données");
 						
-					DataBinaire data = new DataBinaire(probabilite, fileName
+					DataBinaire data = new DataBinaire(fileName
 							+ "Données_Recuit_demandes.csv", fileName
 							+ "Données_Recuit_paliers1.csv", fileName
 							+ "Données_Recuit_paliers2.csv", fileName
