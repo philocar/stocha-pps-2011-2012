@@ -163,11 +163,11 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 			double sommeAchats = 0, sommeVentes = 0;
 			for(int s = 0; s < donnees.nbScenarios; s++)
 			{
-				sommeAchats += getyAchat(p, s) / donnees.getScenario(s).getProbabilite();
-				sommeVentes += getyVente(p, s) / donnees.getScenario(s).getProbabilite();
+				sommeAchats += yAchat[p][s] * donnees.getScenario(s).getProbabilite();
+				sommeVentes += yVente[p][s] * donnees.getScenario(s).getProbabilite();
 			}
-			string += "\tAchat : "+sommeAchats+" €\n";
-			string += "\tVente : "+sommeVentes+" €\n";
+			string += "\tAchat : "+sommeAchats+" MW\n";
+			string += "\tVente : "+sommeVentes+" MW\n";
 		}
 		return string;
 	}
