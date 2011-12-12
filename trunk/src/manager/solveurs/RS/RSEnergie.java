@@ -108,18 +108,20 @@ public class RSEnergie extends RecuitSimule
 			if(nbTransformationsParScenariosCourant >= nbTransformationsParScenarios)
 			{
 				nbTransformationsParScenariosCourant = 0;
+				int indicePeriodeChange;
 				int indiceScenarioChange;
 				// On essaie des modifications tant que ça ne répond pas à la probabilité voulue
 				do
 				{
 					recherche = false;
-					indiceScenarioChange = rand.nextInt(solution.getZ().length);
-					solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
+					indicePeriodeChange = rand.nextInt(solution.getZ().length);
+					indiceScenarioChange = rand.nextInt(solution.getZ()[indicePeriodeChange].length);
+					solution.active(indicePeriodeChange, indiceScenarioChange, !solution.isActived(indicePeriodeChange, indiceScenarioChange));
 					
 					// Repasse dans l'état initial si ça ne répond pas à la probabilité voulue
-					if(solution.probabiliteScenario() < donnees.getProbabilite())
+					if(solution.probabiliteScenario(indicePeriodeChange) < donnees.getProbabilite(indicePeriodeChange))
 					{
-						solution.active(indiceScenarioChange, !solution.isActived(indiceScenarioChange));
+						solution.active(indicePeriodeChange, indiceScenarioChange, !solution.isActived(indicePeriodeChange, indiceScenarioChange));
 						recherche = true;
 					}
 					
@@ -197,7 +199,7 @@ public class RSEnergie extends RecuitSimule
 	
 	public static void main(String[] args)
 	{
-		DataBinaire data = new DataBinaire(0.98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
+		DataBinaire data = new DataBinaire("Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
 		RSEnergie rs = new RSEnergie(data, 0.9, 0.01, 16384, 0.8, 10, 100);
 		rs.lancer();
 		SolutionEnergieBinaire solution = (SolutionEnergieBinaire) rs.getSolution();

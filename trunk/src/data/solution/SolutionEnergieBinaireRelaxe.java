@@ -13,8 +13,8 @@ public class SolutionEnergieBinaireRelaxe extends Solution implements SolutionCe
 	 * La matrice de décision pour chaque periode, chaque centrale, on a le vecteur de palier
 	 */
 	private double[][][] y;
-	/** Le vecteur d'activation des scénarios */
-	private double[] z;
+	/** Le vecteur d'activation des scénarios par périodes */
+	private double[][] z;
 	/** Le vecteur des trajectoires hydrauliques */
 	private double[] trajectoires;
 	/** Les données du problèmes */
@@ -28,7 +28,7 @@ public class SolutionEnergieBinaireRelaxe extends Solution implements SolutionCe
 	public SolutionEnergieBinaireRelaxe(DataBinaire donnees) {
 		this.donnees = donnees;
 		y = new double[donnees.nbPeriodes][donnees.nbCentrales][];
-		z = new double[donnees.nbScenarios];
+		z = new double[donnees.nbPeriodes][donnees.nbScenarios];
 		trajectoires = new double[donnees.nbTrajectoires];
 		
 		for(int p=0; p<donnees.nbPeriodes; p++)
@@ -108,7 +108,7 @@ public class SolutionEnergieBinaireRelaxe extends Solution implements SolutionCe
 	 * Retourne le vecteur des scénarios
 	 * @return le vecteur des scénarios
 	 */
-	public double[] getZ() {
+	public double[][] getZ() {
 		return z;
 	}
 
@@ -121,17 +121,24 @@ public class SolutionEnergieBinaireRelaxe extends Solution implements SolutionCe
 	}
 
 	/**
-	 * Teste si le scénario est actif
+	 * Teste si le scénario est actif pour une période
+	 * @parma p la période
 	 * @param s le scénario
 	 * @return true si le scénario est actif, false sinon
 	 */
-	public double isActived(int s) {
-		return z[s];
+	public double isActived(int p, int s) {
+		return z[p][s];
 	}
 	
-	public void setZ(int s, double val)
+	/**
+	 * Modifie l'activation d'un scénario pour une période
+	 * @param p la période
+	 * @param s le scénario
+	 * @param val la valeur
+	 */
+	public void setZ(int p, int s, double val)
 	{
-		z[s] = val;
+		z[p][s] = val;
 	}
 
 	/**

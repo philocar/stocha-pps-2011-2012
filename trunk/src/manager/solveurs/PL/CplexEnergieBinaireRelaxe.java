@@ -37,7 +37,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 			int nbPaliers = donnees.nbPaliers[0] + donnees.nbPaliers[1] + donnees.nbPaliers[2] + donnees.nbPaliers[3];
 
 			IloNumVar[] y = cplex.numVarArray(donnees.nbPeriodes * nbPaliers + donnees.nbTrajectoires, 0, 1);
-			IloNumVar[] z = cplex.numVarArray(donnees.nbScenarios, 0, 1);
+			IloNumVar[] z = cplex.numVarArray(donnees.nbScenarios*donnees.nbPeriodes, 0, 1);
 
 			int ythetaSize = donnees.nbPeriodes * nbPaliers;
 			int ynSize = donnees.nbTrajectoires;
@@ -74,12 +74,14 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 			cplex.add(eq);
 
 			// La somme des probabilités des scénarios doit être supérieurs à p
-			double[] probabilites = new double[donnees.nbScenarios];
-			for (int i = 0; i < donnees.nbScenarios; i++) {
-				probabilites[i] = donnees.getScenario(i).getProbabilite();
+			for(int p=0; p<donnees.nbPeriodes; p++)
+			{
+				IloNumVar[] zPeriode = cplex.numVarArray(donnees.nbScenarios, 0, 1);
+				for(int i=0; i<donnees.nbScenarios; i++)
+					zPeriode[i] = z[p*donnees.nbScenarios+i];
+				IloRange eqg = cplex.ge(cplex.scalProd(probabilites, zPeriode), donnees.getProbabilite(p));
+				cplex.add(eqg);
 			}
-			IloRange eqg = cplex.ge(cplex.scalProd(probabilites, z), donnees.getProbabilite());
-			cplex.add(eqg);
 
 			// Contraintes sur les demandes
 			IloLinearNumExpr exprYn = cplex.scalProd(donnees.getTrajectoires(), yn);
@@ -128,8 +130,11 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 					solution.setChoixTrajectoire(i, valYn[i]);
 				}
 				
-				for (int s = 0; s < valZ.length; s++) {
-					solution.setZ(s, valZ[s]);
+				for(int p=0; p<donnees.nbPeriodes; p++)
+				{
+					for (int s = 0; s < donnees.nbScenarios; s++) {
+						solution.setZ(p ,s, valZ[p*donnees.nbScenarios + s]);
+					}
 				}
 
 				System.out.println(solution.toString());
@@ -142,7 +147,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 	}
 
 	public static void main(String[] args) {
-		DataBinaire data = new DataBinaire(0.98, "Data/Données_Recuit_demandes.csv",
+		DataBinaire data = new DataBinaire("Data/Données_Recuit_demandes.csv",
 				"Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv",
 				"Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv",
 				"Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv",
