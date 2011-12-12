@@ -17,8 +17,6 @@ public abstract class PLEnergieRecours implements Solveur {
 	protected DataRecours donnees;
 	/** La solution */
 	protected SolutionEnergieRecours solution;
-	/** Le vecteur contenant les prix par période multiplié par la probabilité de chaque scénarios */
-	protected double[] probabilitesPrix;
 	/** Le vecteur de coûts par période et par centrale */
 	protected double[] couts;
 	/** La matrice qui pour chaque scénario et chaque période associe la liste des facteurs de disponibilité */
