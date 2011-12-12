@@ -16,8 +16,8 @@ public class DataBinaire extends DataBase {
 	private ScenarioBinaire[] scenarios;
 	/** Les trajectoires hydrauliques */
 	private double[] trajectoires;
-	/** La probabilité voulue que les scénarios se déroulent */
-	private double probabilite;
+	/** Les probabilités vouluent que les scénarios se déroulent par période */
+	private double[] probabilites = {0.96, 0.96, 0.96, 0.96, 0.95, 0.94, 0.93};
 	/** Les paliers de chaque centrales thermiques */
 	private double[][] paliers;
 	/** Le nombre de scénarios */
@@ -33,7 +33,6 @@ public class DataBinaire extends DataBase {
 	
 	/**
 	 * Construit une donnée binaire en fonction des fichiers. Les scénarios sont équiprobables
-	 * @param probabilie la probabilité voulue que les scénarios se déroulent
 	 * @param demandesFile le fichier csv contenant les scénarios de demandes
 	 * @param coeffCentrale1File le fichier csv contenant les paliers de la centrale 1
 	 * @param coeffCentrale2File le fichier csv contenant les paliers de la centrale 2
@@ -43,12 +42,11 @@ public class DataBinaire extends DataBase {
 	 * @param parametresHydrauliquesFile le fichier csv contenant les paramètres hydrauliques
 	 * @param capaciteMaxFile le fichier csv contenant la capacité max et les coûts
 	 */
-	public DataBinaire(double probabilite, String demandesFile, String coeffCentrale1File, String coeffCentrale2File, String coeffCentrale3File, String coeffCentrale4File, String trajectoiresFile, String parametresHydrauliquesFile, String capaciteMaxFile) {
+	public DataBinaire(String demandesFile, String coeffCentrale1File, String coeffCentrale2File, String coeffCentrale3File, String coeffCentrale4File, String trajectoiresFile, String parametresHydrauliquesFile, String capaciteMaxFile) {
 		super(parametresHydrauliquesFile, capaciteMaxFile);
 		
 		scenarios = new ScenarioBinaire[nbScenarios];
 		trajectoires = new double[nbTrajectoires];
-		this.probabilite = probabilite;
 		paliers = new double[nbCentrales][];
 		
 		for(int i=0; i<nbCentrales; i++)
@@ -308,12 +306,13 @@ public class DataBinaire extends DataBase {
 	}
 	
 	/**
-	 * Retourne la probabilité voulue
-	 * @return la probabilité voulue
+	 * Retourne la probabilité pour la période voulue
+	 * @param p la période
+	 * @return la probabilité pour la période voulue
 	 */
-	public double getProbabilite()
+	public double getProbabilite(int p)
 	{
-		return probabilite;
+		return probabilites[p];
 	}
 	
 	/**
@@ -328,7 +327,7 @@ public class DataBinaire extends DataBase {
 	
 	public static void main(String[] args)
 	{
-		DataBinaire data = new DataBinaire(98, "Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
+		DataBinaire data = new DataBinaire("Data/Données_Recuit_demandes.csv", "Data/Données_Recuit_paliers1.csv", "Data/Données_Recuit_paliers2.csv", "Data/Données_Recuit_paliers3.csv", "Data/Données_Recuit_paliers4.csv", "Data/Données_Recuit_trajectoire_hydro.csv", "Data/Données_Recuit_parametres_hydro.csv", "Data/Données_Recuit_capacité.csv");
 		for(ScenarioBinaire scenario : data.getScenarios())
 		{
 			double[] test = scenario.getPaliersPeriodeCentrale(0, 0);

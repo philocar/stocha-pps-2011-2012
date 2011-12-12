@@ -17,7 +17,7 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 	 */
 	private int[][] y;
 	/** Le vecteur d'activation des scénarios */
-	private boolean[] z;
+	private boolean[][] z;
 	/** La trajectoires hydrauliques choisie */
 	private int trajectoire;
 	/** Les données du problèmes */
@@ -31,7 +31,7 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 	public SolutionEnergieBinaire(DataBinaire donnees) {
 		this.donnees = donnees;
 		y = new int[donnees.nbPeriodes][donnees.nbCentrales];
-		z = new boolean[donnees.nbScenarios];
+		z = new boolean[donnees.nbPeriodes][donnees.nbScenarios];
 	}
 
 	@Override
@@ -40,7 +40,10 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 		
 		// On copie les valeurs de la solution courante dans le clone
 		for (int i = 0; i < z.length; i++)
-			res.z[i] = z[i];
+		{
+			for(int j=0; j<z[i].length; j++)
+				res.z[i][j] = z[i][j];
+		}
 		for (int i = 0; i < y.length; i++) {
 			for (int j = 0; j < y[i].length; j++)
 				res.setDecisionPeriodeCentrale(i, j, y[i][j]);
@@ -77,17 +80,23 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 	public void solutionInitiale() {
 		Random rand = new Random();
 
-		// Initialise le vecteur z à false
+		// Initialise la matrice z à false
 		for (int i = 0; i < z.length; i++)
-			z[i] = false;
+		{
+			for(int j=0; j<z[i].length; j++)
+				z[i][j] = false;
+		}
 
-		// Active des scénarios aléatoirement jusqu'à obtenir la probabilité voulue
+		// Active des scénarios aléatoirement jusqu'à obtenir la probabilité voulue pour chaque période
 		int scenarioActive;
-		do {
-			scenarioActive = rand.nextInt(z.length);
-			if (!z[scenarioActive])
-				z[scenarioActive] = true;
-		} while (probabiliteScenario() < donnees.getProbabilite());
+		for(int p=0; p<donnees.nbPeriodes; p++)
+		{
+			do {
+				scenarioActive = rand.nextInt(z[p].length);
+				if (!z[p][scenarioActive])
+					z[p][scenarioActive] = true;
+			} while (probabiliteScenario(p) < donnees.getProbabilite(p));
+		}
 
 		int centraleCoutMin = 0;
 		
@@ -112,10 +121,10 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 			double coutMin = Integer.MAX_VALUE;
 			for (int i = 0; i < donnees.getCouts().length; i++) {
 				double cout;
-				
+				// Si c'est une centrale thermique
 				if(i < donnees.nbCentrales)
 					cout = donnees.getCoutCentrale(i);
-				else
+				else // Si c'est le réservoir
 					cout = donnees.getCoutCentrale(i) / donnees.getTurbinage();
 				
 				if (!centraleUtilisee[i] && cout <= coutMin) {
@@ -147,8 +156,6 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 				}
 			}
 		} while (!respecteContrainteDemande());
-	
-		System.out.println(this);
 	}
 
 	/**
@@ -157,12 +164,12 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 	 */
 	public boolean respecteContrainteDemande() {
 
-		// Pour chaque scénarios
-		for (int s = 0; s < donnees.nbScenarios; s++) {
-			// S'il est actif
-			if (isActived(s)) {
-				// Pour chaque période on calcule la production
-				for (int p = 0; p < donnees.nbPeriodes; p++) {
+		// Pour chaque période 
+		for (int p = 0; p < donnees.nbPeriodes; p++) {
+			// Pour chaque scénarios actif on calcule la production
+			for (int s = 0; s < donnees.nbScenarios; s++) {
+				// S'il est actif
+				if (isActived(p, s)) {
 					double production = 0;
 					for (int c = 0; c < donnees.nbCentrales; c++) {
 						production += donnees.getScenario(s).getPaliersPeriodeCentrale(c, p)[getDecisionPeriodeCentrale(p, c)];
@@ -188,7 +195,7 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 		// Pour chaque scénario
 		for (int s = 0; s < donnees.nbScenarios; s++) {
 			// S'il est actif
-			if (isActived(s)) {
+			if (isActived(periode, s)) {
 				// Calcule la production pour la période
 				double production = 0;
 				for (int c = 0; c < donnees.nbCentrales; c++) {
@@ -207,23 +214,24 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 	}
 
 	/**
-	 * Retourne la somme des probabilités des scénarios actifs
-	 * @return la somme des probabilités des scénarios actifs
+	 * Retourne la somme des probabilités des scénarios actifs pour une période
+	 * @param p la période
+	 * @return la somme des probabilités des scénarios actifs pour une période
 	 */
-	public double probabiliteScenario() {
+	public double probabiliteScenario(int p) {
 		double sommeProba = 0;
-		for (int i = 0; i < z.length; i++) {
-			if (z[i])
+		for (int i = 0; i < z[p].length; i++) {
+			if (z[p][i])
 				sommeProba += donnees.getScenario(i).getProbabilite();
 		}
 		return sommeProba;
 	}
 
 	/**
-	 * Retourne le vecteur des scénarios
-	 * @return le vecteur des scénarios
+	 * Retourne la matrice des scénarios
+	 * @return la matrice des scénarios
 	 */
-	public boolean[] getZ() {
+	public boolean[][] getZ() {
 		return z;
 	}
 
@@ -236,12 +244,13 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 	}
 
 	/**
-	 * Teste si le scénario est actif
+	 * Teste si le scénario est actif pour une période
+	 * @parma p la période
 	 * @param s le scénario
 	 * @return true si le scénario est actif, false sinon
 	 */
-	public boolean isActived(int s) {
-		return z[s];
+	public boolean isActived(int p, int s) {
+		return z[p][s];
 	}
 
 	/**
@@ -271,12 +280,13 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 	}
 
 	/**
-	 * Modifie l'activation du scénario
+	 * Modifie l'activation du scénario pour une période
+	 * @periode la période
 	 * @param indiceScenario le scénario
 	 * @param activation l'activation
 	 */
-	public void active(int indiceScenario, boolean activation) {
-		z[indiceScenario] = activation;
+	public void active(int periode, int indiceScenario, boolean activation) {
+		z[periode][indiceScenario] = activation;
 	}
 
 	/**

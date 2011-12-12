@@ -50,6 +50,11 @@ public abstract class PLEnergieBinaireRelaxe implements Solveur {
 			couts[donnees.nbPeriodes * nbPaliers + i] = donnees.nbPeriodes * donnees.getCoutCentrale(4)
 					* donnees.getTrajectoire(i) / donnees.getTurbinage();
 		}
+		
+		probabilites = new double[donnees.nbScenarios];
+		for (int i = 0; i < donnees.nbScenarios; i++) {
+			probabilites[i] = donnees.getScenario(i).getProbabilite();
+		}
 	}
 
 	/**
