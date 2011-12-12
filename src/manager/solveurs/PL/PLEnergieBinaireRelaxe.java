@@ -1,9 +1,10 @@
 package manager.solveurs.PL;
 
+import manager.solveurs.Solveur;
 import data.DataBinaire;
 import data.solution.SolutionEnergieBinaireRelaxe;
 
-public abstract class PLEnergieBinaireRelaxe {
+public abstract class PLEnergieBinaireRelaxe implements Solveur {
 	/** Variable contenant les données du problème */
 	protected DataBinaire donnees;
 	/** Le vecteur de solution du problème */
