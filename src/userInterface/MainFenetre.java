@@ -326,7 +326,7 @@ public class MainFenetre extends JFrame {
 	public void setSolution(Solution solution) {
 		this.solution = solution;
 		affichage.setSolution( ((SolutionCentrale)solution).genererSolutionEnergie());
-		cout.setText(""+solution.fonctionObjectif());
+		cout.setText("coût "+(int)(solution.fonctionObjectif()) + " €");
 		System.out.println("solution : "+solution);
 	}
 
