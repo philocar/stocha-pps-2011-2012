@@ -108,7 +108,7 @@ public class DessinReservoir extends JComponent {
 			}
 			//nom de l'abscisse
 			g.setColor(new Color(0, 129, 21));
-			g.drawString("période", idr/nuage.length*(nuage.length+1), hauteurAxe+delta+10);
+			g.drawString("période", idr/nuage.length*(nuage.length+1)-10, hauteurAxe+delta+10);
 		
 			// puissance max
 			int hauteurMax =  getHeight() - 5 - (int) ((pmax - ymin) * getHeight() / (ymax - ymin));
