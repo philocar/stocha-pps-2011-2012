@@ -104,7 +104,7 @@ public class CplexEnergieBinaireRelaxe extends PLEnergieBinaireRelaxe {
 					IloLinearNumExpr exprYt = cplex.scalProd(prod, varYt);
 					IloRange ge = cplex.ge(
 							cplex.sum(exprYt, exprYn,
-									cplex.prod(-1 * (donnees.getScenario(s).getDemandePeriode(p) + M), z[s])), -M);
+									cplex.prod(-1 * (donnees.getScenario(s).getDemandePeriode(p) + M), z[p*donnees.nbScenarios + s])), -M);
 					cplex.add(ge);
 				}
 			}

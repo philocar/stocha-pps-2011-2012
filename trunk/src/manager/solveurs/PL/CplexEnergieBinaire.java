@@ -105,7 +105,7 @@ public class CplexEnergieBinaire extends PLEnergieBinaire {
 					IloLinearNumExpr exprYt = cplex.scalProd(prod, varYt);
 					IloRange ge = cplex.ge(
 							cplex.sum(exprYt, exprYn,
-									cplex.prod(-1 * (donnees.getScenario(s).getDemandePeriode(p) + M), z[s])), -M);
+									cplex.prod(-1 * (donnees.getScenario(s).getDemandePeriode(p) + M), z[p*donnees.nbScenarios + s])), -M);
 					cplex.add(ge);
 				}
 			}
@@ -138,7 +138,7 @@ public class CplexEnergieBinaire extends PLEnergieBinaire {
 				for(int p=0; p<donnees.nbPeriodes; p++)
 				{
 					for (int s = 0; s < donnees.nbScenarios; s++) {
-						if (valZ[s] > 0)
+						if (valZ[p*donnees.nbPeriodes + s] > 0)
 							solution.active(p, s, true);
 						else
 							solution.active(p, s, false);
