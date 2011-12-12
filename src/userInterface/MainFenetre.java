@@ -334,4 +334,8 @@ public class MainFenetre extends JFrame {
 		descriptionFichier.setText(text);
 	}
 	
+	public void cacherResultat(){
+		resultat.setVisible(false);		
+	}
+	
 }

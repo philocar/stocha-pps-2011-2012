@@ -94,7 +94,7 @@ public class DessinCentrale extends JComponent {
 				//jours sur l'axe
 				g.setColor(new Color(0, 129, 21));
 				g.drawLine(idr, hauteurAxe-delta , idr, hauteurAxe + delta );
-				g.drawString( ""+i, idr, hauteurAxe+delta+10);
+				g.drawString( ""+(i+1), idr, hauteurAxe+delta+10);
 				
 				
 				// dessin d'une petite croix
@@ -107,7 +107,7 @@ public class DessinCentrale extends JComponent {
 			}
 			//nom de l'abscisse
 			g.setColor(new Color(0, 129, 21));
-			g.drawString("jours", idr/nuage.length*(nuage.length+1), hauteurAxe+delta+10);
+			g.drawString("période", idr/nuage.length*(nuage.length+1), hauteurAxe+delta+10);
 		
 			// puissance max
 			int hauteurMax =  getHeight() - 5 - (int) ((pmax - ymin) * getHeight() / (ymax - ymin));
