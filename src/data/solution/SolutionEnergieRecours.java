@@ -58,23 +58,13 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 
 	@Override
 	public double fonctionObjectif() {
-		return value;
-		
-//		double val = 0;
-//		
-//		for (int p = 0; p < donnees.nbPeriodes; p++) {
-//			for (int c = 0; c < donnees.nbCentralesThermiques+1; c++) {
-//				val += getX(p, c) * donnees.getCoutCentrale(c);
-//			}
-//
-//			for(int s = 0; s < donnees.nbScenarios; s++)
-//			{
-//				val += getyAchat(p, s)*100 - getyVente(p, s)*200;
-//			}
-//			
-//			val -= donnees.getApportsPeriode(p) * donnees.getCoutCentrale(4);
-//		}
-//		return val;
+		double coutApports = 0;
+		for(int i = 0; i < donnees.nbPeriodes; i++)
+		{
+			coutApports += donnees.getApportsPeriode(i) * donnees.getCoutCentrale(4);
+		}
+		return (value - coutApports);
+
 	}
 	
 	
