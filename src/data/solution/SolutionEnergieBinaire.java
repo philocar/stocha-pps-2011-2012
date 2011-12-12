@@ -111,8 +111,15 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 			// On cherche la centrale dont le cout de production est le plus faible
 			double coutMin = Integer.MAX_VALUE;
 			for (int i = 0; i < donnees.getCouts().length; i++) {
-				if (!centraleUtilisee[i] && donnees.getCoutCentrale(i) <= coutMin) {
-					coutMin = donnees.getCoutCentrale(i);
+				double cout;
+				
+				if(i < donnees.nbCentrales)
+					cout = donnees.getCoutCentrale(i);
+				else
+					cout = donnees.getCoutCentrale(i) / donnees.getTurbinage();
+				
+				if (!centraleUtilisee[i] && cout <= coutMin) {
+					coutMin = cout;
 					centraleCoutMin = i;
 				}
 			}
@@ -140,6 +147,8 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 				}
 			}
 		} while (!respecteContrainteDemande());
+	
+		System.out.println(this);
 	}
 
 	/**
