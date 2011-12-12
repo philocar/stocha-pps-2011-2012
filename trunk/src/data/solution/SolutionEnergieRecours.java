@@ -170,9 +170,16 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 		for(int i = 0; i<size; i++)
 			for(int j=0; j<x.length; j++)
 				values[i][j] = x[j][i];		
+
+		// il faut rajouter le turbinage pour passer en MW
+		double[][] prodMax = donnees.getProductionsMax();
+		for(int j=0; j<x.length; j++){
+			values[values.length-1][j] *= donnees.getTurbinage();
+			prodMax[values.length-1][j] *= donnees.getTurbinage();
+		}
 		
 		e.setEnergies(values);
-		e.setEnergiesMax(donnees.getProductionsMax());
+		e.setEnergiesMax(prodMax);
 		
 		return e;
 	}
