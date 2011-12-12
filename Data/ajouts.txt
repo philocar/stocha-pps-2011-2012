@@ -41,9 +41,11 @@ b7=[0 0 0 0 0 sigb(7)]';
 f7=M(7,1:n)/phinv(7);
 d7=-bmoy(7)/phinv(7);
 
+gains=w*(ah(1)+ah(2)+ah(3)+ah(4)+ah(5)+ah(6)+ah(7));
+
 
 cvx_begin
-    variable x(mn)  
+    variable x(mn-gains)  
     minimize (c*x)
     subject to
     x5=[x(n) x(2*n) x(3*n) x(4*n) x(5*n) x(6*n) x(7*n)]';
