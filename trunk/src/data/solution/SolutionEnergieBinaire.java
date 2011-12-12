@@ -69,7 +69,7 @@ public class SolutionEnergieBinaire extends Solution implements SolutionCentrale
 				val += donnees.getPalier(c, y[p][c]) * donnees.getCoutCentrale(c);
 			}
 
-			// On calcule le coût de production du réservoire
+			// On calcule le coût de production du réservoir
 			val += ((donnees.getTrajectoire(trajectoire) / donnees.getTurbinage()) - donnees.getApportsPeriode(p))
 					* donnees.getCoutCentrale(4);
 		}

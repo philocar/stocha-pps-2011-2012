@@ -9,7 +9,7 @@ import data.DataRecours;
  */
 public class SolutionEnergieRecours extends Solution implements SolutionCentrale{
 
-	/** Le vecteur de productions */
+	/** La matrice de productions */
 	private double[][] x;
 	/** La matrice contenant l'énergie achetée. Pour chaque période et chaque scénario il y a de l'énergie achetée */
 	private double[][] yAchat;
@@ -17,8 +17,6 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 	private double[][] yVente;
 	/** Les données du problèmes */
 	private DataRecours donnees;
-	
-	private double value;
 	
 	/**
 	 * Crée une nouvelle solution spécifique au problème de management de la production d'énergie avec recours
@@ -58,18 +56,24 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 
 	@Override
 	public double fonctionObjectif() {
-		double coutApports = 0;
-		for(int i = 0; i < donnees.nbPeriodes; i++)
+		double val = 0;
+		
+		for(int p=0; p<donnees.nbPeriodes; p++)
 		{
-			coutApports += donnees.getApportsPeriode(i) * donnees.getCoutCentrale(4);
-		}
-		return (value - coutApports);
+			// Pour chaque centrale thermique
+			for (int c = 0; c < donnees.nbCentralesThermiques+1; c++) {
+				// On calcule son coût de production
+				val += x[p][c] * donnees.getCoutCentrale(c);
+			}
 
-	}
-	
-	
-	public void setValue(double value) {
-		this.value = value;
+			// On calcule le coût de production du réservoir
+			val -= donnees.getApportsPeriode(p) * donnees.getCoutCentrale(donnees.nbCentralesThermiques);
+			for(int s=0; s<donnees.nbScenarios; s++)
+			{
+				val += (yAchat[p][s] * 100 + yVente[p][s] * 200) * donnees.getScenario(s).getProbabilite();
+			}
+		}
+		return val;
 	}
 
 	@Override

@@ -21,6 +21,8 @@ public abstract class PLEnergieRecours implements Solveur {
 	protected double[] couts;
 	/** La matrice qui pour chaque scénario et chaque période associe la liste des facteurs de disponibilité */
 	protected double[][][] facteursDisponibilite;
+	/** Les gains des apports en eau */
+	protected double gains;
 	
 	/**
 	 * Crée un nouveau PLEnergie.
@@ -58,8 +60,8 @@ public abstract class PLEnergieRecours implements Solveur {
 			{
 				couts[p*5 + c] = donnees.getCoutCentrale(c);
 			}
+			gains += donnees.getApportsPeriode(p) *  donnees.getCoutCentrale(4);
 		}
-		
 	}
 	
 	/**
