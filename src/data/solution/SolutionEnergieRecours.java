@@ -151,7 +151,7 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 	 */
 	public String toString(){
 		String string = "";
-		
+		string += "Fonction Objectif = " + fonctionObjectif() + "\n";
 		for(int p = 0; p < donnees.nbPeriodes; p++)
 		{
 			string += "période "+(p+1)+"\n";
