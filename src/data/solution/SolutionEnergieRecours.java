@@ -151,17 +151,23 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 	 */
 	public String toString(){
 		String string = "";
-		for(int i = 0; i < donnees.nbPeriodes*(donnees.nbCentralesThermiques+1); i++)
+		
+		for(int p = 0; p < donnees.nbPeriodes; p++)
 		{
-			string += "X"+((i/(donnees.nbCentralesThermiques+1))+1)+((i%(donnees.nbCentralesThermiques+1))+1)+" = "+getX(i/(donnees.nbCentralesThermiques+1), i%(donnees.nbCentralesThermiques+1))+"\n";
-		}
-		for(int i = 0; i < donnees.nbPeriodes*donnees.nbScenarios; i++)
-		{
-			string += "YP"+((i/donnees.nbScenarios)+1)+((i%donnees.nbScenarios)+1)+" = "+getyAchat(i/donnees.nbScenarios, i%donnees.nbScenarios)+"\n";
-		}
-		for(int i = 0; i < donnees.nbPeriodes*donnees.nbScenarios; i++)
-		{
-			string += "YM"+((i/donnees.nbScenarios)+1)+((i%donnees.nbScenarios)+1)+" = "+getyVente(i/donnees.nbScenarios, i%donnees.nbScenarios)+"\n";
+			string += "période "+(p+1)+"\n";
+			for(int c = 0; c < donnees.nbCentralesThermiques; c++)
+			{
+				string += "\tcentrale "+(c+1)+" : "+getX(p, c)+" MW\n";
+			}
+			string += "\tcentrale "+(donnees.nbCentralesThermiques+1)+" : "+(getX(p, donnees.nbCentralesThermiques)*donnees.getTurbinage())+" MW\n";
+			double sommeAchats = 0, sommeVentes = 0;
+			for(int s = 0; s < donnees.nbScenarios; s++)
+			{
+				sommeAchats += getyAchat(p, s) / donnees.getScenario(s).getProbabilite();
+				sommeVentes += getyVente(p, s) / donnees.getScenario(s).getProbabilite();
+			}
+			string += "\tAchat : "+sommeAchats+" €\n";
+			string += "\tVente : "+sommeVentes+" €\n";
 		}
 		return string;
 	}
