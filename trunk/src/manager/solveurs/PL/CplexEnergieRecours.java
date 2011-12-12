@@ -119,7 +119,9 @@ public class CplexEnergieRecours extends PLEnergieRecours {
 					solution.setyVente(i / donnees.nbScenarios, i
 							% donnees.nbScenarios, valYM[i]);
 				}
-				System.out.println(solution.toString());
+				
+//				System.out.println(solution.toString());
+//				System.out.println(solution.fonctionObjectif());
 				cplex.end();
 			}
 
