@@ -60,14 +60,15 @@ public class SolutionEnergieRecours extends Solution implements SolutionCentrale
 		
 		for(int p=0; p<donnees.nbPeriodes; p++)
 		{
-			// Pour chaque centrale thermique
+			// Calcule le cout de production
 			for (int c = 0; c < donnees.nbCentralesThermiques+1; c++) {
-				// On calcule son coût de production
 				val += x[p][c] * donnees.getCoutCentrale(c);
 			}
 
-			// On calcule le coût de production du réservoir
+			// Calcule les gains des apports en eau
 			val -= donnees.getApportsPeriode(p) * donnees.getCoutCentrale(donnees.nbCentralesThermiques);
+			
+			// Calcule les pertes d'achat et vente
 			for(int s=0; s<donnees.nbScenarios; s++)
 			{
 				val += (yAchat[p][s] * 100 + yVente[p][s] * 200) * donnees.getScenario(s).getProbabilite();
