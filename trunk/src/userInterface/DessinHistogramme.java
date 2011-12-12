@@ -153,7 +153,7 @@ public class DessinHistogramme extends JComponent {
 		// nom de l'abscisse
 		g.setColor(new Color(0, 129, 21));
 		g.drawString("période", idr / nuage[0].length
-				* (nuage[0].length + 1), hauteurAxe + delta + 10);
+				* (nuage[0].length + 1)-10, hauteurAxe + delta + 10);
 
 	}
 
